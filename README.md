@@ -1,4 +1,6 @@
 # COSC_4353_Project
+## Team Name: Thunder Bay
+
 
 Haitham Yousif 
 
