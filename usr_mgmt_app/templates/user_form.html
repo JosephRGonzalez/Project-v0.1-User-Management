@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ action }} User</title>
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">User Management</a>
+            <div class="ms-auto">
+                <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a>
+            </div>
+        </div>
+    </nav>
+    <div class="sidebar">
+        <h2 class="text-center text-white">Navigation</h2>
+        <a href="{% url 'dashboard' %}" class="btn btn-danger w-100 text-start">Dashboard</a>
+        <a href="{% url 'user_list' %}" class="btn btn-danger w-100 text-start">Users</a>
+    </div>
+    
+    <div class="container mt-5">
+        <h2>{{ action }} User</h2>
+        
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="id_username" class="form-label">Username</label>
+                {{ form.username.errors }}
+                {{ form.username|add_class:"form-control" }}
+            </div>
+            <div class="mb-3">
+                <label for="id_email" class="form-label">Email</label>
+                {{ form.email.errors }}
+                {{ form.email|add_class:"form-control" }}
+            </div>
+            <div class="mb-3">
+                <label for="id_first_name" class="form-label">First Name</label>
+                {{ form.first_name.errors }}
+                {{ form.first_name|add_class:"form-control" }}
+            </div>
+            <div class="mb-3">
+                <label for="id_last_name" class="form-label">Last Name</label>
+                {{ form.last_name.errors }}
+                {{ form.last_name|add_class:"form-control" }}
+            </div>
+            <div class="mb-3">
+                <label for="id_password" class="form-label">Password</label>
+                {{ form.password.errors }}
+                {{ form.password|add_class:"form-control" }}
+                {% if action == 'Edit' %}
+                <small class="form-text text-muted">Leave blank to keep current password</small>
+                {% endif %}
+            </div>
+            <div class="mb-3">
+                <label for="id_role" class="form-label">Role</label>
+                {{ form.role.errors }}
+                {{ form.role|add_class:"form-control" }}
+            </div>
+            <div class="mb-3">
+                <label for="id_status" class="form-label">Status</label>
+                {{ form.status.errors }}
+                {{ form.status|add_class:"form-control" }}
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Save</button>
+            <a href="{% url 'user_list' %}" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</body>
+</html>
