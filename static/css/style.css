@@ -93,6 +93,7 @@ body {
 .signup a{
     color: rgba(169, 62, 228, 0.81);
     cursor: pointer;
+    font-size: 17px;
 }
 
 .signup label:hover {
