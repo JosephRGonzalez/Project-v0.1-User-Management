@@ -8,7 +8,7 @@
 }
 
 body {
-    background-image: url("../images/bg.jpg");
+    background-image: url("../images/bg1.jpg");
     min-height: 100vh;
     width: 100%;
     background-size: cover;
@@ -23,9 +23,10 @@ body {
     transform: translate(-50%, -50%);
     max-width: 430px;
     width: 100%;
-    background: #fff;
+    background: rgba(0, 0, 0, 0.66);
     border-radius: 7px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    color:#fff;
 }
 
 .container .form {
@@ -50,7 +51,8 @@ body {
     border: 1px solid #ddd;
     border-radius: 6px;
     outline: none;
-    border-color: #0088ff;
+    border-color: rgba(0, 0, 0, 0.89);
+    background-color: rgba(115, 107, 107, 0.66);
 }
 
 .form input:focus {
@@ -59,7 +61,7 @@ body {
 
 .form a {
     font-size: 16px;
-    color: #009dff;
+    color: rgba(255, 255, 255, 0.81);
     text-decoration: none;
 }
 
@@ -69,7 +71,8 @@ body {
 
 .form input.button {
     color: #fff;
-    background: #009dff;
+   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    background: rgba(115, 107, 107, 0.55);
     font-size: 1.2rem;
     font-weight: 500;
     letter-spacing: 1px;
@@ -79,7 +82,7 @@ body {
 }
 
 .form input.button:hover {
-    background: #0088ff;
+    background: rgba(120, 48, 163, 0.81);
 }
 
 .signup {
@@ -87,8 +90,8 @@ body {
     text-align: center;
 }
 
-.signup label {
-    color: #009dff;
+.signup a{
+    color: rgba(169, 62, 228, 0.81);
     cursor: pointer;
 }
 
@@ -100,21 +103,21 @@ body {
     left: 10px;
     transform: translate(1760%, 230%);
     font-size: 18px;
-    color: #0088ff;
+    color: rgba(169, 62, 228, 0.81);
 }
 
 .fas.fa-lock {
     left: 10px;
     transform: translate(1870%, 665%);
     font-size: 18px;
-    color: #0088ff;
+    color: rgba(169, 62, 228, 0.81);
 }
 
 #l2 {
     left: 10px;
     transform: translate(1405%, 935%);
     font-size: 18px;
-    color: #0088ff;
+    color: rgba(169, 62, 228, 0.81);
 }
 
 @media screen and (min-width: 335px) and (max-width: 415px) {
@@ -141,13 +144,13 @@ body {
         left: 10px;
         transform: translate(1360%, 210%);
         font-size: 18px;
-        color: #0088ff;
+        color: rgba(169, 62, 228, 0.81);
     }
     
     .fas.fa-lock {
         left: 10px;
         transform: translate(1400%, 605%);
         font-size: 18px;
-        color: #0088ff;
+        color: rgba(169, 62, 228, 0.81);
     }
 }
