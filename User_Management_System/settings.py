@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-99+)794ra3^w5_-5u4*k249wdfaqdq4!==nxqs02yhfq9l(7y8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['usr-mgmt-app-bue8bpeqcucthdc8.westus2-01.azurewebsites.net']
+ALLOWED_HOSTS = ['usr-mgmt-app-bue8bpeqcucthdc8.westus2-01.azurewebsites.net', '127.0.0.1']
 
 
 # Application definition
@@ -117,7 +117,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -125,7 +125,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 STATIC_DIR = os.path.join (BASE_DIR, "static")
-STATIC_ROOT = os.path.join (BASE_DIR,'static files')
+STATIC_ROOT = os.path.join (BASE_DIR,'staticfiles')
 
 STATICFILES_DIRS = [
         os.path.join (BASE_DIR, "static"),
