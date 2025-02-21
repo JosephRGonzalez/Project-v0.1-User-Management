@@ -138,3 +138,7 @@ LOGIN_REDIRECT_URL = '/dashboard/'  # Redirect to dashboard after login
 AUTH_USER_MODEL = 'usr_mgmt_app.UserProfile'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://usr-mgmt-app-bue8bpeqcucthdc8.westus2-01.azurewebsites.net',
+]
