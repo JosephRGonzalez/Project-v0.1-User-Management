@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware'
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -135,3 +136,5 @@ STATICFILES_DIRS = [
 LOGIN_REDIRECT_URL = '/dashboard/'  # Redirect to dashboard after login
 
 AUTH_USER_MODEL = 'usr_mgmt_app.UserProfile'
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
