@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'usr_mgmt_app',
 ]
 
 MIDDLEWARE = [
@@ -129,3 +130,8 @@ STATIC_ROOT = os.path.join (BASE_DIR,'static files')
 STATICFILES_DIRS = [
         os.path.join (BASE_DIR, "static"),
     ]
+
+# Login
+LOGIN_REDIRECT_URL = '/dashboard/'  # Redirect to dashboard after login
+
+AUTH_USER_MODEL = 'usr_mgmt_app.UserProfile'

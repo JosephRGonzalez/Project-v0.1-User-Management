@@ -1,0 +1,44 @@
+.sidebar {
+    height: 100vh; /* Full viewport height */
+    width: 250px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: #212529;
+
+    padding-top: 50px;
+    overflow-y: auto; /* Allows scrolling if content overflows */
+}
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 15px;
+    text-decoration: none;
+    font-size: 18px;
+    transition: 0.3s;
+
+}
+.sidebar a:hover {
+    background-color: #495057; /* Slightly lighter on hover */
+}
+.content {
+    margin-left: 250px; /* Same width as sidebar */
+    padding: 20px;
+
+}
+
+
+.btn {
+border-radius: 0 !important;
+}
+
+body {
+    background-color: #0f0e0e !important;
+}
+
+.container {
+    margin-left: 250px; /* Offset content to the right of the sidebar */
+    padding: 20px;
+    color: rgb(255, 255, 255); /* Optional: Makes text more readable on dark backgrounds */
+    background-color: transparent !important;
+}
