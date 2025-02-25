@@ -103,7 +103,17 @@ span {
     margin-top: 20px;
     font-size: 17px;
     outline: none;
+    transition: transform 0.3s ease-in-out;
 }
+
+.submit-btn:hover {
+    background-color: rgba(169, 62, 228, 0.81);
+    transform: scale(1.05);
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+
 form {
     width: auto;
     display: grid;
@@ -199,7 +209,7 @@ input:valid {
 
 /* Error Message */
 .message.error {
-    background-color: rgba(120, 48, 163, 0.81);
+    background-color: rgba(186, 7, 7, 0.81);
     border: 1px solid #000000;
 }
 

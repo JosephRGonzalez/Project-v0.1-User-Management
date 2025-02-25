@@ -39,11 +39,14 @@ def dashboard_view(request):
 def dashboard_view(request):
     # Get the count of Admins and Users
     admin_count = UserProfile.objects.filter(role='admin').count()
+    moderator_count = UserProfile.objects.filter(role='moderator').count()
     user_count = UserProfile.objects.filter(role='user').count()
+
 
     # Render the dashboard template with the counts
     return render(request, 'dashboard.html', {
         'admin_count': admin_count,
+        'moderator_count': moderator_count,
         'user_count': user_count,
     })
 
@@ -89,11 +92,13 @@ def signup_view(request):
 def dashboard(request):
     # Count the number of admins and users
     admin_count = User.objects.filter(userprofile__role='admin').count()
+    moderator_count = User.objects.filter(userprofile__role='moderator').count()
     user_count = User.objects.filter(userprofile__role='user').count()
 
     # Pass the counts to the template
     context = {
         'admin_count': admin_count,
+        'moderator_count': moderator_count,
         'user_count': user_count,
     }
     return render(request, 'dashboard.html', context)
