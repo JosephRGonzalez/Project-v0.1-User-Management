@@ -1,0 +1,69 @@
+{%load  static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thunder Bay | Lightning Fast User Management</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/landing_page.css'%}">
+</head>
+<body class="back-row-toggle splat-toggle">
+
+    <!-- Background Layers -->
+    <div class="bg"></div>
+    <div class="lightning flashit"></div>
+
+    <!-- Rain Animation -->
+    <div class="rain front-row"></div>
+    <div class="rain back-row"></div>
+
+
+    <a class = "enterButton" href="{% url 'login' %}"> Login Now</a>
+
+    <div class="firstLogo">
+        <img class="logo" src="{% static '/images/logo1.png'%}" alt="Logo">
+    </div>
+
+
+    <div class="scrollableContainer">
+
+
+        <!-- Content inside the scrollable container (images) -->
+        <div class="content">
+            <img class = "images" src="{% static 'images/signup-screenshot.png' %}" alt="Step 1">
+            <h2 class="caption"> Create your account in a flash with Thunder Bay's simple sign-up process. </h2>
+
+            <img class = "images" src="{% static 'images/login-screenshot.png'%}" alt="Step 2">
+            <h2 class="caption">Quick and simple login—get started in seconds</h2>
+
+            <img class = "images" src="{% static 'images/dashboard_screenshot.png'%}" alt="Step 3">
+            <h2 class="caption"> Your Dashboard: All the Important Stats, Right Where You Need Them</h2>
+
+            <img class = "images" src="{% static 'images/usersList_screenshot.png' %}" alt="Step 4">
+            <h2 class="caption">Easily Manage and View All Users in One Place</h2>
+
+            <img class = "technologies" src="{% static 'images/technologies.png' %}" alt="Step 5">
+            <h2 class="caption">A Full-Stack Solution with Cutting-Edge Web Technologies</h2>
+
+            <img class = "technologies" src="{% static 'images/microsoft.png' %}" alt="Step 6">
+            <h2 class="caption">Azure Web App Hosting with Microsoft Authentication for Enhanced Security</h2>
+        </div>
+
+    </div>
+
+            <!-- Secondary fixed logo at the bottom -->
+            <div class="secondaryLogo">
+                <img src="{% static 'images/uofh2.png' %}" alt="Secondary Logo">
+            </div>
+
+
+
+
+
+
+    <script src="{% static 'javascript/landing_page.js' %}"></script>
+</body>
+</html>
+
+

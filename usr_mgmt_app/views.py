@@ -12,8 +12,12 @@ from django.contrib.auth.decorators import permission_required
 
 
 
+#Landing Page
+def landing_page(request):
+    return render(request, 'landing_page.html')
 
-#Login/Home Page (index.html)
+
+#Login Page (index.html)
 def login_view(request):
     if request.method == 'POST':
         username = request.POST['username']

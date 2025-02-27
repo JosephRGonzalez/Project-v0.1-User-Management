@@ -1,0 +1,269 @@
+html, body {
+    overflow: hidden;
+    background-color: black;
+}
+
+
+/* Background Image */
+.bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(../images/landing_bg.jpeg);
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    z-index: -3;
+}
+
+/* Lightning Effect */
+.lightning {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url(../images/landing_bg.jpeg);
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    filter: brightness(3);
+    z-index: -2;
+}
+
+/* Lightning Flash Animation */
+.flashit {
+    animation: flash ease-out 7s infinite;
+    animation-delay: 2s;
+}
+
+@keyframes flash {
+    from { opacity: 0; }
+    92% { opacity: 0; }
+    93% { opacity: 0.6; }
+    94% { opacity: 0.2; }
+    96% { opacity: 1; }
+    to { opacity: 0; }
+}
+
+/* Rain Effect */
+.rain {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+}
+
+.rain.back-row {
+    display: none;
+    z-index: 1;
+    bottom: 60px;
+    opacity: 0.5;
+}
+
+body.back-row-toggle .rain.back-row {
+    display: block;
+}
+
+.drop {
+    position: absolute;
+    bottom: 100%;
+    width: 15px;
+    height: 120px;
+    pointer-events: none;
+    animation: drop 0.5s linear infinite;
+}
+
+@keyframes drop {
+    0% { transform: translateY(0vh); }
+    75% { transform: translateY(90vh); }
+    100% { transform: translateY(90vh); }
+}
+
+/* Rain Stem */
+.stem {
+    width: 1px;
+    height: 60%;
+    margin-left: 7px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.25));
+    animation: stem 0.5s linear infinite;
+}
+
+@keyframes stem {
+    0% { opacity: 1; }
+    65% { opacity: 1; }
+    75% { opacity: 0; }
+    100% { opacity: 0; }
+}
+
+/* Splat Effect */
+.splat {
+    width: 15px;
+    height: 10px;
+    border-top: 2px dotted rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    opacity: 1;
+    transform: scale(0);
+    animation: splat 0.5s linear infinite;
+    display: none;
+}
+
+body.splat-toggle .splat {
+    display: block;
+}
+
+@keyframes splat {
+    0% { opacity: 1; transform: scale(0); }
+    80% { opacity: 1; transform: scale(0); }
+    90% { opacity: 0.5; transform: scale(1); }
+    100% { opacity: 0; transform: scale(1.5); }
+}
+
+/* Scrollable Container */
+.scrollableContainer {
+    position: fixed;
+    top: 120px; /* Adjust this to the height of the first logo */
+    left: 0;
+    width: 400px;
+    height: calc(100vh - 200px); /* Adjust to take the space of both logos */
+    background-color: rgba(41, 41, 41, 0.6);
+    overflow-y: auto;
+    z-index: 500;
+    color: white;
+    padding-top: 40px;
+    box-sizing: border-box;
+}
+
+/* First logo outside the scrollable container */
+.firstLogo {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 400px;
+    z-index: 1000; /* Ensure it's above the scrollable content */
+    background-color: rgb(41, 41, 41,0.6);
+    height: 120px; /* Set the height for the first logo */
+}
+
+.firstLogo img {
+    max-width: 100%;
+    height: auto;
+    filter: brightness(1.2) contrast(1.5);
+}
+
+/* Content area inside the scrollable container */
+.content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+/* Each image styling (optional) */
+.images {
+    max-width: 90%;
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+
+.technologies{
+    max-width: 90%;
+    height: auto;
+    border-radius: 8px;
+    background-color: rgba(0, 0, 0, 0.29);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Captions for images */
+.caption {
+    font-family: 'Lato', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #f1f1f1;
+    text-align: center;
+    padding: 12px;
+    margin: 10px 0;
+    line-height: 1.4;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+    max-width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5);
+    transition: background-color 0.3s ease;
+}
+
+.caption:hover {
+    background-color: rgba(0, 0, 0, 0.85);
+}
+
+/* Secondary logo at the bottom */
+.secondaryLogo {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    z-index: 2000;
+    background-color: rgba(41, 41, 41, 0.6);
+    height: 80px; /* Set the height for the secondary logo */
+    width: 400px;
+}
+
+.secondaryLogo img {
+    width: 350px;
+    height: auto;
+    margin-left: 7%;
+    margin-top:7%;
+    filter: brightness(1.2);
+}
+
+
+
+@import url(https://fonts.googleapis.com/css?family=Titillium+Web:200,900|Lato:100,300,900);
+
+@media screen and (max-width: 630px) {
+    #logo {
+        font-size: 3rem;
+        margin-left: -9rem;
+        margin-top: -1rem;
+    }
+}
+
+
+.enterButton {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgba(83, 27, 113, 0.634), rgba(26, 25, 25, 0.6));
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 20px 60px;
+    font-size: 54px;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(83, 27, 113, 0.4);
+    transition: all 0.3s ease-in-out;
+    z-index: 100;
+}
+
+.enterButton:hover {
+    background: linear-gradient(135deg, rgba(119, 30, 179, 0.9), rgba(26, 25, 25, 0.8));
+    box-shadow: 0 12px 30px rgba(119, 30, 179, 0.5);
+    transform: translate(-50%, -50%) scale(1.08);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.enterButton:active {
+    transform: translate(-50%, -50%) scale(0.98);
+    box-shadow: 0 4px 15px rgba(119, 30, 179, 0.5);
+}
