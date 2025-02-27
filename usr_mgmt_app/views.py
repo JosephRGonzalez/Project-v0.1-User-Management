@@ -154,18 +154,20 @@ def user_create(request):
 
 # Edit a user (ADMIN AND MODERATORS ONLY)
 @permission_required('usr_mgmt_app.can_edit', raise_exception=True)
-def user_edit(request, user_id):  # Use user_id instead of id
-    user = get_object_or_404(UserProfile, id=user_id)  # Fetch the user by user_id
+def user_edit(request, user_id):
+    user = get_object_or_404(UserProfile, id=user_id)
 
-    if request.method == 'POST':
-        form = UserProfileForm(request.POST, instance=user)
-        if form.is_valid():
-            form.save()
-            return redirect('user_list')
-    else:
-        form = UserProfileForm(instance=user)
+    if request.method == "POST":
+        user.first_name = request.POST.get("first_name", user.first_name)
+        user.last_name = request.POST.get("last_name", user.last_name)
+        user.email = request.POST.get("email", user.email)
+        user.role = request.POST.get("role", user.role)
 
-    return render(request, 'user_edit.html', {'form': form, 'user': user})
+        user.save()  # Save changes to the database
+
+        return redirect("user_list")  # Redirect to user list after saving
+
+    return render(request, "user_edit.html", {"user": user})
 
 
 # Deactivate a user (ADMIN ONLY)
