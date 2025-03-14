@@ -31,11 +31,14 @@ Experience the User Management System live by visiting the [demo site](http://us
 - **User Management**: View and manage user profiles, roles, and statuses.
   
 ### **Demo Screenshots:**
+- **Landing Page**:
+  ![Landing Page](images/landing_page_screenshot.png)
+
 - **Login Page**: 
-  ![Login Page](images/login-screenshot.png)
+  ![Login Page](images/login_screenshot.png)
   
 - **Sign Up Page**: 
-  ![Sign Up Page](images/signup-screenshot.png)
+  ![Sign Up Page](images/signup_screenshot.png)
 
 ---
 
