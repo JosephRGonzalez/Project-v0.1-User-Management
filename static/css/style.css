@@ -24,17 +24,22 @@ body {
 }
 
 
+/* Background */
+
 body {
     background-image: url("../images/bg.jpg");
     min-height: 100vh;
     width: 100%;
     background-size: cover;
     background-color: white;
+    background-position: center;
     background-repeat: no-repeat;
     overflow: hidden;
-
 }
 
+
+
+/*  Login Form Containers */
 .container {
     position: absolute;
     top: 50%;
@@ -42,10 +47,11 @@ body {
     transform: translate(-50%, -50%);
     max-width: 430px;
     width: 100%;
-    background: rgba(0, 0, 0, 0.66);
+    background: rgba(136, 139, 141, 0.66);
     border-radius: 7px;
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
     color:#fff;
+
 }
 
 .container .form {
@@ -56,20 +62,28 @@ body {
 }
 
 
+
+/* Logo Containers */
 .logoContainer{
     position: absolute;
     max-width: 650px;
     width:150%;
     top: -20%;
-    left: 30%;
+    left: 40%;
     transform: translate(-50%, -50%);
+
 }
 
+.logo:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
 
 
 .logo{
     position: relative;
     max-width: 100%;
+    transition: transform 0.3s ease-in-out;
 }
 
 
@@ -77,6 +91,7 @@ body {
     position: absolute;
     bottom:0;
     right:0;
+    width:100px;
 }
 
 .uofh{
@@ -84,10 +99,16 @@ body {
     max-width: 100%;
 }
 
+
+
+/* Login Form */
 .form header {
-    font-size: 2rem;
-    font-weight: 500;
+    font-size: 62px;
+    font-weight: 700;
     text-align: center;
+    font-family: 'League Gothic' , sans-serif;
+    text-shadow: 0 0 1px rgba(0, 0, 0);
+
 }
 
 .form input {
@@ -100,7 +121,7 @@ body {
     border-radius: 6px;
     outline: none;
     border-color: rgba(0, 0, 0, 0.89);
-    background-color: rgba(115, 107, 107, 0.66);
+    background-color: rgba(255, 255, 255, 0.66);
 }
 
 .form input:focus {
@@ -108,9 +129,10 @@ body {
 }
 
 .form a {
-    font-size: 16px;
+    font-size: 18px;
     color: rgba(255, 255, 255, 0.81);
     text-decoration: none;
+    font-family: 'Source Sans Pro', 'sans-serif';
 }
 
 .form a:hover {
@@ -118,33 +140,41 @@ body {
 }
 
 .form input.button {
-    color: #fff;
-   text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-    background: rgba(115, 107, 107, 0.55);
-    font-size: 1.2rem;
-    font-weight: 500;
+    background: rgb(200, 16, 46,0.81);
+    text-shadow: 0 0 2px rgba(0, 0, 0);
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
     letter-spacing: 1px;
     margin-top: 1rem;
     cursor: pointer;
-    transition: 0.4s;
+    transition: transform ease-in-out 0.4s;
+    font-family: "Source Sans Pro" , sans-serif;
+
 }
 
 .form input.button:hover {
-    background: rgba(120, 48, 163, 0.81);
+    background: rgba(200, 16, 46);
+    text-shadow: 0 0 2px rgba(0, 0, 0);
+    color: white;
 }
 
 .signup {
-    font-size: 17px;
+    font-size: 20px;
     text-align: center;
+    font-family: 'Source Sans Pro', 'sans-serif';
 }
 
 .signup a{
-    color: rgba(169, 62, 228, 0.81);
+    color: rgb(227, 7, 43);
     cursor: pointer;
-    font-size: 17px;
+    font-weight: 500;
+    font-size: 22px;
     margin-left: 1%;
-}
+    text-shadow: 0 0 1px rgba(255, 255, 255);
 
+
+}
 
 
 .signup label:hover {
@@ -152,33 +182,39 @@ body {
 }
 
 .error-messages{
-    color: red;
-    font-size: 15px;
+    color: white;
+    background-color: rgb(200, 16, 46,0.9);
+    font-size: 18px;
     text-align: center;
+    padding:8px;
     margin-top: 1%;
     margin-bottom: 1%;
+    border-radius: 20px;
+    text-shadow: 0 0 2px rgba(0, 0, 0);
+
 }
+
+
+
 
 #emailicon {
     left: 10px;
     transform: translate(1760%, 230%);
     font-size: 18px;
-    color: rgba(169, 62, 228, 0.81);
+    color: rgba(200, 16, 46, 0.81);
 }
 
 .fas.fa-lock {
     left: 10px;
     transform: translate(1870%, 665%);
     font-size: 18px;
-    color: rgba(169, 62, 228, 0.81);
+    color: rgba(200, 16, 46, 0.81);
 }
 
-#l2 {
-    left: 10px;
-    transform: translate(1405%, 935%);
-    font-size: 18px;
-    color: rgba(169, 62, 228, 0.81);
-}
+
+
+
+/*Responsive Code */
 
 @media screen and (min-width: 335px) and (max-width: 415px) {
     .form header {
@@ -204,14 +240,14 @@ body {
         left: 10px;
         transform: translate(1360%, 210%);
         font-size: 18px;
-        color: rgba(169, 62, 228, 0.81);
+        color: rgba(200, 16, 46, 0.81);
     }
     
     .fas.fa-lock {
         left: 10px;
         transform: translate(1400%, 605%);
         font-size: 18px;
-        color: rgba(169, 62, 228, 0.81);
+        color: rgba(200, 16, 46, 0.81);
     }
 }
 

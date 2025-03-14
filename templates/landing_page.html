@@ -4,11 +4,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link  rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <title>Thunder Bay | Lightning Fast User Management</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="{% static 'css/landing_page.css'%}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 </head>
+
 <body class="back-row-toggle splat-toggle">
+
+
 
     <!-- Background Layers -->
     <div class="bg"></div>
@@ -18,11 +25,13 @@
     <div class="rain front-row"></div>
     <div class="rain back-row"></div>
 
+    <!-- Enter Button -->
+    <a class = "enterButton" href="{% url 'login' %}"> Login Now </a>
 
-    <a class = "enterButton" href="{% url 'login' %}"> Login Now</a>
 
+    <!-- Logo Container -->
     <div class="firstLogo">
-        <img class="logo" src="{% static '/images/logo1.png'%}" alt="Logo">
+        <img class="logo" src="{% static '/images/logo.png'%}" alt="Logo">
     </div>
 
 
@@ -31,11 +40,13 @@
 
         <!-- Content inside the scrollable container (images) -->
         <div class="content">
-            <img class = "images" src="{% static 'images/signup-screenshot.png' %}" alt="Step 1">
+
+            <img class = "images" src="{% static 'images/login_screenshot.png'%}" alt="Step 1">
+            <h2 class="caption">Quick and simple login—get started in seconds</h2>
+
+            <img class = "images" src="{% static 'images/signup_screenshot.png' %}" alt="Step 2">
             <h2 class="caption"> Create your account in a flash with Thunder Bay's simple sign-up process. </h2>
 
-            <img class = "images" src="{% static 'images/login-screenshot.png'%}" alt="Step 2">
-            <h2 class="caption">Quick and simple login—get started in seconds</h2>
 
             <img class = "images" src="{% static 'images/dashboard_screenshot.png'%}" alt="Step 3">
             <h2 class="caption"> Your Dashboard: All the Important Stats, Right Where You Need Them</h2>
@@ -52,9 +63,9 @@
 
     </div>
 
-            <!-- Secondary fixed logo at the bottom -->
+            <!-- UH fixed logo at the bottom -->
             <div class="secondaryLogo">
-                <img src="{% static 'images/uofh2.png' %}" alt="Secondary Logo">
+                <img src="{% static 'images/uofh.png' %}" alt="Secondary Logo">
             </div>
 
 

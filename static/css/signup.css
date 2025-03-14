@@ -1,8 +1,3 @@
-/*
-  Sign-Up Sheet
-*/
-
-
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400&display=swap');
 
@@ -29,12 +24,13 @@
     scroll-behavior: smooth;
     font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
+
 body {
     overflow: hidden;
-    background-color: rgba(65, 26, 89, 0.81);
+    background-color: rgba(200, 16, 46, 0.5);
     background-image: url("../images/bg.jpg");
     background-size: cover;
-    background-position: left center; /* Ensures image stays on the left */
+    background-position: center; /* Ensures image stays on the left */
     background-repeat: no-repeat;
 
 }
@@ -49,9 +45,9 @@ body {
     height: 100vh;
     width: 100%;
     overflow: hidden;
-    background-color: rgba(65, 26, 89,0.5); /* Adjusted to be semi-transparent */
+    background-color: rgba(136, 139, 141,0.5); /* Adjusted to be semi-transparent */
     background-blend-mode: overlay; /* Blends with the body's background */
-     z-index: 2;
+    z-index: 2;
 }
 
 
@@ -70,8 +66,10 @@ body {
     grid-column: 1 / -1;
     letter-spacing: .06em;
     margin-bottom: 30px;
-    font-size: 40px;
+    font-size: 70px;
     color: white;
+    font-family:'League Gothic',sans-serif;
+    text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 }
 input {
     display: block;
@@ -83,10 +81,19 @@ input {
     background-color: rgba(255, 255, 255, 0);
     transition: all .5s ease-in;
     color: var(--opac-white);
+    font-size: 16px;
 }
+
+input:focus, input:valid {
+    background-color: rgba(255, 255, 255, 0.8);
+    color:black;
+}
+
+
 input::placeholder{
     content: none;
 }
+
 span {
     letter-spacing: .05em;
     text-transform: uppercase;
@@ -95,7 +102,7 @@ span {
 }
 [type="submit"]{
     border: 0;
-    background-color: var(--dusky-green);
+    background-color: rgba(200, 16, 46);
     color: white;
     padding: 10px 50px;
     letter-spacing: .05em;
@@ -107,11 +114,16 @@ span {
 }
 
 .submit-btn:hover {
-    background-color: rgba(169, 62, 228, 0.81);
+    background-color: rgba(200, 16, 46);
     transform: scale(1.05);
     transition: transform 0.3s ease-in-out;
     cursor: pointer;
 }
+
+.submit-btn:active {
+    transform: scale(0.95);
+}
+
 
 
 form {
@@ -121,21 +133,25 @@ form {
 }
 .btm-text {
     margin-top: 15px;
-    font-size: 14px;
+    font-size: 15px;
 }
-.btm-text-highlighted {
-    color: rgba(169, 62, 228, 0.81);
-    font-weight: 700;
-    font-size:14px;
+.btm-text-highlighted{
+    color: rgb(227, 7, 43);
+    font-weight: 500;
+    font-size:18px;
     margin-left: 5px;
+    text-decoration: none;
 }
 
-.btm-text-highlighted :hover{
-    transform: scale(1.2)
+.btm-text-highlighted:hover {
+    text-decoration: underline;
 }
+
 .input-container {
     position: relative;
+    text-shadow: 0 0 2px rgba(0, 0, 0);
 }
+
 span:not(.btm-text-highlighted) {
     position: absolute;
     left: 0;
@@ -156,7 +172,6 @@ input:valid ~ span{
     padding: 0 6px;
     color: white;
     background-color: var(--dusky-green);
-    color: white;
     border-radius: 2px;
 }
 input:focus,
@@ -221,18 +236,21 @@ input:valid {
 .image-container{
     display: grid;
     place-items: center;
-    background-color: var(--dusky-green);
     color: white;
+    background-color: rgb(84, 88, 90,0.4);
 }
 .image-container > img {
     width: calc(90%);
 }
+
+
 .company,
 .image-container > .quote {
         width: 100%;
         height: 100%;
         text-align: center;
-        font-size: 19px;
+        font-size: 24px;
+        text-shadow: 0 0 1px rgba(0, 0, 0);
 }
 .company {
     font-size: 34px;
@@ -249,8 +267,37 @@ input:valid {
     width:100%;
     object-fit: contain;
     object-position: left;
-    top:0px;
+    top:0;
+}
 
+.back-btn{
+    position: absolute;
+    z-index: 999;
+    animation: 1.3s 1 forwards cubic-bezier(.36,-0.01,.5,1.38) slideRight;
+    left:0;
+    bottom:0;
+    margin: 1%;
+
+}
+
+#back-icon{
+    font-size: 87px;
+    text-shadow: 0 0 2px rgba(255, 255, 255, 0.5);
+    color: rgba(200, 16, 46);
+    color:rgba(255,255,255);
+    z-index: 999;
+    transition: 0.5s ease-in-out;
+}
+
+#back-icon:hover{
+    transform: scale(1.15);
+    cursor: pointer;
+    color: rgba(200, 16, 46);
+
+ }
+
+#back-icon:active {
+    transform: translate(-10%, -10%) scale(0.98);
 }
 
 
@@ -290,47 +337,10 @@ input:valid {
 	}
 }
 
-/* .card-container {
-    display: none;
-} */
 
 
-/*
-    GREETING SECTION (SHOWS AFTER SIGNING UP)
-*/
-.outro-overlay {
-    display: flex;
-    background-color: var(--dusky-green);
-    height: 100vh;
-    width: 100%;
-    z-index: 0;
-    overflow: hidden;
-    align-items: center;
-    justify-content: space-evenly;
-    color: white;
-    position: relative;
-}
-.outro-overlay > #signedUp-illustration {
-    height: 90%;
-    z-index: 2;
-}
-.outro-overlay > .shape {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 1;
-    animation: 1.3s 1 forwards cubic-bezier(.36,-0.01,.5,1.38) slideRight;
-    width: 150%;
-}
-.outro-overlay > .outro-greeting {
-    z-index: 3;
-    font-weight: 700;
-    letter-spacing: .02em;
-    word-spacing: .1em;
-}
-.disabled {
-    display: none ;
-}
+
+
 
 
 /*
@@ -352,24 +362,7 @@ input:valid {
 }
 
 
-/*
-    AUTHOR LINK
-*/
-.author-link{
-    position: fixed;
-    bottom: 0;
-    padding-bottom: 10px;
-    z-index: 5;
-}
-.author-link,
-a {
-    text-decoration: none;
-    color: var(--light-grey);
-    transition: .3s ease-out;
-}
-.author-link > a:hover {
-    color: var(--darky);
-}
+
 
 
 

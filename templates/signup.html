@@ -11,17 +11,30 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <title>Sign up | Thunder Bay</title>
+    <link  rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <link rel="shortcut icon" href="" type="image/x-icon">
+    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
     <link rel="stylesheet" href="{% static 'css/signup.css' %}">
 </head>
+
+
+
+
+
 <body>
     <main class="card-container slideUp-animation">
+
+    <!-- Left-Side Content -->
         <div class="image-container">
-            <img src = "{% static 'images/logo1.png' %}" class="logo" alt="logo">
-            <img src="" class="illustration" alt="">
+            <img src = "{% static 'images/logo.png' %}" class="logo" alt="logo">
+
+            <!-- <img src="{% static 'images/bg7.jpg' %}" class="illustration" alt=""> -->
+
             <p class="quote">Lightning-Fast User Management.</p>
-            <a href="#btm" class="mobile-btm-nav">
-                <img src="./assets/images/dbl-arrow.png" alt="">
+
+            <a href = "{% url 'login' %}" class="back-btn">
+               <i id = "back-icon" class="fa-solid fa-left-long"></i>
             </a>
         </div>
 
@@ -29,9 +42,11 @@
 
 
 
-
+    <!-- Right-Side Content -->
         <form action="{% url 'signup' %}" method="POST">
     {% csrf_token %}
+
+
             <div class="form-container slideRight-animation">
 
                                 <!-- Display Django messages here -->
@@ -48,6 +63,7 @@
                     Get started
                 </h1>
 
+                                    <!-- Form Inputs -->
                 <div class="input-container">
                     <label for="f-name"></label>
                     <input type="text" name="f-name" id="f-name" required>
@@ -76,8 +92,6 @@
                     <div class="error"></div>
                 </div>
 
-
-
                 <div class="input-container">
                     <label for="user-password"></label>
                     <input type="password" name="user-password" id="user-password" class="user-password" required>
@@ -94,10 +108,11 @@
                     <div class="error"></div>
                 </div>
 
+                                <!-- Submit Button -->
                 <div id="btm">
                     <button type="submit" class="submit-btn">Create Account</button>
                     <p class="btm-text">
-                        Already have an account..? <a class="btm-text-highlighted" href="{% url 'login' %}">    Log in</a>
+                        Already have an account..? <a class="btm-text-highlighted" href="{% url 'login' %}">    Login</a>
                     </p>
                 </div>
             </div>

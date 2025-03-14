@@ -6,9 +6,13 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link  rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <title>Thunder Bay | Login</title>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
    </head>
 
 
@@ -19,17 +23,17 @@
 
 
 
-
+    <!-- Login Form Container -->
   <div class="container">
-
+        <!-- Logo -->
     <div class = logoContainer>
-      <img src = "{% static 'images/logo1.png' %}" class="logo" alt="logo">
+        <a href="{% url 'landing_page' %}"> <img src = "{% static 'images/logo.png' %}" class="logo" alt="logo"> </a>
   </div>
 
     <div class="login form">
       <header>Login</header>
 
-
+        <!-- Login Form -->
       <form method = "POST" >
           {% csrf_token %}
         <i id="emailicon" class="fa-solid fa-envelope"></i>
@@ -61,8 +65,10 @@
     </div>
   </div>
 
+
+    <!-- UofH Logo -->
 <div class="uofhContainer">
-    <img src = "{% static 'images/uofh.png' %}" class="uofh" alt="UH logo">
+    <img src = "{% static 'images/uofh2.png' %}" class="uofh" alt="UH logo">
 </div>
 
 

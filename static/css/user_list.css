@@ -10,7 +10,7 @@
 }
 
 .btn-add-user {
-    background: #0d6efd;
+    background: rgb(136,139,141);
     color: white;
     padding: 10px 15px;
     text-decoration: none;
@@ -20,14 +20,14 @@
 }
 
 .btn-add-user:hover {
-    background: #0b5ed7;
+    background: rgb(84,88,90);
 }
 
 /* User Table */
 .user-table {
     width: 100%;
     border-collapse: collapse;
-    background: #1e1e1e;
+    background: rgb(136,139,141);
     color: white;
     border-radius: 5px;
     overflow: hidden;
@@ -39,11 +39,11 @@
 }
 
 .user-table th {
-    background: #292929;
+    background: rgb(200, 16, 46);
 }
 
 .user-table tr:nth-child(even) {
-    background: #252525;
+    background: rgb(84,88,90);
 }
 
 .user-table tr:hover {
@@ -63,7 +63,7 @@
 }
 
 .btn-edit {
-    background: #ffc107;
+    background: rgb(246,190,0);
     color: black;
     padding: 5px 10px;
     border-radius: 5px;
@@ -72,11 +72,11 @@
 }
 
 .btn-edit:hover {
-    background: #e0a800;
+    background: rgb(215,155,0);
 }
 
 .btn-status {
-    background: #198754;
+    background: rgb(0,179,136);
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
@@ -85,11 +85,11 @@
 }
 
 .btn-status:hover {
-    background: #157347;
+    background: rgb(0,134,108);
 }
 
 .btn-delete {
-    background: #dc3545;
+    background: rgb(200,16,46);
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
@@ -98,7 +98,7 @@
 }
 
 .btn-delete:hover {
-    background: #c82333;
+    background: rgb(150,12,34);
 }
 
 /* Disabled Button */
@@ -112,15 +112,15 @@
 
 #homeicon{
     font-size: 18px;
-    color: grey;
+    color: rgb(255,255,255);
     transform: translate(6%,280%);
     z-index:1002
 }
 
 #usersicon{
     font-size: 18px;
-  color: rgba(120, 48, 163, 0.81);
-    transform: translate(6%,500%);
+  color: rgba(136,139,141);
+    transform: translate(6%,520%);
     z-index:1002;
 }
 

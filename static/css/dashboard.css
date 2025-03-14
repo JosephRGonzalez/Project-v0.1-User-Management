@@ -3,12 +3,14 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: "Roboto", Arial, sans-serif;
+    font-family: Source Sans Pro,sans-serif;
+    overflow: hidden;
+
 }
 
 body {
-    background: linear-gradient(135deg, #240d33, rgba(0, 0, 0, 0.81));
-    color: white;
+    background: rgb(255,255,255);
+    color: black;
     overflow-x: hidden;
     z-index: 1;
 
@@ -16,13 +18,15 @@ body {
 
 h1{
     font-weight: lighter;
-    font-size: 40px;
+    font-size:60px;
+    font-family: "League Gothic",sans-serif;
 }
 
 h2{
     font-weight: lighter;
-    font-size: 28px;
+    font-size: 30px;
     margin-top:50px;
+    font-family: Source Sans Pro,sans-serif;
 }
 
 .logoContainer{
@@ -32,18 +36,20 @@ h2{
     max-height:100px;
     height:100%;
     top: 0;
-    margin:0;
+    padding-top:10%;
+    background: rgb(200,16,46);
+
 }
 
 .logo{
     position: relative;
-    max-width: 100%;
+    max-width: 95%;
 }
 
 
 /* Navbar */
 .navbar {
-    background-color: rgba(15, 14, 14, 0);
+
     padding: 15px 30px;
     position: fixed;
     top: 0;
@@ -55,6 +61,7 @@ h2{
     justify-content: space-between;
     z-index: 1000;
     flex-direction: row; /* Aligns elements in a vertical stack */
+    font-family: Source Sans Pro,sans-serif;
 
 }
 
@@ -74,6 +81,7 @@ h2{
     align-items: center;
     margin-left: 50px;
     transition: transform 0.3s ease-in-out;
+    padding-right:2%;
 }
 
 .navbar_user:hover{
@@ -84,6 +92,7 @@ h2{
 .navbar_username{
     padding: 15px 0 10px 15px;
     font-weight: lighter;
+
 }
 
 .profile_picture{
@@ -95,6 +104,7 @@ h2{
     font-size: 20px;
     margin-left:50px;
     transition: transform 0.3s ease-in-out;
+    color:rgb(200,16,46);
 }
 #settings_icon:hover{
     transform: scale(1.2) ;
@@ -104,6 +114,7 @@ h2{
 #notifications_icon{
     font-size: 20px;
     transition: transform 0.3s ease-in-out;
+    color:rgb(200,16,46);
 }
 
 #notifications_icon:hover{
@@ -112,20 +123,6 @@ h2{
 }
 
 
-.logout-btn {
-    background-color: rgba(217, 83, 79, 0);
-    color: white;
-    padding: 10px 20px;
-    text-decoration: none;
-    border-radius: 5px;
-    transition: background 0.3s ease;
-    z-index:1003;
-}
-
-.logout-btn:hover {
-    background-color: #c9302c;
-    z-index:1003;
-}
 
 /* Main Content */
 .main-content {
@@ -133,6 +130,7 @@ h2{
     margin-top: 50px; /* Ensure navbar spacing */
     padding: 30px;
     min-height: 100vh;
+    font-family: Source Sans Pro,sans-serif;
 }
 
 /* Cards */
@@ -149,14 +147,15 @@ h2{
     padding: 20px;
     border-radius: 10px;
     text-align: center;
-    background: linear-gradient(135deg, #252525, #1e1e1e);
+    background: linear-gradient(135deg, rgb(255,255,255), rgb(136,139,141));
     box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s ease, background 0.3s ease;
 }
 
 .card:hover {
     transform: scale(1.05);
-    background: linear-gradient(135deg, #292929, #1c1c1c);
+    background: linear-gradient(20deg, rgb(255,255,255), rgb(136,139,141));
+
 }
 
 .card-title {
@@ -165,15 +164,15 @@ h2{
 }
 
 .admin-card {
-    border-bottom: 5px solid #0d6efd;
+    border-bottom: 5px solid rgb(200,16,46,0.81);
 }
 
 .moderator-card {
-    border-bottom: 5px solid rgba(186, 7, 7, 0.81);
+    border-bottom: 5px solid rgba(0, 179, 136, 0.81);
 }
 
 .customer-card {
-    border-bottom: 5px solid #198754;
+    border-bottom: 5px solid rgb(246,190,0,0.81);
 }
 
 /* Responsive Design */
@@ -203,25 +202,19 @@ h2{
     position: fixed;
     top: 0;
     left: 0;
-    background: linear-gradient(180deg, #1e1e1e, #0f0e0e);
+    background: rgb(150,12,34);
     padding-top: 120px; /* Adjusted to align with navbar */
     overflow-y: auto;
     overflow-x: hidden;
     box-shadow: 2px 0px 5px rgba(0, 0, 0, 0.2);
     z-index: 1001;
     justify-content: space-between;
-
     display: flex; /* Makes sidebar a flex container */
     flex-direction: column; /* Aligns elements in a vertical stack */
+    font-family: Source Sans Pro,sans-serif;
 }
 
-.sidebar-title {
-    text-align: center;
-    font-size: 22px;
-    font-weight: bold;
-    color: white;
-    margin-bottom: 20px;
-}
+
 
 
 .sidebar-content {
@@ -232,7 +225,7 @@ h2{
 
 .sidebar a {
     display: block;
-    color: white;
+    color: rgba(255, 255, 255);
     padding: 15px 15px 20px 60px;
     text-decoration: none;
     font-size: 18px;
@@ -242,8 +235,8 @@ h2{
 }
 
 .sidebar-content a:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-    color: rgba(169, 62, 228, 0.81);
+    background-color: rgb(100,8,23,0.5);
+    color: rgb(255,249,217);
 }
 
 /* Responsive Sidebar */
@@ -262,21 +255,21 @@ h2{
 
 #homeicon{
     font-size: 18px;
-    color: rgba(120, 48, 163, 0.81);
+    color: rgb(136, 139, 141);
     transform: translate(6%,280%);
-    z-index:1002
+    z-index:1002;
 }
 
 #usersicon{
     font-size: 18px;
-    color: grey;
-    transform: translate(6%,500%);
-    z-index:1002
+    color: rgb(255, 255, 255);
+    transform: translate(6%,520%);
+    z-index:1002;
 }
 
 #logoutIcon{
     font-size: 18px;
-    color: grey;
+    color: rgb(255,255,255);
     z-index:1002;
     transform: translate(105%,-215%);
 }
@@ -295,13 +288,25 @@ h2{
     padding: 10px 15px;
     text-decoration: none;
     font-size: 18px;
-    background: red;
     border-radius: 5px;
     transition: background 0.3s ease;
     z-index:1003;
 }
 
 
+.logout-btn {
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+    z-index:1003;
+}
+
+.logout-btn:hover {
+    background-color: rgb(200,16,46);
+    z-index:1003;
+    color: rgb(255,249,217);
+}
 
 
 /* Animations */

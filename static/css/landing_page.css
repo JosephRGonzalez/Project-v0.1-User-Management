@@ -36,7 +36,7 @@ html, body {
 /* Lightning Flash Animation */
 .flashit {
     animation: flash ease-out 7s infinite;
-    animation-delay: 2s;
+
 }
 
 @keyframes flash {
@@ -128,8 +128,8 @@ body.splat-toggle .splat {
     top: 120px; /* Adjust this to the height of the first logo */
     left: 0;
     width: 400px;
-    height: calc(100vh - 200px); /* Adjust to take the space of both logos */
-    background-color: rgba(41, 41, 41, 0.6);
+    height: calc(100vh - 220px); /* Adjust to take the space of both logos */
+    background-color: rgba(136, 139, 141, 0.6);
     overflow-y: auto;
     z-index: 500;
     color: white;
@@ -144,14 +144,18 @@ body.splat-toggle .splat {
     left: 0;
     width: 400px;
     z-index: 1000; /* Ensure it's above the scrollable content */
-    background-color: rgb(41, 41, 41,0.6);
+    background-color: rgb(136, 139, 141, 0.6);
     height: 120px; /* Set the height for the first logo */
+    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .firstLogo img {
-    max-width: 100%;
+    max-width: 95%;
     height: auto;
     filter: brightness(1.2) contrast(1.5);
+    padding-top:7%;
+    padding-left:3%;
 }
 
 /* Content area inside the scrollable container */
@@ -160,7 +164,10 @@ body.splat-toggle .splat {
     flex-direction: column;
     align-items: center;
     gap: 20px;
+
 }
+
+
 
 /* Each image styling (optional) */
 .images {
@@ -175,13 +182,13 @@ body.splat-toggle .splat {
     max-width: 90%;
     height: auto;
     border-radius: 8px;
-    background-color: rgba(0, 0, 0, 0.29);
+    background-color: rgba(255, 255, 255, 0.5);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Captions for images */
 .caption {
-    font-family: 'Lato', sans-serif;
+    font-family: 'Source Sans Pro', sans-serif;
     font-size: 20px;
     font-weight: 600;
     color: #f1f1f1;
@@ -190,7 +197,7 @@ body.splat-toggle .splat {
     margin: 10px 0;
     line-height: 1.4;
     text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(200, 16, 46, 0.7);
     border-radius: 5px;
     max-width: 80%;
     margin-left: auto;
@@ -200,7 +207,7 @@ body.splat-toggle .splat {
 }
 
 .caption:hover {
-    background-color: rgba(0, 0, 0, 0.85);
+    background-color: rgba(200, 16, 46, 0.85);
 }
 
 /* Secondary logo at the bottom */
@@ -209,17 +216,57 @@ body.splat-toggle .splat {
     bottom: 0;
     left: 0;
     z-index: 2000;
-    background-color: rgba(41, 41, 41, 0.6);
-    height: 80px; /* Set the height for the secondary logo */
+    background-color: rgba(136, 139, 141, 0.6);
+    height: 100px; /* Set the height for the secondary logo */
     width: 400px;
+    border-top: 2px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .secondaryLogo img {
     width: 350px;
     height: auto;
     margin-left: 7%;
-    margin-top:7%;
-    filter: brightness(1.2);
+    margin-top:2%;
+    filter: brightness(1.2) drop-shadow(8px 8px 16px rgba(0, 0, 0, 0.5));
+
+}
+
+/* Enter Button */
+
+.enterButton {
+    position: absolute;
+    bottom: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(135deg, rgba(200, 16, 46, 0.634), rgba(150, 12, 34, 0.6));
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    color: white;
+    padding: 20px 100px;
+    font-size: 72px;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 12px;
+    backdrop-filter: blur(8px);
+    box-shadow: 0 8px 24px rgba(200, 16, 46, 0.4);
+    transition: all 0.3s ease-in-out;
+    z-index: 100;
+    font-family: "League Gothic", sans-serif;
+    text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+}
+
+.enterButton:hover {
+    background: linear-gradient(135deg, rgba(200, 16, 46, 0.9), rgba(150, 12, 34, 0.8));
+    box-shadow: 0 12px 30px rgba(200, 16, 46, 0.9);
+    transform: translate(-50%, -50%) scale(1.08);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+.enterButton:active {
+    transform: translate(-50%, -50%) scale(0.98);
+    box-shadow: 0 4px 15px rgba(200, 16, 46, 0.5);
 }
 
 
@@ -235,35 +282,5 @@ body.splat-toggle .splat {
 }
 
 
-.enterButton {
-    position: absolute;
-    bottom: 5%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: linear-gradient(135deg, rgba(83, 27, 113, 0.634), rgba(26, 25, 25, 0.6));
-    border: 2px solid rgba(255, 255, 255, 0.3);
-    color: white;
-    padding: 20px 60px;
-    font-size: 54px;
-    font-weight: 600;
-    text-align: center;
-    text-decoration: none;
-    cursor: pointer;
-    border-radius: 12px;
-    backdrop-filter: blur(8px);
-    box-shadow: 0 8px 24px rgba(83, 27, 113, 0.4);
-    transition: all 0.3s ease-in-out;
-    z-index: 100;
-}
 
-.enterButton:hover {
-    background: linear-gradient(135deg, rgba(119, 30, 179, 0.9), rgba(26, 25, 25, 0.8));
-    box-shadow: 0 12px 30px rgba(119, 30, 179, 0.5);
-    transform: translate(-50%, -50%) scale(1.08);
-    border-color: rgba(255, 255, 255, 0.5);
-}
 
-.enterButton:active {
-    transform: translate(-50%, -50%) scale(0.98);
-    box-shadow: 0 4px 15px rgba(119, 30, 179, 0.5);
-}
