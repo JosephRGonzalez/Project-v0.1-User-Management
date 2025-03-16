@@ -192,3 +192,10 @@ def user_toggle_status(request, user_id):
     user.is_active = not user.is_active  # Toggle the is_active status
     user.save()
     return redirect('user_list')
+
+@login_required
+def approval_requests_view(request):
+    # Your logic to handle approval requests goes here.
+    # For now, let's assume it renders a template for approval requests.
+    return render(request, 'approval_requests.html')
+
