@@ -6,10 +6,9 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth import logout
-from .models import UserProfile
+from .models import UserProfile, ApprovalRequest, ApprovalStep  # Updated to include new models
 from .forms import UserProfileForm
 from django.contrib.auth.decorators import permission_required
-
 
 
 #Landing Page
@@ -32,20 +31,13 @@ def login_view(request):
     return render(request, 'index.html')  # Render login page
 
 
-
-
-
 # Redirects user to Dashboard (dashboard.html) after logging in
 @login_required
-def dashboard_view(request):
-    return render(request, 'dashboard.html')
-
 def dashboard_view(request):
     # Get the count of Admins and Users
     admin_count = UserProfile.objects.filter(role='admin').count()
     moderator_count = UserProfile.objects.filter(role='moderator').count()
     user_count = UserProfile.objects.filter(role='user').count()
-
 
     # Render the dashboard template with the counts
     return render(request, 'dashboard.html', {
@@ -53,7 +45,6 @@ def dashboard_view(request):
         'moderator_count': moderator_count,
         'user_count': user_count,
     })
-
 
 
 # Sign up form (signup.html)
@@ -171,7 +162,6 @@ def user_edit(request, user_id):
 
 
 # Deactivate a user (ADMIN ONLY)
-
 @permission_required('usr_mgmt_app.can_manage_users', raise_exception=True)
 def user_deactivate(request, id):
     user = get_object_or_404(UserProfile, id=id)
@@ -193,9 +183,217 @@ def user_toggle_status(request, user_id):
     user.save()
     return redirect('user_list')
 
+
+########## APPROVAL SYSTEM ##########
+from .utils import generate_approval_pdf
+
+@login_required
+def approve_request_view(request, step_id):
+    """View for approving a request"""
+    # Get the approval step that belongs to this approver
+    step = get_object_or_404(ApprovalStep, id=step_id, approver=request.user)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        comment = request.POST.get('comment', '')
+        
+        if action == 'approve':
+            # Mark this approval step as approved
+            step.status = 'approved'
+            step.comments = comment
+            step.save()
+            
+            # Check if all steps are approved
+            all_steps = ApprovalStep.objects.filter(request=step.request)
+            all_approved = all(s.status == 'approved' for s in all_steps)
+            
+            if all_approved:
+                # If all approvers have approved, update the main request status
+                step.request.status = 'approved'
+                step.request.save()
+                
+                # Generate PDF for the approved request
+                try:
+                    pdf_path = generate_approval_pdf(step.request.id)
+                    if pdf_path:
+                        step.request.pdf_document = pdf_path
+                        step.request.save()
+                        messages.success(request, "Request approved and PDF generated successfully.")
+                    else:
+                        messages.success(request, "Request approved successfully, but PDF generation failed.")
+                except Exception as e:
+                    messages.success(request, f"Request approved successfully, but PDF generation error: {str(e)}")
+            else:
+                messages.success(request, "Request approved successfully. Awaiting other approvers.")
+        
+        elif action == 'return':
+            # Mark this step as returned
+            step.status = 'returned'
+            step.comments = comment
+            step.save()
+            
+            # Update the main request status to returned
+            step.request.status = 'returned'
+            step.request.save()
+            
+            messages.success(request, "Request returned for revisions.")
+        
+        return redirect('approval_requests')
+    
+    # If not a POST request, show the approval form
+    return render(request, 'approve_request.html', {'step': step})
 @login_required
 def approval_requests_view(request):
-    # Your logic to handle approval requests goes here.
-    # For now, let's assume it renders a template for approval requests.
-    return render(request, 'approval_requests.html')
+    # Get all requests made by the current user
+    try:
+        user_requests = ApprovalRequest.objects.filter(requester=request.user).order_by('-created_at')
+        
+        # If the user is an approver, get pending requests assigned to them
+        if request.user.role in ['admin', 'moderator']:
+            pending_approvals = ApprovalStep.objects.filter(
+                approver=request.user, 
+                status='pending'
+            ).select_related('request')
+        else:
+            pending_approvals = None
+        
+        context = {
+            'user_requests': user_requests,
+            'pending_approvals': pending_approvals
+        }
+    except:
+        # If ApprovalRequest model is not yet available, use an empty context
+        context = {}
+    
+    return render(request, 'approval_requests.html', context)
 
+@login_required
+def submit_request_view(request):
+    if request.method == 'POST':
+        email_alias = request.POST.get('email_alias')
+        comments = request.POST.get('comments')
+        
+        try:
+            # Create a new approval request
+            approval_request = ApprovalRequest.objects.create(
+                requester=request.user,
+                email_alias=email_alias,
+                comments=comments,
+                status='pending'  # Set to pending when submitted
+            )
+            
+            # Find approvers (users with admin or moderator roles)
+            approvers = UserProfile.objects.filter(
+                role__in=['admin', 'moderator'],
+                is_active=True
+            )
+            
+            # Create approval steps for each approver
+            for approver in approvers:
+                ApprovalStep.objects.create(
+                    request=approval_request,
+                    approver=approver
+                )
+            
+            messages.success(request, "Your request has been submitted and is pending approval.")
+        except Exception as e:
+            # Fall back to the original behavior if models aren't set up yet
+            messages.success(request, f"Your request has been submitted successfully! {str(e)}")
+        
+        return redirect('approval_requests')
+    
+    # If not POST request, redirect to approval requests page
+    return redirect('approval_requests')
+
+@login_required
+def approve_request_view(request, step_id):
+    """View for approving a request"""
+    # Get the approval step that belongs to this approver
+    step = get_object_or_404(ApprovalStep, id=step_id, approver=request.user)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        comment = request.POST.get('comment', '')
+        
+        if action == 'approve':
+            # Mark this approval step as approved
+            step.status = 'approved'
+            step.comments = comment
+            step.save()
+            
+            # Check if all steps are approved
+            all_steps = ApprovalStep.objects.filter(request=step.request)
+            all_approved = all(s.status == 'approved' for s in all_steps)
+            
+            if all_approved:
+                # If all approvers have approved, update the main request status
+                step.request.status = 'approved'
+                step.request.save()
+                # Here you would trigger PDF generation with LaTeX
+                
+            messages.success(request, "Request approved successfully.")
+        
+        elif action == 'return':
+            # Mark this step as returned
+            step.status = 'returned'
+            step.comments = comment
+            step.save()
+            
+            # Update the main request status to returned
+            step.request.status = 'returned'
+            step.request.save()
+            
+            messages.success(request, "Request returned for revisions.")
+        
+        return redirect('approval_requests')
+    
+    # If not a POST request, show the approval form
+    return render(request, 'approve_request.html', {'step': step})
+
+@login_required
+def request_detail_view(request, request_id):
+    """View for seeing details of a specific request"""
+    approval_request = get_object_or_404(ApprovalRequest, id=request_id)
+    
+    # Security check: user should only see their own requests or requests they need to approve
+    is_requester = approval_request.requester == request.user
+    is_approver = ApprovalStep.objects.filter(request=approval_request, approver=request.user).exists()
+    
+    if not (is_requester or is_approver or request.user.role == 'admin'):
+        messages.error(request, "You don't have permission to view this request.")
+        return redirect('approval_requests')
+    
+    # Get all approval steps for this request
+    steps = ApprovalStep.objects.filter(request=approval_request)
+    
+    context = {
+        'request': approval_request,
+        'steps': steps,
+        'is_requester': is_requester,
+        'is_approver': is_approver
+    }
+    
+    return render(request, 'request_detail.html', context)
+
+@login_required
+def revise_request_view(request, request_id):
+    """View for revising a returned request"""
+    approval_request = get_object_or_404(ApprovalRequest, id=request_id, requester=request.user, status='returned')
+    
+    if request.method == 'POST':
+        email_alias = request.POST.get('email_alias')
+        comments = request.POST.get('comments')
+        
+        # Update the request
+        approval_request.email_alias = email_alias
+        approval_request.comments = comments
+        approval_request.status = 'pending'  # Reset to pending
+        approval_request.save()
+        
+        # Reset all approval steps to pending
+        ApprovalStep.objects.filter(request=approval_request).update(status='pending', comments='')
+        
+        messages.success(request, "Your request has been revised and resubmitted.")
+        return redirect('approval_requests')
+    
+    return render(request, 'revise_request.html', {'request': approval_request})

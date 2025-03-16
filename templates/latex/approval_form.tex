@@ -1,0 +1,66 @@
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{geometry}
+\usepackage{datetime}
+\usepackage{fancyhdr}
+
+\geometry{a4paper, margin=1in}
+\pagestyle{fancy}
+
+\begin{document}
+
+\begin{center}
+    \Large\textbf{Thunder Bay - Approval Request Form}
+    
+    \vspace{0.5cm}
+    \normalsize
+    \today
+\end{center}
+
+\vspace{1cm}
+
+\noindent\textbf{Request ID:} {{request_id}} \\
+\noindent\textbf{Requested by:} {{requester_name}} \\
+\noindent\textbf{Email Alias:} {{email_alias}} \\
+\noindent\textbf{Submission Date:} {{submission_date}} \\
+\noindent\textbf{Status:} {{status}} \\
+
+\vspace{0.5cm}
+
+\noindent\textbf{Comments:} \\
+{{comments}}
+
+\vspace{1cm}
+
+\noindent\textbf{Approvals:} \\
+
+\begin{tabular}{|p{4cm}|p{4cm}|p{4cm}|}
+    \hline
+    \textbf{Approver} & \textbf{Status} & \textbf{Date} \\
+    \hline
+    {{approvals_table}}
+    \hline
+\end{tabular}
+
+\vspace{1.5cm}
+
+\noindent\textbf{Signatures:}
+
+\vspace{1cm}
+
+\noindent\begin{tabular}{p{7cm}p{7cm}}
+\includegraphics[width=5cm]{{signature_path}} & \\
+\cline{1-1}
+Requester Signature & \\
+\end{tabular}
+
+\vspace{1cm}
+
+\noindent\begin{tabular}{p{7cm}p{7cm}}
+\includegraphics[width=5cm]{{approver_signature_path}} & \\
+\cline{1-1}
+Final Approver Signature & \\
+\end{tabular}
+
+\end{document}
