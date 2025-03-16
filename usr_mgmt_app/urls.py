@@ -6,6 +6,7 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),  # Login page
     path('signup/', views.signup_view, name='signup'),  # Sign up Page
     path('dashboard/', views.dashboard_view, name='dashboard'),  # Dashboard page
+    path('approval-requests/', views.approval_requests_view, name='approval_requests'),  # This should match the name you're using
     path('logout/', views.logout_view, name='logout'),
     path('users/', views.user_list, name='user_list'),  # List of users
     path('user/create/', views.user_create, name='user_create'),  # Add new user
