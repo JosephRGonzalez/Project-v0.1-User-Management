@@ -1,107 +1,44 @@
-/* Approval System CSS */
-
-/* Main Content */
 .main-content {
-    margin-left: 350px;
-    margin-top: 50px;
-    padding: 30px;
-    min-height: 100vh;
-    font-family: Source Sans Pro, sans-serif;
+    max-width: 600px;
+    margin: 50px auto;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border: 2px solid #0077B6;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 h1 {
-    font-weight: lighter;
-    font-size: 60px;
-    font-family: "League Gothic", sans-serif;
+    text-align: center;
+    color: #0077B6;
     margin-bottom: 20px;
 }
 
-h2 {
-    font-weight: lighter;
-    font-size: 30px;
-    margin-top: 30px;
-    font-family: Source Sans Pro, sans-serif;
-}
-
-/* Approval Cards */
-.approval-card-container {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 50px;
-}
-
-.approval-card {
-    width: 320px;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    background: linear-gradient(135deg, rgb(255, 255, 255), rgb(136, 139, 141));
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.3);
-    transition: transform 0.3s ease, background 0.3s ease;
-}
-
-.approval-card:hover {
-    transform: scale(1.05);
-    background: linear-gradient(20deg, rgb(255, 255, 255), rgb(136, 139, 141));
-}
-
-.approval-card-title {
-    font-size: 20px;
-    margin-bottom: 10px;
-}
-
-.pending-card {
-    border-bottom: 5px solid rgb(255, 165, 0); /* Orange for Pending */
-}
-
-.approved-card {
-    border-bottom: 5px solid rgba(0, 179, 136, 0.81); /* Green for Approved */
-}
-
-.returned-card {
-    border-bottom: 5px solid rgb(200, 16, 46, 0.81); /* Red for Returned */
-}
-
-/* Form Styles */
-.approval-form {
-    background: #f7f7f7;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 30px;
-    width: 100%;
-    max-width: 600px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    margin: 30px auto;
-}
-
-.approval-form label {
-    display: block;
-    margin: 10px 0 5px;
-    font-weight: bold;
-}
-
-.approval-form input,
-.approval-form select,
-.approval-form textarea {
+input[type="text"],
+textarea {
     width: 100%;
     padding: 10px;
-    border: 1px solid #ccc;
+    margin: 5px 0;
+    border: 1px solid #ddd;
     border-radius: 5px;
-    margin-bottom: 15px;
 }
 
-.approval-form button {
-    background-color: rgb(200, 16, 46);
+.submit-btn {
+    background-color: #0077B6;
     color: white;
-    padding: 10px 20px;
     border: none;
-    border-radius: 5px;
+    padding: 10px 20px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    border-radius: 5px;
+    width: 100%;
+    margin-top: 10px;
 }
 
-.approval-form button:hover {
-    background-color: rgb(150, 12, 34);
+.request-status {
+    margin-top: 20px;
+}
+
+.status {
+    font-weight: bold;
+    color: #0077B6;
 }
