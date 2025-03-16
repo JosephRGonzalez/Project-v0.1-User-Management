@@ -1,0 +1,78 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thunder Bay | Approval System</title>
+    <link rel="stylesheet" href="{% static 'css/approval.css' %}">
+    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <i id="notifications_icon" class="fa-regular fa-bell"></i>
+            <i id="settings_icon" class="fa-solid fa-gear"></i>
+            <div class="navbar_user">
+                <img class="profile_picture" src="{% static 'images/default_profile.png' %}" alt="profile picture">
+                <span class="navbar_username">{{ user.first_name }} {{ user.last_name }}</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logoContainer">
+            <img class="logo" src="{% static 'images/logo2.png' %}" alt="logo">
+        </div>
+        <div class="sidebar-content">
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'user_list' %}">Users</a>
+            <a href="{% url 'approval_system' %}" class="active">Approval System</a>
+        </div>
+        <div class="logout-container">
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h1>Approval System</h1>
+        <h2>Manage Requests Efficiently</h2>
+
+        <div class="card-container">
+            <div class="card pending-card">
+                <h3 class="card-title">Pending</h3>
+                <h2>{{ pending_count }}</h2>
+            </div>
+            <div class="card approved-card">
+                <h3 class="card-title">Approved</h3>
+                <h2>{{ approved_count }}</h2>
+            </div>
+            <div class="card returned-card">
+                <h3 class="card-title">Returned</h3>
+                <h2>{{ returned_count }}</h2>
+            </div>
+        </div>
+
+        <!-- Approval Form Section -->
+        <div class="approval-form-container">
+            <h2>Submit a Request</h2>
+            <form method="POST">
+                {% csrf_token %}
+                <label for="request_type">Request Type:</label>
+                <select id="request_type" name="request_type" required>
+                    <option value="email_alias">Email Alias</option>
+                    <option value="enrollment_verification">Enrollment Verification</option>
+                </select>
+
+                <label for="description">Description:</label>
+                <textarea id="description" name="description" rows="4" placeholder="Provide details for your request..." required></textarea>
+
+                <button type="submit" class="submit-btn">Submit Request</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
