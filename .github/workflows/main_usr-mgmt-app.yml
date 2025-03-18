@@ -24,14 +24,12 @@ jobs:
         with:
           python-version: '3.9'
 
-      - name: Create and start virtual environment
-        run: |
-          python -m venv venv
-          source venv/bin/activate
-      
+      # Remove virtual environment creation from this step
+      # The environment will be handled by Azure during the deployment
+
       - name: Install dependencies
         run: pip install -r requirements.txt
-        
+
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
@@ -43,7 +41,7 @@ jobs:
           name: python-app
           path: |
             release.zip
-            !venv/
+            !venv/ # Exclude venv from being uploaded
 
   deploy:
     runs-on: ubuntu-latest
@@ -64,7 +62,7 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      
+      # Login to Azure
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -72,10 +70,16 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C1B82C400F9845E483C26314755E6966 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_1C3C50C7871C4E3D98C184041ACE8C21 }}
 
+      # Deploy to Azure Web App
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
           app-name: 'usr-mgmt-app'
           slot-name: 'Production'
-          
+
+      # Install dependencies on Azure after deployment
+      - name: Install dependencies on Azure
+        run: |
+          pip install -r requirements.txt
+        working-directory: /home/site/wwwroot # Path to your app directory on Azure
