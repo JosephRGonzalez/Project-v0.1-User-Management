@@ -1,3 +1,5 @@
+
+
 /* General Page Styling */
 
 .content-header {
@@ -110,20 +112,10 @@
 }
 
 
-#homeicon{
-    font-size: 18px;
-    color: rgb(255,255,255);
-    transform: translate(6%,280%);
-    z-index:1002
-}
-
-#usersicon{
-    font-size: 18px;
-  color: rgba(136,139,141);
-    transform: translate(6%,520%);
-    z-index:1002;
-}
-
+/* Icons in Sidebar */
+.sidebar-link[data-icon="fa-house"]::before { content: "\f015"; color:white;} /* FontAwesome Unicode */
+.sidebar-link[data-icon="fa-users"]::before { content: "\f0c0"; color: grey;}
+.sidebar-link[data-icon="fa-file-alt"]::before { content: "\f15c"; color: white;}
 
 
 

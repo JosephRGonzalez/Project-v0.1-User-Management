@@ -1,3 +1,15 @@
+/* Sidebar Icon */
+.sidebar-link[data-icon="fa-house"]::before { content: "\f015"; color:white;} /* FontAwesome Unicode */
+.sidebar-link[data-icon="fa-users"]::before { content: "\f0c0"; color: white;}
+.sidebar-link[data-icon="fa-file-alt"]::before { content: "\f15c"; color: grey;}
+
+
+
+
+
+
+
+
 /* Approval Requests CSS */
 form {
     margin-top: 30px;
@@ -85,8 +97,108 @@ textarea {
     color: rgb(0, 153, 51); /* Approved - green */
 }
 
+
+
+
+/* Signature */
+
+.signature-upload-section {
+    background: #f8f8f8;
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-top: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-family: Source Sans Pro, sans-serif;
+}
+
+.signature-upload-section form {
+    position: relative;
+    margin: 5%;
+
+}
+
+#signature{
+    font-family: Source Sans Pro, sans-serif;
+    font-size:14px;
+}
+
+input::file-selector-button {
+    font-size:15px;
+    padding:3%;
+
+}
+
+input::file-selector-button:hover {
+    cursor: pointer;
+
+}
+
+.signature-upload-section h2 {
+    color: rgb(200,16,46);
+    font-family: "League Gothic", sans-serif;
+    font-size : 54px;
+    margin-bottom: 1%;
+}
+
+.signature-upload-section p {
+    font-family: "Crimson Pro", sans-serif;
+    font-size: 20px;
+}
+
+.signature-preview-container img {
+    max-width: 300px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    display: block;
+}
+
+.no-signature-message {
+    color: rgb(200,16,46);
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+.upload-btn {
+    background: rgb(200,16,46);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.upload-btn:hover {
+    background: rgb(150,12,34);
+}
+
+
+#signature_delete{
+    background: none;
+    box-shadow: none;
+}
+
+.delete-btn {
+    background-color: rgb(200,16,46);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 5px;
+}
+
+.delete-btn:hover {
+    background-color: rgb(150,12,34);  /* Darker red on hover */
+}
+
+
+
 /* Animation for form and status section */
-form, .request-status {
+form, .request-status, .signature-upload-section {
     opacity: 0;
     transform: translateY(30px);
     animation: slideIn 1s ease-in-out forwards;

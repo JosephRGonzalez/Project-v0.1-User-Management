@@ -32,20 +32,18 @@
     </nav>
 
 
-    <!-- Sidebar -->
+        <!-- Sidebar -->
     <div class="sidebar">
 
         <div class = "logoContainer">
             <img class = "logo" src="{% static 'images/logo2.png' %}" alt="logo">
         </div>
 
-        <div class="sidebar-content">
-            <i id = "homeicon" class="fa-solid fa-house"></i>
-            <i id = "usersicon" class="fa-solid fa-users"></i>
-            <a href="{% url 'dashboard' %}">Dashboard</a>
-            <a href="{% url 'user_list' %}">Users</a>
-            <a href="{% url 'approval_requests' %}">Approval Requests</a>
-        </div>
+    <div class="sidebar-content">
+        <a href="{% url 'dashboard' %}" class="sidebar-link" data-icon="fa-house">Dashboard</a>
+        <a href="{% url 'user_list' %}" class="sidebar-link" data-icon="fa-users">Users</a>
+        <a href="{% url 'approval_requests' %}" class="sidebar-link" data-icon="fa-file-alt">Forms</a>
+    </div>
 
         <div class="logout-container">
             <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
@@ -53,6 +51,7 @@
         </div>
 
     </div>
+
 
     <!-- Main Content -->
     <div class="main-content">

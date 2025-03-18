@@ -9,6 +9,7 @@ from django.contrib.auth import logout
 from .models import UserProfile, ApprovalRequest, ApprovalStep  # Updated to include new models
 from .forms import UserProfileForm
 from django.contrib.auth.decorators import permission_required
+import os
 
 
 #Landing Page
@@ -397,3 +398,38 @@ def revise_request_view(request, request_id):
         return redirect('approval_requests')
     
     return render(request, 'revise_request.html', {'request': approval_request})
+
+
+@login_required
+def upload_signature(request):
+    if request.method == "POST" and request.FILES.get("signature"):
+        user_profile = request.user  # Since UserProfile extends AbstractUser, request.user is a UserProfile
+        user_profile.signature = request.FILES["signature"]
+        user_profile.save()
+
+        messages.success(request, "Your signature has been uploaded successfully!")
+        return redirect("approval_requests")  # Redirect back to the approval requests page
+
+    return render(request, "approval_requests.html")
+
+
+@login_required
+def delete_signature(request):
+    if request.method == 'POST':
+        user = request.user
+
+        # Check if the user has a signature image
+        if user.signature:
+            # Get the path to the file in the media folder
+            signature_path = user.signature.path
+
+            # Delete the image file from the filesystem
+            if os.path.isfile(signature_path):
+                os.remove(signature_path)
+
+            # Clear the signature field in the user model
+            user.signature = None
+            user.save()
+
+
+    return redirect('approval_requests')  # Redirect to profile page (or wherever appropriate)

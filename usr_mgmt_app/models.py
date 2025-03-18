@@ -1,5 +1,16 @@
+import os
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.core.exceptions import ValidationError
+
+
+# Validation for Signature Image Upload
+def validate_signature_file(value):
+    ext = os.path.splitext(value.name)[1]  # Get file extension
+    valid_extensions = ['.png', '.jpg', '.jpeg']
+    if ext.lower() not in valid_extensions:
+        raise ValidationError('Unsupported file format. Allowed formats: PNG, JPG, JPEG.')
+
 
 class UserProfile(AbstractUser):
     ROLE_CHOICES = [
@@ -11,10 +22,13 @@ class UserProfile(AbstractUser):
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    signature = models.ImageField(upload_to='signatures/', null=True, blank=True)
+    signature = models.ImageField(upload_to='signatures/', null=True, blank=True, validators=[validate_signature_file])
     groups = models.ManyToManyField(Group, related_name="userprofile_groups", blank=True)
     user_permissions = models.ManyToManyField(Permission, related_name="userprofile_permissions", blank=True)
-    
+
+
+
+
     class Meta:
         permissions = [
             ("can_read", "Can read data"),
@@ -25,6 +39,9 @@ class UserProfile(AbstractUser):
     
     def __str__(self):
         return f"{self.username} ({self.role})"
+
+
+
 
 class ApprovalRequest(models.Model):
     STATUS_CHOICES = (
@@ -55,3 +72,4 @@ class ApprovalStep(models.Model):
     
     def __str__(self):
         return f"Approval step for Request #{self.request.id} by {self.approver.username}"
+

@@ -14,6 +14,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 </head>
+
+
 <body>
     <!-- Navbar -->
     <nav class="navbar">
@@ -27,29 +29,35 @@
         </div>
     </nav>
 
-    <!-- Sidebar -->
+        <!-- Sidebar -->
     <div class="sidebar">
-        <div class="logoContainer">
-            <img class="logo" src="{% static 'images/logo2.png' %}" alt="logo">
+
+        <div class = "logoContainer">
+            <img class = "logo" src="{% static 'images/logo2.png' %}" alt="logo">
         </div>
-        <div class="sidebar-content">
-            <i id="homeicon" class="fa-solid fa-house"></i>
-            <i id="usersicon" class="fa-solid fa-users"></i>
-            <a href="{% url 'dashboard' %}">Dashboard</a>
-            <a href="{% url 'user_list' %}">Users</a>
-            <a href="{% url 'approval_requests' %}">Approval Requests</a>
-        </div>
+
+    <div class="sidebar-content">
+        <a href="{% url 'dashboard' %}" class="sidebar-link" data-icon="fa-house">Dashboard</a>
+        <a href="{% url 'user_list' %}" class="sidebar-link" data-icon="fa-users">Users</a>
+        <a href="{% url 'approval_requests' %}" class="sidebar-link" data-icon="fa-file-alt">Forms</a>
+    </div>
+
         <div class="logout-container">
             <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
-            <i id="logoutIcon" class="fa-solid fa-arrow-right-from-bracket"></i>
+            <i id = "logoutIcon" class="fa-solid fa-arrow-right-from-bracket"></i>
         </div>
+
     </div>
+
 
     <!-- Main content -->
     <div class="main-content">
-        <h1>Approval Requests</h1>
+        <h1>Forms</h1>
         <h2>Submit a new request</h2>
-        
+
+
+
+
         <form method="POST" action="{% url 'submit_request' %}">
             {% csrf_token %}
             <label for="email_alias">Email Alias:</label>
@@ -69,6 +77,59 @@
                 <li>Request #3 - Status: <span class="status">Approved</span></li>
             </ul>
         </div>
+
+
+
+
+<!-- Signature Upload Section -->
+<div class="signature-upload-section">
+    <h2>Upload Your Signature</h2>
+    <p>Upload an image of your signature to easily sign forms online. This will be saved and used for signing forms effortlessly.</p>
+
+    <form method="POST" action="{% url 'upload_signature' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <label for="signature">Select a Signature Image:</label>
+        <input type="file" id="signature" name="signature" accept=".png, .jpg, .jpeg" onchange="previewSignature(event)" required>
+
+        <button type="submit" class="upload-btn">Upload Signature</button>
+    </form>
+
+    <!-- Signature Preview -->
+    <div class="signature-preview-container">
+        <h3>Current Signature:</h3>
+        {% if user.signature %}
+            <img id="signature-preview" src="{{ user.signature.url }}" alt="Uploaded Signature">
+
+                        <!-- Delete Signature Form -->
+            <form id = "signature_delete" method="POST" action="{% url 'delete_signature' %}">
+                {% csrf_token %}
+                <button type="submit" class="delete-btn">Delete Signature</button>
+            </form>
+            <!-- If there is no signature uploaded -->
+        {% else %}
+            <p class="no-signature-message">No signature uploaded. Upload now to sign forms easily.</p>
+        {% endif %}
     </div>
+
+</div>
+
+<!-- JavaScript for Signature Live Preview -->
+<script>
+    function previewSignature(event) {
+        var reader = new FileReader();
+        reader.onload = function () {
+            var output = document.getElementById('signature-preview');
+            output.src = reader.result;
+            output.style.display = "block";
+        };
+        reader.readAsDataURL(event.target.files[0]);
+    }
+</script>
+
+
+</div>
+
+
 </body>
 </html>

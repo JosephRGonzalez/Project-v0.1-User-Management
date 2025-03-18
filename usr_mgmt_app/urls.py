@@ -1,5 +1,11 @@
 from django.urls import path
 from . import views
+from .views import upload_signature
+from django.conf import settings
+from django.conf.urls.static import static
+
+
+
 urlpatterns = [
     path('', views.landing_page, name='landing_page'),  # Landing page
     path('login/', views.login_view, name='login'),  # Login page
@@ -17,4 +23,10 @@ urlpatterns = [
     path('user/<int:id>/deactivate/', views.user_deactivate, name='user_deactivate'),  # Deactivate user
     path('user/<int:id>/delete/', views.user_delete, name='user_delete'),  # Delete user
     path('user/<int:user_id>/toggle-status/', views.user_toggle_status, name='user_toggle_status'),  # Activate/Deactivate toggle
+    path("upload-signature/", upload_signature, name="upload_signature"),  #Signature Upload
+    path('delete_signature/', views.delete_signature, name='delete_signature') #Delete Signature
+
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
