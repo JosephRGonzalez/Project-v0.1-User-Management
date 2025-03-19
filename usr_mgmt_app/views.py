@@ -12,6 +12,7 @@ from django.contrib.auth.decorators import permission_required
 import os
 
 
+
 #Landing Page
 def landing_page(request):
     return render(request, 'landing_page.html')
@@ -245,7 +246,7 @@ def approve_request_view(request, step_id):
     return render(request, 'approve_request.html', {'step': step})
 @login_required
 def approval_requests_view(request):
-    # Get all requests made by the current user
+    # Get all approval requests made by the current user
     try:
         user_requests = ApprovalRequest.objects.filter(requester=request.user).order_by('-created_at')
         
@@ -258,16 +259,68 @@ def approval_requests_view(request):
         else:
             pending_approvals = None
         
+        # Get ETD forms for this user
+        etd_forms = ETDForm.objects.filter(student=request.user).order_by('-created_at')
+        
         context = {
             'user_requests': user_requests,
-            'pending_approvals': pending_approvals
+            'pending_approvals': pending_approvals,
+            'etd_forms': etd_forms
         }
-    except:
-        # If ApprovalRequest model is not yet available, use an empty context
+    except Exception as e:
+        # If models are not yet available, use an empty context
+        print(f"Error in approval_requests_view: {str(e)}")
         context = {}
     
     return render(request, 'approval_requests.html', context)
+from .utils import generate_etd_form
 
+@login_required
+def create_etd_form_view(request):
+    """View for creating an ETD form"""
+    if request.method == 'POST':
+        # Process form submission
+        student_id_number = request.POST.get('student_id_number')
+        degree_type = request.POST.get('degree_type')
+        graduation_date = request.POST.get('graduation_date')
+        request_type = request.POST.get('request_type')
+        justification = request.POST.get('justification')
+        
+        try:
+            # Create ETD form
+            etd_form = ETDForm.objects.create(
+                student=request.user,
+                student_id_number=student_id_number,
+                degree_type=degree_type,
+                graduation_date=graduation_date,
+                request_type=request_type,
+                justification=justification,
+                status='pending'
+            )
+            
+            # Generate PDF for the form
+            form_data = {
+                'student_id': student_id_number,
+                'degree_type': etd_form.get_degree_type_display(),
+                'graduation_date': graduation_date,
+                'justification': justification,
+            }
+            
+            pdf_path = generate_etd_form(request.user.id, form_data)
+            if pdf_path:
+                etd_form.pdf_document = pdf_path
+                etd_form.save()
+                messages.success(request, "ETD form created successfully. You can download it from the list below.")
+            else:
+                messages.warning(request, "ETD form created but PDF generation failed.")
+                
+        except Exception as e:
+            messages.error(request, f"Error creating ETD form: {str(e)}")
+            print(f"Error in create_etd_form_view: {str(e)}")
+        
+        return redirect('approval_requests')
+    
+    return redirect('approval_requests')
 @login_required
 def submit_request_view(request):
     if request.method == 'POST':

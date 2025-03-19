@@ -24,8 +24,8 @@ urlpatterns = [
     path('user/<int:id>/delete/', views.user_delete, name='user_delete'),  # Delete user
     path('user/<int:user_id>/toggle-status/', views.user_toggle_status, name='user_toggle_status'),  # Activate/Deactivate toggle
     path("upload-signature/", upload_signature, name="upload_signature"),  #Signature Upload
-    path('delete_signature/', views.delete_signature, name='delete_signature') #Delete Signature
-
+    path('delete_signature/', views.delete_signature, name='delete_signature'), #Delete Signature
+    path('create-etd-form/', views.create_etd_form_view, name='create_etd_form')
 ]
 
 if settings.DEBUG:

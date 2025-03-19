@@ -4,6 +4,9 @@
 \usepackage{geometry}
 \usepackage{datetime}
 \usepackage{fancyhdr}
+\usepackage{tabularx}
+\usepackage{enumitem}
+\usepackage{checkbox}
 
 \geometry{a4paper, margin=1in}
 \pagestyle{fancy}
@@ -11,56 +14,137 @@
 \begin{document}
 
 \begin{center}
-    \Large\textbf{Thunder Bay - Approval Request Form}
-    
-    \vspace{0.5cm}
-    \normalsize
-    \today
+    \Large\textbf{ELECTRONIC THESIS/DISSERTATION SPECIAL CIRCUMSTANCE FORM}
 \end{center}
 
-\vspace{1cm}
+\bigskip
 
-\noindent\textbf{Request ID:} {{request_id}} \\
-\noindent\textbf{Requested by:} {{requester_name}} \\
-\noindent\textbf{Email Alias:} {{email_alias}} \\
-\noindent\textbf{Submission Date:} {{submission_date}} \\
-\noindent\textbf{Status:} {{status}} \\
+\noindent\textbf{Student's Name:} {{student_name}} \hfill \textbf{Student ID number:} {{student_id}}
 
-\vspace{0.5cm}
+\bigskip
 
-\noindent\textbf{Comments:} \\
-{{comments}}
+\noindent\textbf{Degree:} {{degree_type}} \hfill \textbf{Date of Graduation (Month Year):} {{graduation_date}}
 
-\vspace{1cm}
+\bigskip
 
-\noindent\textbf{Approvals:} \\
+\noindent\fbox{\begin{minipage}{\textwidth}
+\textbf{SPECIAL REQUEST OPTIONS}
 
-\begin{tabular}{|p{4cm}|p{4cm}|p{4cm}|}
-    \hline
-    \textbf{Approver} & \textbf{Status} & \textbf{Date} \\
-    \hline
-    {{approvals_table}}
-    \hline
-\end{tabular}
+\smallskip
 
+\begin{itemize}[leftmargin=*]
+  \item[$\square$] \textbf{First Embargo Extension} This extends your initial embargo from release for an additional two years beyond the end of your first embargo. This request must be submitted no later than two years from the date of ETD submission.
+  \item[$\square$] \textbf{Additional Embargo Extension} If your document has been embargoed for four years or more, this request extends the embargo for one additional year and must be renewed annually by the anniversary date of original submission. Will be reviewed by and must receive approval from a faculty review committee.
+  \item[$\square$] \textbf{Full Record Hold} - Usually for patent considerations or contractual obligations This option suppresses all evidence of the existence of the thesis or dissertation during the embargo period. Normally, the title, basic metadata, and abstract are publicly available during an embargo. This request must be submitted to the Graduate School at the time of ETD submission. Requests will be reviewed by and must receive approval from a faculty review committee.
+  \item[$\square$] \textbf{Other} - If your special circumstance request is not listed above, please explain below. If your request is being submitted at the time of ETD submission, it must be sent to the Graduate School by the thesis/disseration submission deadline (see academic calendar). Some requests may require approval by a faculty review committee.
+\end{itemize}
+
+\end{minipage}}
+
+\bigskip
+
+\noindent\fbox{\begin{minipage}{\textwidth}
+\textbf{Reasoning/justification for Special Request:}
 \vspace{1.5cm}
 
-\noindent\textbf{Signatures:}
+{{justification}}
 
-\vspace{1cm}
+\smallskip
 
-\noindent\begin{tabular}{p{7cm}p{7cm}}
-\includegraphics[width=5cm]{{signature_path}} & \\
-\cline{1-1}
-Requester Signature & \\
-\end{tabular}
+(attach additional pages and documentation as needed)
+\end{minipage}}
 
-\vspace{1cm}
+\bigskip
 
-\noindent\begin{tabular}{p{7cm}p{7cm}}
-\includegraphics[width=5cm]{{approver_signature_path}} & \\
-\cline{1-1}
-Final Approver Signature & \\
-\end{tabular}
+\noindent\fbox{\begin{minipage}{\textwidth}
+\textbf{THESIS/DISSERTATION COMMITTEE CHAIR/CO-CHAIR'S SIGNATURE}
+
+\smallskip
+
+I have discussed the situation with my student, and I approve of the request the student has made.
+
+\smallskip
+
+Chair or Co-Chair's Signature: \includegraphics[width=5cm]{{chair_signature}} \hfill Date: {{chair_signature_date}}
+\end{minipage}}
+
+\bigskip
+
+\noindent\fbox{\begin{minipage}{\textwidth}
+\textbf{STUDENT AGREEMENT}
+
+\smallskip
+
+I certify that the information provided above is correct and true. I understand that my request is subject to review and that the ETD will be released following the expiration of the embargo period unless another request for extension has been submitted and approved by the scheduled release date.
+
+\smallskip
+
+Student's Signature: \includegraphics[width=5cm]{{student_signature}} \hfill Date: {{student_signature_date}}
+\end{minipage}}
+
+\bigskip
+
+\begin{center}
+This form is submitted to the Graduate School at gradschool@uh.edu
+\end{center}
+
+\vfill
+
+\begin{center}
+\textbf{UHGS 082117}
+\end{center}
+
+\newpage
+
+\begin{center}
+    \Large\textbf{University of Houston\\
+    Electronic Theses and Dissertations (ETD)}
+\end{center}
+
+\bigskip
+
+\begin{center}
+    \textbf{University of Houston Electronic Thesis/Disseratation Policy}
+\end{center}
+
+\noindent All Electronic Theses/Dissertations (ETDs) will be made available after graduation on the internet via the University of Houston Libraries and through ProQuest. Availability may be delayed temporarily for circumstances such as patent consideration, compliance with research contractual terms, publication issues, etc, by requesting an embargo.
+
+\bigskip
+
+\noindent\textbf{What comprises an ETD record?}
+
+\noindent An ETD record includes the elements, as noted below:
+
+\begin{itemize}
+    \item \textbf{Metadata} – Data which describe the ETD record. These include, but are not limited to, the title, abstract, author, committee, keywords, etc.
+    \item \textbf{Full Text Document}– The ETD primary document which describes the independent research study that was undertaken to partially fulfill requirements for the degree sought – generally a single PDF file.
+    \item \textbf{Supplemental files} – Files which accompany the ETD document, are intended for public access, and provide additional details of the research (e.g., data sets, movie clips, etc.).
+\end{itemize}
+
+\bigskip
+
+\noindent\textbf{What is an embargo?}
+
+\noindent If needed, a student can request, with the support of their committee chair, that the full text of their ETD by held back from release for a two-year period following graduation. This is generally for students pursuing a patent, or working toward publication of material in an academic journal. During the two-year embargo, only the metadata of the document is seen publicly, attesting to the existence of the ETD, but the full text is withheld.
+
+\bigskip
+
+\noindent\textbf{What is a "Full Record Hold," and when would I choose it?}
+
+\noindent If you need the full ETD record to be withheld from public access due to patent considerations or to comply with research contractual terms, select the "Full Record Hold" on the Special Circumstance form. The ETD record will not be viewable publicly during the embargo period and will only be released after the embargo period ends.
+
+\bigskip
+
+\noindent\textbf{How do I extend an embargo hold?}
+
+\noindent A hold may be extended for up to two years (for the first extension) and then one year at a time for any additional extensions. The request must be made prior to expiration and appropriate justification must be included. Each request for extension will be reviewed on a case-by-case basis. Please complete and submit the "Special Circumstance" form.
+
+\bigskip
+
+\noindent Graduate students and faculty (when sponsored research) bear responsibility for requesting extensions. A timely response is important in order to extend the hold period. The full ETD record will be released following the expiration date if no response is received.
+
+\bigskip
+
+\noindent For additional questions or concerns regarding availability options, please contact The Graduate School at gradschool@uh.edu.
 
 \end{document}

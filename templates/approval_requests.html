@@ -15,7 +15,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 </head>
 
-
 <body>
     <!-- Navbar -->
     <nav class="navbar">
@@ -29,107 +28,194 @@
         </div>
     </nav>
 
-        <!-- Sidebar -->
+    <!-- Sidebar -->
     <div class="sidebar">
-
-        <div class = "logoContainer">
-            <img class = "logo" src="{% static 'images/logo2.png' %}" alt="logo">
+        <div class="logoContainer">
+            <img class="logo" src="{% static 'images/logo2.png' %}" alt="logo">
         </div>
 
-    <div class="sidebar-content">
-        <a href="{% url 'dashboard' %}" class="sidebar-link" data-icon="fa-house">Dashboard</a>
-        <a href="{% url 'user_list' %}" class="sidebar-link" data-icon="fa-users">Users</a>
-        <a href="{% url 'approval_requests' %}" class="sidebar-link" data-icon="fa-file-alt">Forms</a>
-    </div>
+        <div class="sidebar-content">
+            <a href="{% url 'dashboard' %}" class="sidebar-link" data-icon="fa-house">Dashboard</a>
+            <a href="{% url 'user_list' %}" class="sidebar-link" data-icon="fa-users">Users</a>
+            <a href="{% url 'approval_requests' %}" class="sidebar-link" data-icon="fa-file-alt">Forms</a>
+        </div>
 
         <div class="logout-container">
             <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
-            <i id = "logoutIcon" class="fa-solid fa-arrow-right-from-bracket"></i>
+            <i id="logoutIcon" class="fa-solid fa-arrow-right-from-bracket"></i>
         </div>
-
     </div>
-
 
     <!-- Main content -->
     <div class="main-content">
         <h1>Forms</h1>
-        <h2>Submit a new request</h2>
-
-
-
-
-        <form method="POST" action="{% url 'submit_request' %}">
-            {% csrf_token %}
-            <label for="email_alias">Email Alias:</label>
-            <input type="text" id="email_alias" name="email_alias" placeholder="Enter your email alias" required>
-            
-            <label for="comments">Comments:</label>
-            <textarea id="comments" name="comments" placeholder="Add additional information (if needed)"></textarea>
-            
-            <input type="submit" class="submit-btn" value="Submit Request">
-        </form>
         
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        <!-- General Request Form -->
+        <div class="form-section">
+            <h2>Submit a General Request</h2>
+            <form method="POST" action="{% url 'submit_request' %}">
+                {% csrf_token %}
+                
+                <label for="comments">Comments:</label>
+                <textarea id="comments" name="comments" placeholder="Add additional information (if needed)"></textarea>
+                
+                <input type="submit" class="submit-btn" value="Submit Request">
+            </form>
+        </div>
+        
+        <!-- Request Status -->
         <div class="request-status">
-            <h3>Current Requests</h3>
-            <ul>
-                <li>Request #1 - Status: <span class="status">Pending</span></li>
-                <li>Request #2 - Status: <span class="status">Returned</span></li>
-                <li>Request #3 - Status: <span class="status">Approved</span></li>
-            </ul>
+            <h3>Your Requests</h3>
+            {% if user_requests %}
+                <ul>
+                    {% for request in user_requests %}
+                        <li>
+                            Request #{{ request.id }} - 
+                            Status: <span class="status status-{{ request.status }}">{{ request.get_status_display }}</span>
+                            <span class="date">{{ request.created_at|date:"M d, Y" }}</span>
+                            {% if request.status == 'approved' and request.pdf_document %}
+                                <a href="{{ request.pdf_document.url }}" class="download-link" target="_blank">Download PDF</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No requests submitted yet.</p>
+            {% endif %}
         </div>
 
-
-
-
-<!-- Signature Upload Section -->
-<div class="signature-upload-section">
-    <h2>Upload Your Signature</h2>
-    <p>Upload an image of your signature to easily sign forms online. This will be saved and used for signing forms effortlessly.</p>
-
-    <form method="POST" action="{% url 'upload_signature' %}" enctype="multipart/form-data">
-        {% csrf_token %}
-
-        <label for="signature">Select a Signature Image:</label>
-        <input type="file" id="signature" name="signature" accept=".png, .jpg, .jpeg" onchange="previewSignature(event)" required>
-
-        <button type="submit" class="upload-btn">Upload Signature</button>
-    </form>
-
-    <!-- Signature Preview -->
-    <div class="signature-preview-container">
-        <h3>Current Signature:</h3>
-        {% if user.signature %}
-            <img id="signature-preview" src="{{ user.signature.url }}" alt="Uploaded Signature">
-
-                        <!-- Delete Signature Form -->
-            <form id = "signature_delete" method="POST" action="{% url 'delete_signature' %}">
+        <!-- ETD Form Section -->
+        <div class="etd-form-section">
+            <h2>Electronic Thesis/Dissertation Form</h2>
+            <p>Use this form to request embargo extensions or special handling for your thesis or dissertation.</p>
+            
+            <form method="POST" action="{% url 'create_etd_form' %}" class="etd-form">
                 {% csrf_token %}
-                <button type="submit" class="delete-btn">Delete Signature</button>
+                
+                <div class="form-group">
+                    <label for="student_id_number">Student ID Number:</label>
+                    <input type="text" id="student_id_number" name="student_id_number" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="degree_type">Degree:</label>
+                    <select id="degree_type" name="degree_type" required>
+                        <option value="masters">Master</option>
+                        <option value="doctorate">Doctorate</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="graduation_date">Date of Graduation (Month Year):</label>
+                    <input type="text" id="graduation_date" name="graduation_date" placeholder="May 2025" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Special Request Options:</label>
+                    <div class="radio-group">
+                        <input type="radio" id="first_extension" name="request_type" value="first_extension" required>
+                        <label for="first_extension">First Embargo Extension</label>
+                    </div>
+                    <div class="radio-group">
+                        <input type="radio" id="additional_extension" name="request_type" value="additional_extension">
+                        <label for="additional_extension">Additional Embargo Extension</label>
+                    </div>
+                    <div class="radio-group">
+                        <input type="radio" id="full_hold" name="request_type" value="full_hold">
+                        <label for="full_hold">Full Record Hold</label>
+                    </div>
+                    <div class="radio-group">
+                        <input type="radio" id="other" name="request_type" value="other">
+                        <label for="other">Other</label>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="justification">Reasoning/justification for Special Request:</label>
+                    <textarea id="justification" name="justification" rows="5" required></textarea>
+                </div>
+                
+                {% if user.signature %}
+                    <input type="submit" class="submit-btn" value="Generate ETD Form">
+                {% else %}
+                    <p class="warning">Please upload your signature before submitting this form.</p>
+                    <input type="submit" class="submit-btn" value="Generate ETD Form" disabled>
+                {% endif %}
             </form>
-            <!-- If there is no signature uploaded -->
-        {% else %}
-            <p class="no-signature-message">No signature uploaded. Upload now to sign forms easily.</p>
-        {% endif %}
+        </div>
+
+        <!-- ETD Forms List -->
+        <div class="etd-forms-list">
+            <h3>Your ETD Forms</h3>
+            {% if etd_forms %}
+                <ul>
+                    {% for form in etd_forms %}
+                        <li>
+                            ETD Form #{{ form.id }} - 
+                            {{ form.get_request_type_display }} - 
+                            Status: <span class="status status-{{ form.status }}">{{ form.get_status_display }}</span>
+                            {% if form.pdf_document %}
+                                <a href="{{ form.pdf_document.url }}" class="download-link" target="_blank">Download PDF</a>
+                            {% endif %}
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No ETD forms submitted yet.</p>
+            {% endif %}
+        </div>
+
+        <!-- Signature Upload Section -->
+        <div class="signature-upload-section">
+            <h2>Upload Your Signature</h2>
+            <p>Upload an image of your signature to easily sign forms online. This will be saved and used for signing forms effortlessly.</p>
+
+            <form method="POST" action="{% url 'upload_signature' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <label for="signature">Select a Signature Image:</label>
+                <input type="file" id="signature" name="signature" accept=".png, .jpg, .jpeg" onchange="previewSignature(event)" required>
+
+                <button type="submit" class="upload-btn">Upload Signature</button>
+            </form>
+
+            <!-- Signature Preview -->
+            <div class="signature-preview-container">
+                <h3>Current Signature:</h3>
+                {% if user.signature %}
+                    <img id="signature-preview" src="{{ user.signature.url }}" alt="Uploaded Signature">
+
+                    <!-- Delete Signature Form -->
+                    <form id="signature_delete" method="POST" action="{% url 'delete_signature' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn">Delete Signature</button>
+                    </form>
+                {% else %}
+                    <p class="no-signature-message">No signature uploaded. Upload now to sign forms easily.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- JavaScript for Signature Live Preview -->
+        <script>
+            function previewSignature(event) {
+                var reader = new FileReader();
+                reader.onload = function () {
+                    var output = document.getElementById('signature-preview');
+                    output.src = reader.result;
+                    output.style.display = "block";
+                };
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        </script>
     </div>
-
-</div>
-
-<!-- JavaScript for Signature Live Preview -->
-<script>
-    function previewSignature(event) {
-        var reader = new FileReader();
-        reader.onload = function () {
-            var output = document.getElementById('signature-preview');
-            output.src = reader.result;
-            output.style.display = "block";
-        };
-        reader.readAsDataURL(event.target.files[0]);
-    }
-</script>
-
-
-</div>
-
-
 </body>
 </html>
