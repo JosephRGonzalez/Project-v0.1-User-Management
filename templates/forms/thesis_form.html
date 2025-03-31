@@ -1,0 +1,111 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thunder Bay | Electronic Thesis/Dissertation Form </title>
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/approval.css' %}">
+    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <i id="notifications_icon" class="fa-regular fa-bell"></i>
+            <i id="settings_icon" class="fa-solid fa-gear"></i>
+            <div class="navbar_user">
+                <img class="profile_picture" src="{% static 'images/default_profile.png' %}" alt="profile picture">
+                <span class="navbar_username">{{ user.first_name }} {{ user.last_name }}</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+
+    <style>
+        .sidebar-link[data-icon="fa-house"]::before { content: "\f015"; color:white;} /* FontAwesome Unicode */
+        .sidebar-link[data-icon="fa-users"]::before { content: "\f0c0"; color: white;}
+        .sidebar-link[data-icon="fa-file-alt"]::before { content: "\f15c"; color: white;}
+    </style>
+
+    <div class="sidebar">
+        <div class="logoContainer">
+            <img class="logo" src="{% static 'images/logo2.png' %}" alt="logo">
+        </div>
+
+        <div class="sidebar-content">
+            <a href="{% url 'dashboard' %}" class="sidebar-link" data-icon="fa-house">Dashboard</a>
+            <a href="{% url 'user_list' %}" class="sidebar-link" data-icon="fa-users">Users</a>
+            <a href="{% url 'approval_requests' %}" class="sidebar-link" data-icon="fa-file-alt">Forms</a>
+        </div>
+
+        <div class="logout-container">
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+            <i id="logoutIcon" class="fa-solid fa-arrow-right-from-bracket"></i>
+        </div>
+    </div>
+
+
+
+    <!-- Main Content -->
+<div class="main-content">
+
+
+<h2>Electronic Thesis/Dissertation Form</h2>
+
+
+<form method="POST" action="">
+    {% csrf_token %}
+
+    <label>First Name:</label>
+    <input type="text" value="{{ user.first_name }}" readonly>
+
+    <label>Last Name:</label>
+    <input type="text" value="{{ user.last_name }}" readonly>
+
+    <label>Student UH ID Number:</label>
+    <input type="text" name="student_id" required pattern="\d{7}" title="Must be a 7-digit number">
+
+    <label>Degree Type:</label>
+    <select name="degree_type">
+        <option value="Master">Master</option>
+        <option value="Doctorate">Doctorate</option>
+    </select>
+
+    <label>Date of Graduation:</label>
+    <input type="month" name="graduation_date" required>
+
+    <label>Special Request Type:</label>
+    <select name="request_type">
+        <option value="First Embargo Extension">First Embargo Extension</option>
+        <option value="Full Record Hold">Full Record Hold</option>
+        <option value="Additional Embargo Extension">Additional Embargo Extension</option>
+        <option value="Other">Other (Please specify below)</option>
+    </select>
+
+    <label>Justification/Reasoning:</label>
+    <textarea name="justification" required></textarea>
+
+    <button type="submit">Submit Request</button>
+</form>
+
+{% if thesis_request %}
+    <h3>Request Submitted!</h3>
+    <a href="{% url 'generate_thesis_pdf' thesis_request.id %}" target="_blank">
+        <button>Generate PDF</button>
+    </a>
+{% endif  %}
+
+    <a href="{% url 'approval_requests' %}" class="btn-back">Cancel</a>
+
+</div>
+</body>
+</html>
+

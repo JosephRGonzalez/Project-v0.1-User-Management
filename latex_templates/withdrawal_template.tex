@@ -1,0 +1,150 @@
+\documentclass{article}
+\usepackage[a4paper,margin=1in,landscape]{geometry}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{eso-pic}  % Allows precise positioning
+\usepackage{tikz}  % For drawing text precisely
+\usepackage{tikz}
+\usepackage{pdfoverlay}
+
+
+
+
+
+
+% Function to place checkboxes at specific coordinates
+\newcommand{\CheckboxAt}[3]{
+    \begin{tikzpicture}[
+        remember picture,
+        overlay,
+        shift={(current page.south west)}
+    ]
+        % Draw a checkbox based on the third argument: 0 for unchecked, 1 for checked
+        \ifx#3u
+            \node[anchor=south west] at (#1, #2) {\tikz \draw[very thick] (0,0) rectangle (0.60,0.60);}; % Unchecked checkbox
+        \else
+            \node[anchor=south west] at (#1, #2) {\tikz \draw[fill=black] (0,0) rectangle (0.60,0.60);}; % Checked checkbox
+        \fi
+    \end{tikzpicture}
+}
+
+
+
+
+
+
+\NewDocumentCommand{\TextAt}{O{left} r() O{\textwidth} +m O{\normalfont}}{
+    \begin{tikzpicture}[
+        remember picture,
+        overlay,
+        shift={(current page.south west)}
+    ]
+        \node[
+            text width=#3,
+            align=#1,
+            anchor=south west,
+            inner sep=0,
+            font=#5,
+        ] at (#2) {\parbox{\textwidth}{#4}};
+    \end{tikzpicture}
+}
+
+
+\newcommand{\ImageAt}[3]{
+    \begin{tikzpicture}[
+        remember picture,
+        overlay,
+        shift={(current page.south west)}
+    ]
+        % Insert the image at the specified coordinates
+        \node[anchor=south west] at (#1, #2) {\includegraphics[width=#3]{{{{SIGNATURE_FILENAME}}}}};
+    \end{tikzpicture}
+}
+
+
+
+
+\begin{document}
+
+    % PDF Form
+    \pdfoverlaySetPDF{../static/pdfs/withdrawal_form.pdf}
+
+
+    % Last Name
+    \TextAt(2in,6.92in){{{LAST_NAME}}} [\footnotesize\bfseries]
+    % First Name
+    \TextAt(3in,6.92in){{{FIRST_NAME}}} [\footnotesize\bfseries]
+    % Middle Name
+    \TextAt(4.3in, 6.92in) {{{MIDDLE_NAME}}} [\footnotesize\bfseries]
+    % Student ID number
+    \TextAt(5.85in,6.92in){{{STUDENT_ID}}}[\footnotesize\bfseries]
+    % College
+    \TextAt(7.4in, 6.92in) {{{COLLEGE}}} [\footnotesize\bfseries]
+    % Plan/Degree
+    \TextAt(9.11in, 6.92in) {{{DEGREE_PLAN}}} [\footnotesize\bfseries]
+
+    %%% Next Line
+
+    % Current Mail Address
+    \TextAt(2.47in,6.54in){{{STREET_ADDRESS}}} [\footnotesize\bfseries]
+    % City
+    \TextAt(5.2in,6.56in){{{CITY}}} [\footnotesize\bfseries]
+    % State
+    \TextAt(6.3in,6.56in){{{STATE}}} [\footnotesize\bfseries]
+    % Zip
+    \TextAt(7.2in,6.56in){{{ZIPCODE}}} [\footnotesize\bfseries]
+    % Phone Number
+    \TextAt(9.2in,6.56in){{{PHONE}}} [\footnotesize\bfseries]
+
+    %% Next Line
+
+    % Term
+    \TextAt(4.54in,6.15in){{{WITHDRAWAL_TERM}}} [\footnotesize\bfseries]
+    % Reason for request
+    \TextAt(1.2in,5.70in){{{WITHDRAWAL_REASON}}} [\footnotesize\bfseries]
+    % Last date you attended
+    \TextAt(5.1in,5.48in){{{LAST_ATTENDANCE_DATE}}} [\footnotesize\bfseries]
+
+
+% Financial Assistance
+\ifthenelse{\equal{{{FINANCIAL_ASSISTANCE}}}{Yes}}
+    {\TextAt(4.015in,5.25in){x}  [\footnotesize\bfseries]}  % Yes checkbox checked
+    {\TextAt(4.465in,5.26in){x}  [\footnotesize\bfseries]}  % No checkbox checked
+
+% UH Student Health Insurance
+\ifthenelse{\equal{{{UH_HEALTH_INSURANCE}}}{Yes}}
+    {\TextAt(4.365in,5.065in){x} [\footnotesize\bfseries]}  % Yes checkbox checked
+    {\TextAt(4.78in,5.065in){x}  [\footnotesize\bfseries]}  % No checkbox checked
+
+% Do you live in campus housing
+\ifthenelse{\equal{{{CAMPUS_HOUSING}}}{Yes}}
+    {\TextAt(2.915in,4.853in){x} [\footnotesize\bfseries]}  % Yes checkbox checked
+    {\TextAt(3.298in,4.853in){x} [\footnotesize\bfseries]}  % No checkbox checked
+
+% F1 or J1 Visa
+\ifthenelse{\equal{{{VISA_HOLDER}}}{Yes}}
+    {\TextAt(2.875in,4.645in){x} [\footnotesize\bfseries]}  % Yes checkbox checked
+    {\TextAt(3.265in,4.645in){x} [\footnotesize\bfseries]}  % No checkbox checked
+
+% GI Bill
+\ifthenelse{\equal{{{GI_BILL}}}{Yes}}
+    {\TextAt(3.515in,4.435in){x} [\footnotesize\bfseries]}  % Yes checkbox checked
+    {\TextAt(3.875in,4.435in){x} [\footnotesize\bfseries]}  % No checkbox checked
+
+
+    % Initial
+    \TextAt(9.2in,3.49in){{{STUDENT_INITIAL}}}
+
+
+    %Signature
+    \ImageAt{2.25in}{2.65in}{2cm}
+
+    % Date Created
+    \TextAt(5.3in,2.85in){{{CREATED_AT}}}
+    % Email
+    \TextAt(7.75in,2.85in){{{EMAIL}}}
+
+
+
+
+\end{document}

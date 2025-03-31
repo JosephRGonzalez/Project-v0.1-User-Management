@@ -1,0 +1,160 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thunder Bay | Medical/Administrative Withdrawal Form </title>
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/approval.css' %}">
+    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <i id="notifications_icon" class="fa-regular fa-bell"></i>
+            <i id="settings_icon" class="fa-solid fa-gear"></i>
+            <div class="navbar_user">
+                <img class="profile_picture" src="{% static 'images/default_profile.png' %}" alt="profile picture">
+                <span class="navbar_username">{{ user.first_name }} {{ user.last_name }}</span>
+            </div>
+        </div>
+    </nav>
+
+
+
+
+    <!-- Sidebar -->
+
+    <style>
+        .sidebar-link[data-icon="fa-house"]::before { content: "\f015"; color:white;} /* FontAwesome Unicode */
+        .sidebar-link[data-icon="fa-users"]::before { content: "\f0c0"; color: white;}
+        .sidebar-link[data-icon="fa-file-alt"]::before { content: "\f15c"; color: white;}
+    </style>
+
+    <div class="sidebar">
+        <div class="logoContainer">
+            <img class="logo" src="{% static 'images/logo2.png' %}" alt="logo">
+        </div>
+
+        <div class="sidebar-content">
+            <a href="{% url 'dashboard' %}" class="sidebar-link" data-icon="fa-house">Dashboard</a>
+            <a href="{% url 'user_list' %}" class="sidebar-link" data-icon="fa-users">Users</a>
+            <a href="{% url 'approval_requests' %}" class="sidebar-link" data-icon="fa-file-alt">Forms</a>
+        </div>
+
+        <div class="logout-container">
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+            <i id="logoutIcon" class="fa-solid fa-arrow-right-from-bracket"></i>
+        </div>
+    </div>
+
+
+    <!-- Main Content -->
+<div class="main-content">
+
+
+<h2>Medical/Administrative Term Withdrawal Form</h2>
+
+
+<form method="POST" action="">
+    {% csrf_token %}
+
+    <label for="first_name">First Name:</label>
+    <input type="text" id="first_name" value="{{ user.first_name }}" readonly>
+
+    <label for="middle_name">Middle Name:</label>
+    <input type="text" id="middle_name" name="middle_name">
+
+    <label for="last_name">Last Name:</label>
+    <input type="text" id="last_name" value="{{ user.last_name }}" readonly>
+
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
+    <label for="student_id">Student UH ID:</label>
+    <input type="text" id="student_id" name="student_id" required pattern="\d{7}" title="Must be a 7-digit number">
+
+    <label for="college">College:</label>
+    <input type="text" id="college" name="college" required>
+
+    <label for="degree_plan">Degree Plan:</label>
+    <input type="text" id="degree_plan" name="degree_plan" required>
+
+<fieldset class="address-fieldset">
+    <legend>Current Mailing Address</legend>
+
+    <label for="street_address">Street Address:</label>
+    <input type="text" id="street_address" name="street_address" required>
+
+    <label for="city">City:</label>
+    <input type="text" id="city" name="city" required>
+
+    <label for="state">State:</label>
+    <input type="text" id="state" name="state" required>
+
+    <label for="zipcode">Zip Code:</label>
+    <input type="text" id="zipcode" name="zipcode" required>
+</fieldset>
+
+
+    <label for="phone">Phone Number:</label>
+    <input type="tel" id="phone" name="phone" required>
+
+    <label for="withdrawal_term">Term for Withdrawal:</label>
+    <input type="text" id="withdrawal_term" name="withdrawal_term" required>
+
+    <label for="last_attendance_date">Last Date Attended Classes:</label>
+    <input type="date" id="last_attendance_date" name="last_attendance_date" required>
+
+    <label for="withdrawal_reason">Reason for Withdrawal:</label>
+    <textarea id="withdrawal_reason" name="withdrawal_reason" required></textarea>
+
+
+
+    <div class="checkbox-container">
+    <label for="financial_assistance">Financial Assistance Received?</label>
+    <input type="checkbox" id="financial_assistance" name="financial_assistance" value="True">
+    </div>
+
+    <div class="checkbox-container">
+    <label for="uh_health_insurance">UH Student Health Insurance?</label>
+    <input type="checkbox" id="uh_health_insurance" name="uh_health_insurance" value="True">
+    </div>
+
+    <div class="checkbox-container">
+    <label for="campus_housing">Campus Housing?</label>
+    <input type="checkbox" id="campus_housing" name="campus_housing" value="True">
+    </div>
+
+    <div class="checkbox-container">
+    <label for="visa_holder">Visa Holder?</label>
+    <input type="checkbox" id="visa_holder" name="visa_holder" value="True">
+    </div>
+
+    <div class="checkbox-container">
+    <label for="gi_bill">GI Bill Benefits?</label>
+    <input type="checkbox" id="gi_bill" name="gi_bill" value="True">
+    </div>
+
+    <button type="submit">Submit Request</button>
+</form>
+
+
+{% if withdrawal_request %}
+    <h3 class = "submission_message">Request Submitted!</h3>
+    <a href="{% url 'generate_withdrawal_pdf' withdrawal_request.id %}" target="_blank">
+        <button>Generate PDF</button>
+    </a>
+{% endif %}
+
+
+</div>
+</body>
+</html>

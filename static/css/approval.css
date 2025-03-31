@@ -8,53 +8,240 @@
 
 
 
+#forms-section h2{
+    font-family: Source Sans Pro, sans-serif;
+}
+
+#forms-section p{
+    margin-bottom: 5%;
+    font-family: "Crimson Pro", sans-serif;
+}
+
+h3{
+    margin-bottom: 5%;
+}
+
+#forms-section {
+  text-align: center;
+  margin: 40px auto;
+  max-width: 900px;
+}
+
+.forms-container {
+  display: flex;
+  justify-content: space-around;
+  margin-top: 20px;
+}
+
+.form-card {
+  width: 45%;
+  padding: 20px;
+  background: #f9f9f9;
+  border-radius: 10px;
+  text-align: center;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-thumbnail {
+  width: 100%;
+  height: auto;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+/* Description Styling */
+.form-description {
+  font-size: 14px;
+  color: #555;
+  margin-top: 10px;
+  line-height: 1.5;
+  text-align: left;
+  padding: 10px;
+  background: #f0f0f0;
+  border-left: 4px solid #c8102e;
+  border-radius: 5px;
+  font-family: "Crimson Pro", serif;
+}
+
+/* Button Styling */
+button {
+  margin-top: 10px;
+  padding: 10px 20px;
+  background: #c8102e;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #a10c24;
+}
+
+/* Modal Styles */
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background: white;
+  margin: 10% auto;
+  padding: 20px;
+  width: 80%;
+  max-width: 600px;
+  border-radius: 8px;
+}
+
+.close {
+  float: right;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+
+
+
+
+
 
 
 /* Approval Requests CSS */
+/* Form Container */
 form {
-    margin-top: 30px;
-    background: linear-gradient(135deg, rgb(255,255,255), rgb(220,220,220));
+    background: linear-gradient(135deg, #ffffff, #e6e6e6);
     padding: 25px;
     border-radius: 10px;
-    box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
     width: 100%;
     max-width: 600px;
+    margin-top: 30px;
+    font-family: 'Source Sans Pro', sans-serif;
 }
 
+/* Form Labels */
 label {
     display: block;
     margin-bottom: 8px;
     font-weight: bold;
+    color: #333;
 }
 
-input[type="text"], textarea {
+/* Form Inputs */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+input[type="date"],
+textarea {
     width: 100%;
-    padding: 10px;
+    padding: 12px;
     margin-bottom: 20px;
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     border-radius: 5px;
-    font-family: Source Sans Pro, sans-serif;
+    font-size: 14px;
+    transition: border-color 0.3s;
 }
 
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="tel"]:focus,
+input[type="date"]:focus,
+textarea:focus {
+    border-color: #c8102e;
+    outline: none;
+}
+
+/* Textarea Specific */
 textarea {
     min-height: 120px;
     resize: vertical;
 }
 
-.submit-btn {
-    background-color: rgb(200,16,46);
+
+
+
+.address-fieldset {
+    border: 2px solid #c8102e; /* University of Houston primary color */
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.address-fieldset legend {
+    color: #c8102e;
+    font-weight: bold;
+    padding: 0 10px;
+    font-size: 1.2em;
+}
+
+.address-fieldset label {
+    display: block;
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.address-fieldset input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+/* Checkbox and Radio Inputs */
+
+
+input[type="checkbox"],
+input[type="radio"] {
+    margin-right: 10px;
+    cursor: pointer;
+
+}
+
+
+/* Custom checkbox design */
+.checkbox-container {
+    display: flex;
+    align-items: center;
+    gap: 12px; /* Space between checkbox and label */
+    font-size: 16px;
+    font-family: 'Source Sans Pro', sans-serif;
+}
+
+
+
+/* Submit Button */
+button[type="submit"] {
+    background-color: #c8102e;
     color: white;
     border: none;
     padding: 12px 20px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
 }
 
-.submit-btn:hover {
-    background-color: rgb(150,12,34);
+button[type="submit"]:hover {
+    background-color: #a10c24;
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    form {
+        padding: 15px;
+    }
+}
+
 
 .request-status {
     margin-top: 40px;
@@ -196,6 +383,25 @@ input::file-selector-button:hover {
 }
 
 
+/* Form Cancel Button */
+
+.btn-back {
+    background: #6c757d;
+    color: white;
+    padding: 10px 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background 0.3s ease;
+    position: relative;
+}
+
+.btn-back:hover {
+    background: #5a6268;
+    transform: scale(1.05);
+}
+
+
 
 /* Animation for form and status section */
 form, .request-status, .signature-upload-section {
@@ -216,4 +422,30 @@ form { animation-delay: 0.3s; }
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+
+.pdf-button {
+    background-color: #c8102e;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: block;
+    margin: 20px auto;
+}
+
+.pdf-button:hover {
+    background-color: #a10c24;
+}
+
+
+
+
+/* Message after form Submission */
+
+.submission_message{
+    margin-top: 10px;
 }

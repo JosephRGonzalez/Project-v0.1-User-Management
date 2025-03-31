@@ -25,7 +25,13 @@ urlpatterns = [
     path('user/<int:user_id>/toggle-status/', views.user_toggle_status, name='user_toggle_status'),  # Activate/Deactivate toggle
     path("upload-signature/", upload_signature, name="upload_signature"),  #Signature Upload
     path('delete_signature/', views.delete_signature, name='delete_signature'), #Delete Signature
-    path('create-etd-form/', views.create_etd_form_view, name='create_etd_form')
+    # Forms
+    path("fill-form/thesis/", views.fill_thesis_form, name="fill_thesis_form"),
+    path("fill-form/withdrawal/", views.fill_withdrawal_form, name="fill_withdrawal_form"),
+    # PDF Generation
+    path("generate-pdf/thesis/<int:request_id>/", views.generate_thesis_pdf, name="generate_thesis_pdf"),
+    path("generate-pdf/withdrawal/<int:request_id>/", views.generate_withdrawal_pdf, name="generate_withdrawal_pdf"),
+
 ]
 
 if settings.DEBUG:
