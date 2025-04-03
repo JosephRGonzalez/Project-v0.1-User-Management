@@ -526,6 +526,8 @@ def fill_thesis_form(request):
     """Handles form submission for Thesis Request."""
     user = request.user
 
+
+
     # Check if a ThesisRequest already exists for the user
     existing_request = ThesisRequest.objects.filter(user=user).first()
 
@@ -538,6 +540,7 @@ def fill_thesis_form(request):
         request_type = request.POST.get("request_type")
         justification = request.POST.get("justification")
 
+
         if not all([student_id, degree_type, graduation_date, request_type, justification]):
             print("Missing form fields!")  # Debugging
             return render(request, "forms/thesis_form.html", {"error": "All fields are required."})
@@ -549,7 +552,9 @@ def fill_thesis_form(request):
             existing_request.graduation_date = graduation_date
             existing_request.request_type = request_type
             existing_request.justification = justification
+            existing_request.status = "Draft"
             existing_request.save()  # Save the updated data
+
         else:
             # If no existing request, create a new one
             ThesisRequest.objects.create(
@@ -558,7 +563,8 @@ def fill_thesis_form(request):
                 degree_type=degree_type,
                 graduation_date=graduation_date,
                 request_type=request_type,
-                justification=justification
+                justification=justification,
+                status = "Draft"
             )
 
         print("Thesis request saved:", existing_request.id if existing_request else "New")  # Debugging
@@ -566,7 +572,14 @@ def fill_thesis_form(request):
 
     # Retrieve the latest request for the user (either existing or the last one created)
     thesis_request = existing_request or ThesisRequest.objects.filter(user=user).last()
-    return render(request, "forms/thesis_form.html", {"thesis_request": thesis_request})
+    return render(
+        request,
+        "forms/thesis_form.html",
+        {
+                 "thesis_request": thesis_request,
+                 "MEDIA_URL": settings.MEDIA_URL
+                }
+             )
 
 
 
@@ -594,10 +607,35 @@ def generate_thesis_pdf(request, request_id):
 
     print("User Data Sent to LaTeX:", user_data)  # Debugging
 
+    # Generate the PDF from LaTeX template
+    pdf_filename = f"thesis_filled_{request_id}.pdf"
     pdf_path = generate_pdf_from_latex(user_data, "thesis_template.tex", f"thesis_filled_{request_id}")
+
+    # Store the PDF path in the model (relative to MEDIA_URL)
+    thesis.pdf_document = os.path.join('generated_pdfs', pdf_filename)  # This is relative to MEDIA_URL
+    thesis.status = "Draft"
+    thesis.save()
+
     return FileResponse(open(pdf_path, "rb"), content_type="application/pdf")
 
+@login_required
+def submit_thesis_for_approval(request, request_id):
+    thesis_request = get_object_or_404(ThesisRequest, id=request_id, user=request.user)
 
+    if request.method == "POST":
+        thesis_request.status = "Pending"  # Update status to Pending
+        thesis_request.save()
+        return redirect("thesis_form")  # Redirect back to the form page
+
+    return redirect("thesis_form")
+
+
+
+
+
+#######################
+### Withdrawal Form ###
+#######################
 def fill_withdrawal_form(request):
     """Handles form submission for Withdrawal Request."""
     user = request.user
@@ -700,3 +738,14 @@ def generate_withdrawal_pdf(request, request_id):
 
     pdf_path = generate_pdf_from_latex(user_data, "withdrawal_template.tex", f"withdrawal_filled_{request_id}")
     return FileResponse(open(pdf_path, "rb"), content_type="application/pdf")
+
+
+# Used for tracking user forms.
+def approval_requests(request):
+    user_thesis_requests = ThesisRequest.objects.filter(user=request.user)
+    user_withdrawal_requests = WithdrawalRequest.objects.filter(user=request.user)
+
+    return render(request, "approval_requests.html", {
+        "thesis_requests": user_thesis_requests,
+        "withdrawal_requests": user_withdrawal_requests,
+    })

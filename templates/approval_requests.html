@@ -170,40 +170,35 @@ function fillForm(formType) {
             {% endfor %}
         </div>
         {% endif %}
-        
-        <!-- General Request Form -->
-        <div class="form-section">
-            <h2>Submit a General Request</h2>
-            <form method="POST" action="{% url 'submit_request' %}">
-                {% csrf_token %}
-                
-                <label for="comments">Comments:</label>
-                <textarea id="comments" name="comments" placeholder="Add additional information (if needed)"></textarea>
-                
-                <input type="submit" class="submit-btn" value="Submit Request">
-            </form>
+
+
+    <!-- User Form Tracking -->
+    <section class="form-tracking-section">
+    <h2>Your Submitted Forms</h2>
+    <p>Track your submitted forms, access PDFs, and view approval status.</p>
+
+    <div class="tracking-container">
+        {% for request in thesis_requests %}
+        <div class="tracking-card">
+            <h3>Thesis Request</h3>
+            <p><strong>Status:</strong> <span class="status {{ request.status|lower }}">{{ request.get_status_display }}</span></p>
+            <a href="{{ request.generated_pdf.url }}" class="pdf-link" target="_blank">📄 View PDF</a>
         </div>
-        
-        <!-- Request Status -->
-        <div class="request-status">
-            <h3>Your Requests</h3>
-            {% if user_requests %}
-                <ul>
-                    {% for request in user_requests %}
-                        <li>
-                            Request #{{ request.id }} - 
-                            Status: <span class="status status-{{ request.status }}">{{ request.get_status_display }}</span>
-                            <span class="date">{{ request.created_at|date:"M d, Y" }}</span>
-                            {% if request.status == 'approved' and request.pdf_document %}
-                                <a href="{{ request.pdf_document.url }}" class="download-link" target="_blank">Download PDF</a>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            {% else %}
-                <p>No requests submitted yet.</p>
-            {% endif %}
+        {% empty %}
+        <p class="no-forms-message">No thesis requests found.</p>
+        {% endfor %}
+
+        {% for request in withdrawal_requests %}
+        <div class="tracking-card">
+            <h3>Withdrawal Request</h3>
+            <p><strong>Status:</strong> <span class="status {{ request.status|lower }}">{{ request.get_status_display }}</span></p>
+            <a href="{{ request.generated_pdf.url }}" class="pdf-link" target="_blank">📄 View PDF</a>
         </div>
+        {% empty %}
+        <p class="no-forms-message">No withdrawal requests found.</p>
+        {% endfor %}
+    </div>
+</section>
 
 
     </div>

@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thunder Bay | Electronic Thesis/Dissertation Form </title>
+    <title>Thunder Bay | Electronic Thesis/Dissertation Form</title>
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-    <link rel="stylesheet" href="{% static 'css/approval.css' %}">
+    <link rel="stylesheet" href="{% static 'css/academic_forms.css' %}">
     <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -28,13 +28,6 @@
     </nav>
 
     <!-- Sidebar -->
-
-    <style>
-        .sidebar-link[data-icon="fa-house"]::before { content: "\f015"; color:white;} /* FontAwesome Unicode */
-        .sidebar-link[data-icon="fa-users"]::before { content: "\f0c0"; color: white;}
-        .sidebar-link[data-icon="fa-file-alt"]::before { content: "\f15c"; color: white;}
-    </style>
-
     <div class="sidebar">
         <div class="logoContainer">
             <img class="logo" src="{% static 'images/logo2.png' %}" alt="logo">
@@ -52,18 +45,14 @@
         </div>
     </div>
 
-
-
     <!-- Main Content -->
-<div class="main-content">
+    <div class="main-content">
+        <h2>Electronic Thesis/Dissertation Form</h2>
 
-
-<h2>Electronic Thesis/Dissertation Form</h2>
-
-
-<form method="POST" action="">
+        <div class="form-preview-container">
+            <!-- Form Section -->
+           <form method="POST" action="{% url 'fill_thesis_form' %}">
     {% csrf_token %}
-
     <label>First Name:</label>
     <input type="text" value="{{ user.first_name }}" readonly>
 
@@ -71,41 +60,66 @@
     <input type="text" value="{{ user.last_name }}" readonly>
 
     <label>Student UH ID Number:</label>
-    <input type="text" name="student_id" required pattern="\d{7}" title="Must be a 7-digit number">
+    <input type="text" name="student_id" value="{% if thesis_request %}{{ thesis_request.student_id }}{% endif %}" required pattern="\d{7}" title="Must be a 7-digit number">
 
     <label>Degree Type:</label>
     <select name="degree_type">
-        <option value="Master">Master</option>
-        <option value="Doctorate">Doctorate</option>
+        <option value="Master" {% if thesis_request and thesis_request.degree_type == 'Master' %}selected{% endif %}>Master</option>
+        <option value="Doctorate" {% if thesis_request and thesis_request.degree_type == 'Doctorate' %}selected{% endif %}>Doctorate</option>
     </select>
 
     <label>Date of Graduation:</label>
-    <input type="month" name="graduation_date" required>
+    <input type="month" name="graduation_date" value="{% if thesis_request %}{{ thesis_request.graduation_date }}{% endif %}" required>
 
     <label>Special Request Type:</label>
     <select name="request_type">
-        <option value="First Embargo Extension">First Embargo Extension</option>
-        <option value="Full Record Hold">Full Record Hold</option>
-        <option value="Additional Embargo Extension">Additional Embargo Extension</option>
-        <option value="Other">Other (Please specify below)</option>
+        <option value="First Embargo Extension" {% if thesis_request and thesis_request.request_type == 'First Embargo Extension' %}selected{% endif %}>First Embargo Extension</option>
+        <option value="Full Record Hold" {% if thesis_request and thesis_request.request_type == 'Full Record Hold' %}selected{% endif %}>Full Record Hold</option>
+        <option value="Additional Embargo Extension" {% if thesis_request and thesis_request.request_type == 'Additional Embargo Extension' %}selected{% endif %}>Additional Embargo Extension</option>
+        <option value="Other" {% if thesis_request and thesis_request.request_type == 'Other' %}selected{% endif %}>Other (Please specify below)</option>
     </select>
 
     <label>Justification/Reasoning:</label>
-    <textarea name="justification" required></textarea>
+    <textarea name="justification" required>{% if thesis_request %}{{ thesis_request.justification }}{% endif %}</textarea>
 
-    <button type="submit">Submit Request</button>
+    <button type="submit" class="btn">Submit Request</button>
+
+    {% if thesis_request %}
+        <div class="message">Request Submitted!</div>
+
+        <div class="form-buttons">
+            <a href="{% url 'generate_thesis_pdf' thesis_request.id %}" target="_blank" class="btn">Generate PDF</a>
+
+
+            <a href="{% url 'approval_requests' %}" class="btn btn-back">Cancel</a>
+        </div>
+    {% endif %}
 </form>
 
-{% if thesis_request %}
-    <h3>Request Submitted!</h3>
-    <a href="{% url 'generate_thesis_pdf' thesis_request.id %}" target="_blank">
-        <button>Generate PDF</button>
-    </a>
-{% endif  %}
 
-    <a href="{% url 'approval_requests' %}" class="btn-back">Cancel</a>
 
-</div>
+            <!-- PDF Preview Section -->
+            <div class="pdf-preview-container">
+                <h3>Preview</h3>
+                <iframe id="pdfPreview"
+                     src="{% if thesis_request and thesis_request.pdf_document %}{{ MEDIA_URL }}{{ thesis_request.pdf_document }}{% else %}{% static 'pdfs/thesis_form.pdf' %}{% endif %}"
+                    width="100%" height="500px"
+                    type="application/pdf">
+                </iframe>
+
+                {% if thesis_request and thesis_request.status == "Draft" %}
+            <form method="POST" action="{% url 'submit_thesis_for_approval' thesis_request.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn">Submit for Approval</button>
+             </form>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
+
+
 

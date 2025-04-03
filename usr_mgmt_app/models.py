@@ -119,7 +119,8 @@ UserProfile = get_user_model()  # Ensure it references the correct User model
 class ThesisRequest(models.Model):
     STATUS_CHOICES = [
         ('draft', 'Draft'),
-        ('submitted', 'Submitted'),
+        ('pending', 'Pending'),
+        ('returned', 'Returned'),
         ('approved', 'Approved'),
     ]
 
@@ -133,7 +134,7 @@ class ThesisRequest(models.Model):
     graduation_date = models.CharField(max_length=10, default="MM/YYYY")  # Default format
     request_type = models.CharField(max_length=50, default="Unknown Request")
     justification = models.TextField(default="No justification provided")  # Default text
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Draft')
     pdf_document = models.FileField(upload_to="generated_pdfs/", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -144,7 +145,8 @@ class ThesisRequest(models.Model):
 class WithdrawalRequest(models.Model):
     STATUS_CHOICES = [
         ('draft', 'Draft'),
-        ('submitted', 'Submitted'),
+        ('pending', 'Pending'),
+        ('returned', 'Returned'),
         ('approved', 'Approved'),
     ]
 

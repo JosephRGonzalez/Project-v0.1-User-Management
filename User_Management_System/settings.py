@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-99+)794ra3^w5_-5u4*k249wdfaqdq4!==nxqs02yhfq9l(7y8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['usr-mgmt-app-bue8bpeqcucthdc8.westus2-01.azurewebsites.net', '127.0.0.1']
+ALLOWED_HOSTS = ['usr-mgmt-app-bue8bpeqcucthdc8.westus2-01.azurewebsites.net', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -143,5 +143,7 @@ CSRF_TRUSTED_ORIGINS = [
     'https://usr-mgmt-app-bue8bpeqcucthdc8.westus2-01.azurewebsites.net',
 ]
 
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+X_FRAME_OPTIONS = "SAMEORIGIN"
