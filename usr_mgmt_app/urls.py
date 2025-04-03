@@ -12,7 +12,7 @@ urlpatterns = [
     path('signup/', views.signup_view, name='signup'),  # Sign up Page
     path('dashboard/', views.dashboard_view, name='dashboard'),  # Dashboard page
     path('submit-request/', views.submit_request_view, name='submit_request'),  # Submit approval request
-    path('approve-request/<int:step_id>/', views.approve_request_view, name='approve_request'),  # Approve/return request
+
     path('request/<int:request_id>/', views.request_detail_view, name='request_detail'),  # View request details
     path('revise-request/<int:request_id>/', views.revise_request_view, name='revise_request'),  # Revise returned request
     path('logout/', views.logout_view, name='logout'),
@@ -33,8 +33,8 @@ urlpatterns = [
     path("generate-pdf/thesis/<int:request_id>/", views.generate_thesis_pdf, name="generate_thesis_pdf"),
     path("generate-pdf/withdrawal/<int:request_id>/", views.generate_withdrawal_pdf, name="generate_withdrawal_pdf"),
     path('approval-requests/', views.approval_requests, name='approval_requests'),
-    path('approve_request/<int:request_id>/', views.approve_request, name='approve_request'),
-    path('return_request/<int:request_id>/', views.return_request, name='return_request'),
+    path("approve_request/<int:request_id>/<str:request_type>/", views.approve_request, name="approve_request"),
+    path("return_request/<int:request_id>/<str:request_type>/", views.return_request, name="return_request"),
 ]
 
 if settings.DEBUG:

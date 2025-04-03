@@ -214,17 +214,18 @@
     background: rgb(0,134,108);
 }
 
+/* New Return Button */
 .btn-return {
-    background: rgb(246,190,0);
-    color: black;
-    padding: 8px 12px;
-    text-decoration: none;
+    background: rgb(200, 16, 46);
+    color: white;
+    padding: 5px 10px;
     border-radius: 5px;
+    text-decoration: none;
     transition: background 0.3s ease;
 }
 
 .btn-return:hover {
-    background: rgb(215,155,0);
+    background: rgb(150,12,34);
 }
 
 /* Empty Request Row */
@@ -234,4 +235,17 @@
     font-size: 18px;
     background: rgb(136,139,141);
     color: white;
+}
+
+.btn-approve {
+    background: rgb(0,179,136);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background 0.3s ease;
+}
+
+.btn-approve:hover {
+    background: rgb(0,134,108);
 }

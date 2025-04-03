@@ -16,7 +16,7 @@ from django.conf import settings
 from .models import ThesisRequest, WithdrawalRequest
 from django.http import FileResponse
 from django.conf import settings
-
+from django.http import HttpResponseForbidden
 
 
 
@@ -124,11 +124,15 @@ def logout_view(request):
 def user_list(request):
     users = UserProfile.objects.all()
 
+    # Fetch pending requests and categorize them
     pending_requests = []
-    for request_obj in ThesisRequest.objects.filter(status="pending"):
-        pending_requests.append({"request": request_obj, "type": "Thesis Request"})
-    for request_obj in WithdrawalRequest.objects.filter(status="pending"):
-        pending_requests.append({"request": request_obj, "type": "Withdrawal Request"})
+    for thesis in ThesisRequest.objects.filter(status="Pending"):
+        pending_requests.append({"id": thesis.id, "type": "ThesisRequest", "request": thesis})
+
+    for withdrawal in WithdrawalRequest.objects.filter(status="Pending"):
+        pending_requests.append({"id": withdrawal.id, "type": "WithdrawalRequest", "request": withdrawal})
+
+    print("Final pending_requests:", pending_requests)  # Debugging
 
     # Get the permissions for the current user
     has_edit_permission = request.user.has_perm('usr_mgmt_app.can_edit')
@@ -145,7 +149,8 @@ def user_list(request):
     return render(request, 'user_list.html', {
         'users': users,
         'has_edit_permission': has_edit_permission,
-        'has_manage_users_permission': has_manage_users_permission
+        'has_manage_users_permission': has_manage_users_permission,
+        'pending_requests': pending_requests,
     })
 
 
@@ -439,7 +444,7 @@ def delete_signature(request):
             user.save()
 
 
-    return redirect('approval_requests')  # Redirect to profile page (or wherever appropriate)
+    return redirect('approval_requests')
 
 
 
@@ -760,17 +765,35 @@ def approval_requests(request):
     })
 
 
-def approve_request(request, request_id):
-    form_request = get_object_or_404(ApprovalRequest, id=request_id)
-    if request.user.role == "admin":
-        form_request.status = "approved"
-        form_request.save()
-    return redirect('user_list')
+def approve_request(request, request_id, request_type):
+    if request.user.role != "admin":
+        return HttpResponseForbidden("You are not authorized to perform this action.")
 
-def return_request(request, request_id):
-    form_request = get_object_or_404(ApprovalRequest, id=request_id)
-    if request.user.role == "admin":
-        form_request.status = "returned"
-        form_request.save()
-    return redirect('user_list')
+    if request_type == "ThesisRequest":
+        request_obj = get_object_or_404(ThesisRequest, id=request_id)
+    elif request_type == "WithdrawalRequest":
+        request_obj = get_object_or_404(WithdrawalRequest, id=request_id)
+    else:
+        return HttpResponseForbidden("Invalid request type.")
+
+    request_obj.status = "Approved"
+    request_obj.save()
+
+    return redirect("user_list")
+
+def return_request(request, request_id, request_type):
+    if request.user.role != "admin":
+        return HttpResponseForbidden("You are not authorized to perform this action.")
+
+    if request_type == "ThesisRequest":
+        request_obj = get_object_or_404(ThesisRequest, id=request_id)
+    elif request_type == "WithdrawalRequest":
+        request_obj = get_object_or_404(WithdrawalRequest, id=request_id)
+    else:
+        return HttpResponseForbidden("Invalid request type.")
+
+    request_obj.status = "Returned"
+    request_obj.save()
+
+    return redirect("user_list")
 

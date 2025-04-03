@@ -112,6 +112,7 @@
     </script>
 
 
+
 {% if user.role == "admin" %}
     <h2>Pending Form Submissions</h2>
     <table class="approval-table">
@@ -132,8 +133,31 @@
     <td>{{ entry.type }}</td>
     <td>{{ entry.request.created_at|date:"Y-m-d H:i" }}</td>
     <td>
-        <a href="{% url 'approve_request' entry.request.id %}" class="btn-approve">Approve</a>
-        <a href="{% url 'return_request' entry.request.id %}" class="btn-return">Return</a>
+
+
+        {% for request in pending_requests %}
+        {% if request.id and request.type %}
+        <form method="POST" action="{% url 'approve_request' request.id request.type %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-approve">Approve</button>
+        </form>
+        {% else %}
+        <span class="text-danger">Invalid Request</span>
+        {% endif %}
+        {% endfor %}
+
+
+        {% for request in pending_requests %}
+        {% if request.id and request.type %}
+        <form method="POST" action="{% url 'return_request' request.id request.type %}">
+            {% csrf_token %}
+            <button type="submit" class="btn-return">Return</button>
+        </form>
+        {% else %}
+        <span class="text-danger">Invalid Request</span>
+        {% endif %}
+        {% endfor %}
+
     </td>
 </tr>
 {% empty %}
@@ -141,6 +165,7 @@
     <td colspan="5" class="no-requests">No pending requests.</td>
 </tr>
 {% endfor %}
+
         </tbody>
     </table>
 {% endif %}
