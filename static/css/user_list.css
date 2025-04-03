@@ -169,3 +169,69 @@
     background: rgba(255, 255, 255, 0.1);
     transition: background 0.3s ease-in-out;
 }
+
+
+/* Approval Table */
+.approval-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: rgb(136,139,141);
+    color: white;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.approval-table th, .approval-table td {
+    padding: 15px;
+    text-align: left;
+}
+
+.approval-table th {
+    background: rgb(200, 16, 46);
+    color: white;
+}
+
+.approval-table tr:nth-child(even) {
+    background: rgb(84,88,90);
+}
+
+.approval-table tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Approval Buttons */
+.btn-approve {
+    background: rgb(0,179,136);
+    color: white;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.btn-approve:hover {
+    background: rgb(0,134,108);
+}
+
+.btn-return {
+    background: rgb(246,190,0);
+    color: black;
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+.btn-return:hover {
+    background: rgb(215,155,0);
+}
+
+/* Empty Request Row */
+.no-requests {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
+    background: rgb(136,139,141);
+    color: white;
+}

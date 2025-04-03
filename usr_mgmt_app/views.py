@@ -123,6 +123,13 @@ def logout_view(request):
 @permission_required('usr_mgmt_app.can_read', raise_exception=True)
 def user_list(request):
     users = UserProfile.objects.all()
+
+    pending_requests = []
+    for request_obj in ThesisRequest.objects.filter(status="pending"):
+        pending_requests.append({"request": request_obj, "type": "Thesis Request"})
+    for request_obj in WithdrawalRequest.objects.filter(status="pending"):
+        pending_requests.append({"request": request_obj, "type": "Withdrawal Request"})
+
     # Get the permissions for the current user
     has_edit_permission = request.user.has_perm('usr_mgmt_app.can_edit')
     has_manage_users_permission = request.user.has_perm('usr_mgmt_app.can_manage_users')
@@ -132,6 +139,7 @@ def user_list(request):
         'has_edit_permission': has_edit_permission,
         'has_manage_users_permission': has_manage_users_permission,
         'users': UserProfile.objects.all(),  # Assuming you have users in your context
+        'pending_requests': pending_requests,
     }
 
     return render(request, 'user_list.html', {
@@ -750,3 +758,19 @@ def approval_requests(request):
         "thesis_requests": user_thesis_requests,
         "withdrawal_requests": user_withdrawal_requests,
     })
+
+
+def approve_request(request, request_id):
+    form_request = get_object_or_404(ApprovalRequest, id=request_id)
+    if request.user.role == "admin":
+        form_request.status = "approved"
+        form_request.save()
+    return redirect('user_list')
+
+def return_request(request, request_id):
+    form_request = get_object_or_404(ApprovalRequest, id=request_id)
+    if request.user.role == "admin":
+        form_request.status = "returned"
+        form_request.save()
+    return redirect('user_list')
+

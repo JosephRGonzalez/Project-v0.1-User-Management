@@ -98,7 +98,7 @@
                 {% endfor %}
             </tbody>
         </table>
-    </div>
+
 
     <!-- Confirmation Scripts -->
     <script>
@@ -111,5 +111,40 @@
         }
     </script>
 
+
+{% if user.role == "admin" %}
+    <h2>Pending Form Submissions</h2>
+    <table class="approval-table">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Requester</th>
+                <th>Form Type</th>
+                <th>Submitted On</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in pending_requests %}
+<tr>
+    <td>{{ entry.request.id }}</td>
+    <td>{{ entry.request.user.first_name }} {{ entry.request.user.last_name }}</td>
+    <td>{{ entry.type }}</td>
+    <td>{{ entry.request.created_at|date:"Y-m-d H:i" }}</td>
+    <td>
+        <a href="{% url 'approve_request' entry.request.id %}" class="btn-approve">Approve</a>
+        <a href="{% url 'return_request' entry.request.id %}" class="btn-return">Return</a>
+    </td>
+</tr>
+{% empty %}
+<tr>
+    <td colspan="5" class="no-requests">No pending requests.</td>
+</tr>
+{% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+</div>
 </body>
 </html>
