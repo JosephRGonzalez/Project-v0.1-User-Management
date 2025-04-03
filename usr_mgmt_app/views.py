@@ -48,12 +48,16 @@ def dashboard_view(request):
     admin_count = UserProfile.objects.filter(role='admin').count()
     moderator_count = UserProfile.objects.filter(role='moderator').count()
     user_count = UserProfile.objects.filter(role='user').count()
+    thesis_requests = ThesisRequest.objects.filter(user=request.user).order_by('-created_at')[:5]  # Get last 5 requests
+    withdrawal_requests = WithdrawalRequest.objects.filter(user=request.user).order_by('-created_at')[:5]
 
     # Render the dashboard template with the counts
     return render(request, 'dashboard.html', {
         'admin_count': admin_count,
         'moderator_count': moderator_count,
         'user_count': user_count,
+        'thesis_requests': thesis_requests,
+        'withdrawal_requests': withdrawal_requests,
     })
 
 

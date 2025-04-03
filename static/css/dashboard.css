@@ -404,3 +404,104 @@ margin-bottom: 5%;
     transition: transform 0.3s ease-in-out;
 }
 
+
+
+
+/* Form Submission Status Section */
+.form-status-section {
+    margin-top: 40px;
+    padding: 20px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-status-section h2 {
+    text-align: left;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+    color: #333;
+}
+
+/* Table Styles */
+.form-status-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fafafa;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0px 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-status-table thead {
+    background: rgb(200,16,46);
+    color: white;
+}
+
+.form-status-table th,
+.form-status-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+
+
+/* Status Badges */
+.status-badge {
+    display: inline-block;
+    padding: 6px 12px;
+    font-weight: bold;
+    border-radius: 25px;
+    font-size: 0.9em;
+    text-transform: capitalize;
+}
+
+.status-draft {
+    background: #ffeb3b;
+    color: #6a4f1f;
+}
+
+.status-pending {
+    background: #f39c12;
+    color: white;
+}
+
+.status-returned {
+    background: #e74c3c;
+    color: white;
+}
+
+.status-approved {
+    background: #2ecc71;
+    color: white;
+}
+
+/* PDF Link */
+.pdf-link {
+    text-decoration: none;
+    font-weight: bold;
+    color: #3498db;
+    transition: color 0.3s ease;
+}
+
+.pdf-link:hover {
+    color: #1d6ea3;
+    text-decoration: underline;
+}
+
+/* Unavailable PDF */
+.pdf-unavailable {
+    color: #aaa;
+    font-style: italic;
+}
+
+/* No Forms Message */
+.no-forms-message {
+    text-align: center;
+    margin-top: 15px;
+    color: #777;
+    font-style: italic;
+}
+
+

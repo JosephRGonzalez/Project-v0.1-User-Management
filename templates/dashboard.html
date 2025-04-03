@@ -78,6 +78,59 @@
         </div>
         <!-- End of Card Container -->
 
+        <!-- Form Submission Status Table -->
+<div class="form-status-section">
+    <h2>Your Recent Form Submissions</h2>
+
+    <table class="form-status-table">
+        <thead>
+            <tr>
+                <th>Form Type</th>
+                <th>Submitted On</th>
+                <th>Status</th>
+                <th>PDF</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for request in thesis_requests %}
+            <tr>
+                <td>Thesis Request</td>
+                <td>{{ request.created_at|date:"F j, Y" }}</td>
+                <td><span class="status-badge status-{{ request.status|lower }}">{{ request.get_status_display }}</span></td>
+                <td>
+                    {% if request.pdf_document %}
+                        <a href="{{ request.pdf_document.url }}" class="pdf-link" target="_blank">📄 View</a>
+                    {% else %}
+                        <span class="pdf-unavailable">N/A</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+
+            {% for request in withdrawal_requests %}
+            <tr>
+                <td>Withdrawal Request</td>
+                <td>{{ request.created_at|date:"F j, Y" }}</td>
+                <td><span class="status-badge status-{{ request.status|lower }}">{{ request.get_status_display }}</span></td>
+                <td>
+                    {% if request.pdf_document %}
+                        <a href="{{ request.pdf_document.url }}" class="pdf-link" target="_blank">📄 View</a>
+                    {% else %}
+                        <span class="pdf-unavailable">N/A</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if not thesis_requests and not withdrawal_requests %}
+        <p class="no-forms-message">You have not submitted any forms yet.</p>
+    {% endif %}
+</div>
+
+
+
 
     </div>
 
