@@ -120,6 +120,20 @@ button:hover,
     }
 }
 
+.address-fieldset {
+    border: 2px solid #c8102e; /* University of Houston primary color */
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
+.address-fieldset legend {
+    color: #c8102e;
+    font-weight: bold;
+    padding: 0 10px;
+    font-size: 1.2em;
+}
 
 

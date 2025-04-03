@@ -172,17 +172,30 @@ function fillForm(formType) {
         {% endif %}
 
 
-    <!-- User Form Tracking -->
-    <section class="form-tracking-section">
+<!-- User Form Tracking -->
+<section class="form-tracking-section">
     <h2>Your Submitted Forms</h2>
     <p>Track your submitted forms, access PDFs, and view approval status.</p>
 
     <div class="tracking-container">
         {% for request in thesis_requests %}
         <div class="tracking-card">
-            <h3>Thesis Request</h3>
-            <p><strong>Status:</strong> <span class="status {{ request.status|lower }}">{{ request.get_status_display }}</span></p>
-            <a href="{{ request.generated_pdf.url }}" class="pdf-link" target="_blank">📄 View PDF</a>
+            <div class="tracking-card-content">
+                <h3>Thesis Request</h3>
+                <p><strong>Status:</strong> {{ request.status }}</p> <span class="status-badge status-{{ request.status|lower }}">{{ request.get_status_display }}</span>
+                <p><strong>Graduation Date:</strong> {{ request.graduation_date }}</p>
+                <p><strong>Degree Program:</strong> {{ request.degree_type }}</p>
+                <p><strong>Request Type:</strong> {{ request.request_type }}</p>
+                {% if request.pdf_document %}
+                    <a href="{{ request.pdf_document.url }}" class="pdf-link" target="_blank">📄 View PDF</a>
+                {% else %}
+                    <p class="pdf-unavailable">📄 PDF not available</p>
+                {% endif %}
+            </div>
+            <div class="additional-info">
+                <p><strong>Student ID:</strong> {{ request.student_id }}</p>
+                <p><strong>Submitted On:</strong> {{ request.created_at|date:"F j, Y" }}</p>
+            </div>
         </div>
         {% empty %}
         <p class="no-forms-message">No thesis requests found.</p>
@@ -190,15 +203,32 @@ function fillForm(formType) {
 
         {% for request in withdrawal_requests %}
         <div class="tracking-card">
-            <h3>Withdrawal Request</h3>
-            <p><strong>Status:</strong> <span class="status {{ request.status|lower }}">{{ request.get_status_display }}</span></p>
-            <a href="{{ request.generated_pdf.url }}" class="pdf-link" target="_blank">📄 View PDF</a>
+            <div class="tracking-card-content">
+                <h3>Withdrawal Request</h3>
+                <p><strong>Status:</strong> {{ request.status }}</p> <span class="status-badge status-{{ request.status|lower }}">{{ request.get_status_display }}</span>
+                <p><strong>Degree Plan:</strong> {{ request.degree_plan }}</p>
+                <p><strong>Term for Withdrawal:</strong> {{ request.withdrawal_term }}</p>
+                <p><strong>Last Date Attendend:</strong> {{ request.last_attendance_date }}</p>
+                {% if request.pdf_document %}
+                    <a href="{{ request.pdf_document.url }}" class="pdf-link" target="_blank">📄 View PDF</a>
+                {% else %}
+                    <p class="pdf-unavailable">📄 PDF not available</p>
+                {% endif %}
+            </div>
+            <div class="additional-info">
+                <p><strong>Student ID:</strong> {{ request.student_id }}</p>
+                <p><strong>Submitted On:</strong> {{ request.created_at|date:"F j, Y" }}</p>
+            </div>
         </div>
         {% empty %}
         <p class="no-forms-message">No withdrawal requests found.</p>
         {% endfor %}
     </div>
 </section>
+
+
+
+
 
 
     </div>

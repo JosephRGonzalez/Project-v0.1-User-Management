@@ -156,7 +156,7 @@ class WithdrawalRequest(models.Model):
     email = models.EmailField(default="example@example.com")  # New field for email
     college = models.CharField(max_length=100, default="Unknown College")
     degree_plan = models.CharField(max_length=100, default="Unknown Degree Plan")
-
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Draft')
 
     street_address = models.CharField(max_length=255, default="No address provided")
     city = models.CharField(max_length=100, default="Unknown City")

@@ -7,7 +7,7 @@
     <title>Thunder Bay | Medical/Administrative Withdrawal Form </title>
     <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-    <link rel="stylesheet" href="{% static 'css/approval.css' %}">
+    <link rel="stylesheet" href="{% static 'css/academic_forms.css' %}">
     <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,12 +32,6 @@
 
     <!-- Sidebar -->
 
-    <style>
-        .sidebar-link[data-icon="fa-house"]::before { content: "\f015"; color:white;} /* FontAwesome Unicode */
-        .sidebar-link[data-icon="fa-users"]::before { content: "\f0c0"; color: white;}
-        .sidebar-link[data-icon="fa-file-alt"]::before { content: "\f15c"; color: white;}
-    </style>
-
     <div class="sidebar">
         <div class="logoContainer">
             <img class="logo" src="{% static 'images/logo2.png' %}" alt="logo">
@@ -57,104 +51,97 @@
 
 
     <!-- Main Content -->
-<div class="main-content">
+    <div class="main-content">
+        <h2>Medical/Administrative Term Withdrawal Form</h2>
 
+        <div class="form-preview-container">
+            <!-- Form Section -->
+            <form method="POST" action="{% url 'fill_withdrawal_form' %}">
+                {% csrf_token %}
 
-<h2>Medical/Administrative Term Withdrawal Form</h2>
+                <label>First Name:</label>
+                <input type="text" value="{{ user.first_name }}" readonly>
 
+                <label>Last Name:</label>
+                <input type="text" value="{{ user.last_name }}" readonly>
 
-<form method="POST" action="">
-    {% csrf_token %}
+                <label>Student UH ID:</label>
+                <input type="text" name="student_id" value="{% if withdrawal_request %}{{ withdrawal_request.student_id }}{% endif %}" required pattern="\d{7}" title="Must be a 7-digit number">
 
-    <label for="first_name">First Name:</label>
-    <input type="text" id="first_name" value="{{ user.first_name }}" readonly>
+                <label>College:</label>
+                <input type="text" name="college" value="{% if withdrawal_request %}{{ withdrawal_request.college }}{% endif %}" required>
 
-    <label for="middle_name">Middle Name:</label>
-    <input type="text" id="middle_name" name="middle_name">
+                <label>Degree Plan:</label>
+                <input type="text" name="degree_plan" value="{% if withdrawal_request %}{{ withdrawal_request.degree_plan }}{% endif %}" required>
 
-    <label for="last_name">Last Name:</label>
-    <input type="text" id="last_name" value="{{ user.last_name }}" readonly>
+                <fieldset class="address-fieldset">
+                    <legend>Current Mailing Address</legend>
+                    <label>Street Address:</label>
+                    <input type="text" name="street_address" value="{% if withdrawal_request %}{{ withdrawal_request.street_address }}{% endif %}" required>
 
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" value="{{ user.email }}" required>
+                    <label>City:</label>
+                    <input type="text" name="city" value="{% if withdrawal_request %}{{ withdrawal_request.city }}{% endif %}" required>
 
-    <label for="student_id">Student UH ID:</label>
-    <input type="text" id="student_id" name="student_id" required pattern="\d{7}" title="Must be a 7-digit number">
+                    <label>State:</label>
+                    <input type="text" name="state" value="{% if withdrawal_request %}{{ withdrawal_request.state }}{% endif %}" required>
 
-    <label for="college">College:</label>
-    <input type="text" id="college" name="college" required>
+                    <label>Zip Code:</label>
+                    <input type="text" name="zipcode" value="{% if withdrawal_request %}{{ withdrawal_request.zipcode }}{% endif %}" required>
+                </fieldset>
 
-    <label for="degree_plan">Degree Plan:</label>
-    <input type="text" id="degree_plan" name="degree_plan" required>
+                <label>Phone Number:</label>
+                <input type="tel" name="phone" value="{% if withdrawal_request %}{{ withdrawal_request.phone }}{% endif %}" required>
 
-<fieldset class="address-fieldset">
-    <legend>Current Mailing Address</legend>
+                <label>Term for Withdrawal:</label>
+                <input type="text" name="withdrawal_term" value="{% if withdrawal_request %}{{ withdrawal_request.withdrawal_term }}{% endif %}" required>
 
-    <label for="street_address">Street Address:</label>
-    <input type="text" id="street_address" name="street_address" required>
+                <label>Last Date Attended Classes:</label>
+                <input type="date" name="last_attendance_date" value="{% if withdrawal_request %}{{ withdrawal_request.last_attendance_date }}{% endif %}" required>
 
-    <label for="city">City:</label>
-    <input type="text" id="city" name="city" required>
+                <label>Reason for Withdrawal:</label>
+                <textarea name="withdrawal_reason" required>{% if withdrawal_request %}{{ withdrawal_request.withdrawal_reason }}{% endif %}</textarea>
 
-    <label for="state">State:</label>
-    <input type="text" id="state" name="state" required>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="financial_assistance" value="True" {% if withdrawal_request and withdrawal_request.financial_assistance %}checked{% endif %}> Financial Assistance Received?</label>
 
-    <label for="zipcode">Zip Code:</label>
-    <input type="text" id="zipcode" name="zipcode" required>
-</fieldset>
+                    <label><input type="checkbox" name="uh_health_insurance" value="True" {% if withdrawal_request and withdrawal_request.uh_health_insurance %}checked{% endif %}> UH Student Health Insurance?</label>
 
+                    <label><input type="checkbox" name="campus_housing" value="True" {% if withdrawal_request and withdrawal_request.campus_housing %}checked{% endif %}> Campus Housing?</label>
 
-    <label for="phone">Phone Number:</label>
-    <input type="tel" id="phone" name="phone" required>
+                    <label><input type="checkbox" name="visa_holder" value="True" {% if withdrawal_request and withdrawal_request.visa_holder %}checked{% endif %}> Visa Holder?</label>
 
-    <label for="withdrawal_term">Term for Withdrawal:</label>
-    <input type="text" id="withdrawal_term" name="withdrawal_term" required>
+                    <label><input type="checkbox" name="gi_bill" value="True" {% if withdrawal_request and withdrawal_request.gi_bill %}checked{% endif %}> GI Bill Benefits?</label>
+                </div>
 
-    <label for="last_attendance_date">Last Date Attended Classes:</label>
-    <input type="date" id="last_attendance_date" name="last_attendance_date" required>
+                <button type="submit" class="btn">Submit Request</button>
 
-    <label for="withdrawal_reason">Reason for Withdrawal:</label>
-    <textarea id="withdrawal_reason" name="withdrawal_reason" required></textarea>
+                {% if withdrawal_request %}
+                    <div class="message">Request Submitted!</div>
 
+                    <div class="form-buttons">
+                        <a href="{% url 'generate_withdrawal_pdf' withdrawal_request.id %}" target="_blank" class="btn">Generate PDF</a>
+                        <a href="{% url 'approval_requests' %}" class="btn btn-back">Cancel</a>
+                    </div>
+                {% endif %}
+            </form>
 
+            <!-- PDF Preview Section -->
+            <div class="pdf-preview-container">
+                <h3>Preview</h3>
+                <iframe id="pdfPreview"
+                     src="{% if withdrawal_request and withdrawal_request.pdf_document %}{{ MEDIA_URL }}{{ withdrawal_request.pdf_document }}{% else %}{% static 'pdfs/withdrawal_form.pdf' %}{% endif %}"
+                    width="100%" height="500px"
+                    type="application/pdf">
+                </iframe>
 
-    <div class="checkbox-container">
-    <label for="financial_assistance">Financial Assistance Received?</label>
-    <input type="checkbox" id="financial_assistance" name="financial_assistance" value="True">
+                {% if withdrawal_request and withdrawal_request.status == "Draft" %}
+                    <form method="POST" action="{% url 'submit_withdrawal_for_approval' withdrawal_request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Submit for Approval</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
     </div>
-
-    <div class="checkbox-container">
-    <label for="uh_health_insurance">UH Student Health Insurance?</label>
-    <input type="checkbox" id="uh_health_insurance" name="uh_health_insurance" value="True">
-    </div>
-
-    <div class="checkbox-container">
-    <label for="campus_housing">Campus Housing?</label>
-    <input type="checkbox" id="campus_housing" name="campus_housing" value="True">
-    </div>
-
-    <div class="checkbox-container">
-    <label for="visa_holder">Visa Holder?</label>
-    <input type="checkbox" id="visa_holder" name="visa_holder" value="True">
-    </div>
-
-    <div class="checkbox-container">
-    <label for="gi_bill">GI Bill Benefits?</label>
-    <input type="checkbox" id="gi_bill" name="gi_bill" value="True">
-    </div>
-
-    <button type="submit">Submit Request</button>
-</form>
-
-
-{% if withdrawal_request %}
-    <h3 class = "submission_message">Request Submitted!</h3>
-    <a href="{% url 'generate_withdrawal_pdf' withdrawal_request.id %}" target="_blank">
-        <button>Generate PDF</button>
-    </a>
-{% endif %}
-
-
-</div>
 </body>
 </html>

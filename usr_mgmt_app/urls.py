@@ -11,7 +11,6 @@ urlpatterns = [
     path('login/', views.login_view, name='login'),  # Login page
     path('signup/', views.signup_view, name='signup'),  # Sign up Page
     path('dashboard/', views.dashboard_view, name='dashboard'),  # Dashboard page
-    path('approval-requests/', views.approval_requests_view, name='approval_requests'),
     path('submit-request/', views.submit_request_view, name='submit_request'),  # Submit approval request
     path('approve-request/<int:step_id>/', views.approve_request_view, name='approve_request'),  # Approve/return request
     path('request/<int:request_id>/', views.request_detail_view, name='request_detail'),  # View request details
@@ -29,10 +28,11 @@ urlpatterns = [
     path("fill-form/thesis/", views.fill_thesis_form, name="fill_thesis_form"),
     path("fill-form/withdrawal/", views.fill_withdrawal_form, name="fill_withdrawal_form"),
     path("submit-thesis-for-approval/<int:request_id>/", views.submit_thesis_for_approval, name="submit_thesis_for_approval"),
+    path("submit-withdrawal-for-approval/<int:request_id>/", views.submit_withdrawal_for_approval, name="submit_withdrawal_for_approval"),
     # PDF Generation
     path("generate-pdf/thesis/<int:request_id>/", views.generate_thesis_pdf, name="generate_thesis_pdf"),
     path("generate-pdf/withdrawal/<int:request_id>/", views.generate_withdrawal_pdf, name="generate_withdrawal_pdf"),
-
+    path('approval-requests/', views.approval_requests, name='approval_requests'),
 ]
 
 if settings.DEBUG:

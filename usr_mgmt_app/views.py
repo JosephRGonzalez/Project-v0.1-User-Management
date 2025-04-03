@@ -339,49 +339,7 @@ def submit_request_view(request):
     return redirect('approval_requests')
 
 @login_required
-def approve_request_view(request, step_id):
-    """View for approving a request"""
-    # Get the approval step that belongs to this approver
-    step = get_object_or_404(ApprovalStep, id=step_id, approver=request.user)
-    
-    if request.method == 'POST':
-        action = request.POST.get('action')
-        comment = request.POST.get('comment', '')
-        
-        if action == 'approve':
-            # Mark this approval step as approved
-            step.status = 'approved'
-            step.comments = comment
-            step.save()
-            
-            # Check if all steps are approved
-            all_steps = ApprovalStep.objects.filter(request=step.request)
-            all_approved = all(s.status == 'approved' for s in all_steps)
-            
-            if all_approved:
-                # If all approvers have approved, update the main request status
-                step.request.status = 'approved'
-                step.request.save()
-                # Here you would trigger PDF generation with LaTeX
-                
-            messages.success(request, "Request approved successfully.")
-        
-        elif action == 'return':
-            # Mark this step as returned
-            step.status = 'returned'
-            step.comments = comment
-            step.save()
-            
-            # Update the main request status to returned
-            step.request.status = 'returned'
-            step.request.save()
-            
-            messages.success(request, "Request returned for revisions.")
-        
-        return redirect('approval_requests')
-    
-    # If not a POST request, show the approval form
-    return render(request, 'approve_request.html', {'step': step})
+
 
 
 @login_required
@@ -625,9 +583,9 @@ def submit_thesis_for_approval(request, request_id):
     if request.method == "POST":
         thesis_request.status = "Pending"  # Update status to Pending
         thesis_request.save()
-        return redirect("thesis_form")  # Redirect back to the form page
+        return redirect("fill_thesis_form")  # Redirect back to the form page
 
-    return redirect("thesis_form")
+    return redirect("fill_thesis_form")
 
 
 
@@ -665,6 +623,7 @@ def fill_withdrawal_form(request):
             existing_request.visa_holder = request.POST.get("visa_holder", False)
             existing_request.gi_bill = request.POST.get("gi_bill", False)
             existing_request.student_initial = user.first_name[0]  # Extract first initial
+            existing_request.status = "Draft"
             existing_request.save()  # Save the updated data
         else:
             # If no existing request, create a new one
@@ -688,14 +647,22 @@ def fill_withdrawal_form(request):
                 campus_housing=request.POST.get("campus_housing", False),
                 visa_holder=request.POST.get("visa_holder", False),
                 gi_bill=request.POST.get("gi_bill", False),
-                student_initial=user.first_name[0]  # Extract first initial
+                student_initial=user.first_name[0],  # Extract first initial
+                status = "Draft"
             )
 
         return redirect("fill_withdrawal_form")
 
     # Retrieve the latest request for the user (either existing or the last one created)
     withdrawal_request = existing_request or WithdrawalRequest.objects.filter(user=user).last()
-    return render(request, "forms/withdrawal_form.html", {"withdrawal_request": withdrawal_request})
+    return render(
+        request,
+        "forms/withdrawal_form.html",
+        {
+            "withdrawal_request": withdrawal_request,
+            "MEDIA_URL": settings.MEDIA_URL
+        }
+    )
 
 
 def generate_withdrawal_pdf(request, request_id):
@@ -736,14 +703,44 @@ def generate_withdrawal_pdf(request, request_id):
 
     print("User Data Sent to LaTeX:", user_data)  # Debugging
 
+    # Generate the PDF from LaTeX template
+    pdf_filename = f"withdrawal_filled_{request_id}.pdf"
     pdf_path = generate_pdf_from_latex(user_data, "withdrawal_template.tex", f"withdrawal_filled_{request_id}")
+
+    # Store the PDF path in the model (relative to MEDIA_URL)
+    withdrawal.pdf_document = os.path.join('generated_pdfs', pdf_filename)  # This is relative to MEDIA_URL
+    withdrawal.status = "Draft"
+    withdrawal.save()
+
     return FileResponse(open(pdf_path, "rb"), content_type="application/pdf")
+
+
+@login_required
+def submit_withdrawal_for_approval(request, request_id):
+    withdrawal_request = get_object_or_404(WithdrawalRequest, id=request_id, user=request.user)
+
+    if request.method == "POST":
+        withdrawal_request.status = "Pending"  # Update status to Pending
+        withdrawal_request.save()
+        return redirect("fill_withdrawal_form")  # Redirect back to the form page
+
+    return redirect("fill_withdrawal_form")
+
+
+
+
 
 
 # Used for tracking user forms.
 def approval_requests(request):
+    print("Current User:", request.user)
+    print("Is Authenticated?", request.user.is_authenticated)
+
     user_thesis_requests = ThesisRequest.objects.filter(user=request.user)
     user_withdrawal_requests = WithdrawalRequest.objects.filter(user=request.user)
+
+    print("Thesis Requests:", list(user_thesis_requests))
+    print("Withdrawal Requests:", list(user_withdrawal_requests))
 
     return render(request, "approval_requests.html", {
         "thesis_requests": user_thesis_requests,
