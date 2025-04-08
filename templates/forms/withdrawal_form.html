@@ -65,6 +65,9 @@
                 <label>Last Name:</label>
                 <input type="text" value="{{ user.last_name }}" readonly>
 
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
                 <label>Student UH ID:</label>
                 <input type="text" name="student_id" value="{% if withdrawal_request %}{{ withdrawal_request.student_id }}{% endif %}" required pattern="\d{7}" title="Must be a 7-digit number">
 

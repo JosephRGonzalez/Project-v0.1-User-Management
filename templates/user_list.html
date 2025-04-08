@@ -122,6 +122,7 @@
                 <th>Requester</th>
                 <th>Form Type</th>
                 <th>Submitted On</th>
+                <th>View PDF</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -132,6 +133,7 @@
     <td>{{ entry.request.user.first_name }} {{ entry.request.user.last_name }}</td>
     <td>{{ entry.type }}</td>
     <td>{{ entry.request.created_at|date:"Y-m-d H:i" }}</td>
+    <td><a href="{{entry.request.pdf_document.url}}">View PDF</a></td>
     <td>
 
 

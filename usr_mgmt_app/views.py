@@ -483,7 +483,13 @@ def generate_pdf_from_latex(user_data, template_file, output_filename):
 
     try:
         print(f"Running Makefile in: {LATEX_DIR}")
-        result = subprocess.run(["make", "-C", LATEX_DIR], capture_output=True, text=True, check=True)
+        result = subprocess.run(
+    ["make", "-C", LATEX_DIR, f"file={output_filename}.tex"],
+    capture_output=True,
+    text=True,
+    check=True,
+)
+
         print("Makefile output:", result.stdout)
     except subprocess.CalledProcessError as e:
         print("LaTeX Error:", e.stderr)
@@ -491,6 +497,7 @@ def generate_pdf_from_latex(user_data, template_file, output_filename):
 
     pdf_path = os.path.join(OUTPUT_DIR, output_filename + ".pdf")
     print(f"✅ PDF should be generated at: {pdf_path}")
+
     return pdf_path
 
 
