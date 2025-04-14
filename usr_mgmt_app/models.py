@@ -196,32 +196,58 @@ class ReducedCourseLoadRequest(models.Model):
         ('spring', 'Spring'),
     ]
 
-    REASON_CHOICES = [
-        ('academic_difficulty', 'Academic Difficulty'),
-        ('medical_reason', 'Medical Reason'),
-        ('final_semester_non_thesis', 'Final Semester - Non-Thesis Track'),
-        ('final_semester_thesis', 'Final Semester - Thesis/Dissertation Track'),
+    MAIN_REASON_CHOICES = [
+        ('academic', 'Academic Difficulty'),
+        ('medical', 'Medical Reason'),
+        ('final', 'Final Semester'),
     ]
 
-    ACADEMIC_DIFFICULTY_CHOICES = [
+    ACADEMIC_TYPE_CHOICES = [
+        ('IAI', 'Initial Adjustment Issues'),
+        ('ICLP', 'Improper Course Level Placement'),
+    ]
+
+    IAI_REASONS = [
         ('english_language', 'English Language'),
         ('reading_requirements', 'Reading Requirements'),
-        ('american_teaching_methods', 'Unfamiliarity with American Teaching Methods'),
-        ('improper_course_placement', 'Improper Course Level Placement'),
+        ('american_teaching', 'Unfamiliarity with American Teaching Methods'),
+    ]
+
+    FINAL_TYPE_CHOICES = [
+        ('non_thesis', 'Non-Thesis Track'),
+        ('thesis', 'Thesis/Dissertation Track'),
     ]
 
     user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="rcl_requests")
-    student_id = models.CharField(max_length=7, default="0000000")
-    reason = models.CharField(max_length=40, choices=REASON_CHOICES)
-    academic_difficulty_types = models.JSONField(null=True, blank=True)  # list of academic difficulty types selected
+    student_id = models.CharField(max_length=7)
+
+    # Primary reason
+    reason = models.CharField(max_length=10, choices=MAIN_REASON_CHOICES)
+
+    # Academic option details
+    academic_type = models.CharField(max_length=10, choices=ACADEMIC_TYPE_CHOICES, blank=True, null=True)
+    iai_reasons = models.JSONField(blank=True, null=True)
+
+    # Medical
     medical_letter_attached = models.BooleanField(default=False)
-    final_semester_hours = models.PositiveIntegerField(null=True, blank=True)
+
+    # Final semester
+    final_type = models.CharField(max_length=20, choices=FINAL_TYPE_CHOICES, blank=True, null=True)
+    final_semester_hours = models.PositiveIntegerField(blank=True, null=True)
+    thesis_hours = models.PositiveIntegerField(blank=True, null=True)
+
+    # Common fields
     semester = models.CharField(max_length=10, choices=SEMESTER_CHOICES)
     semester_year = models.PositiveIntegerField(default=2025)
-    courses_to_drop = models.CharField(max_length=255, default="", help_text="Comma-separated list of course numbers")
-    total_credit_hours_after_drop = models.PositiveIntegerField(default=0)
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
+    # Courses to Drop
+    course_to_drop_1 = models.CharField(max_length=20, default="")  # Required
+    course_to_drop_2 = models.CharField(max_length=20, blank=True, default="")  # Optional
+    course_to_drop_3 = models.CharField(max_length=20, blank=True, default="")  # Optional
+
+    total_credit_hours_after_drop = models.PositiveIntegerField()
+
     pdf_document = models.FileField(upload_to="generated_pdfs/", null=True, blank=True)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

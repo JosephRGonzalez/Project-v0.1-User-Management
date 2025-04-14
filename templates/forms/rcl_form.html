@@ -42,92 +42,145 @@
         </div>
     </div>
 
+
     <!-- Main Content -->
-    <div class="main-content">
-        <h2>Reduced Course Load Form</h2>
+<div class="main-content">
+  <h2>Reduced Course Load Form</h2>
 
-        <div class="form-preview-container">
-            <form method="POST" action="{% url 'fill_rcl_form' %}">
-                {% csrf_token %}
+  <div class="form-preview-container">
+    <form method="POST" action="{% url 'fill_rcl_form' %}">
+      {% csrf_token %}
 
-                <label>First Name:</label>
-                <input type="text" value="{{ user.first_name }}" readonly>
+      <label>First Name:</label>
+      <input type="text" value="{{ user.first_name }}" readonly>
 
-                <label>Last Name:</label>
-                <input type="text" value="{{ user.last_name }}" readonly>
+      <label>Last Name:</label>
+      <input type="text" value="{{ user.last_name }}" readonly>
 
-                <label>Student UH ID:</label>
-                <input type="text" name="student_id" value="{% if rcl_request %}{{ rcl_request.student_id }}{% endif %}" required pattern="\d{7}" title="Must be a 7-digit number">
+      <label>Student UH ID:</label>
+      <input type="text" name="student_id" value="{% if rcl_request %}{{ rcl_request.student_id }}{% endif %}" required pattern="\d{7}" title="Must be a 7-digit number">
 
-                <label for="reason">Reason for RCL:</label>
-                <select name="reason" id="reason" required>
-                    <option value="">-- Select Reason --</option>
-                    <option value="academic_difficulty" {% if rcl_request.reason == 'academic_difficulty' %}selected{% endif %}>Academic Difficulty</option>
-                    <option value="medical_reason" {% if rcl_request.reason == 'medical_reason' %}selected{% endif %}>Medical Reason</option>
-                    <option value="final_semester_non_thesis" {% if rcl_request.reason == 'final_semester_non_thesis' %}selected{% endif %}>Final Semester (Non-Thesis Track)</option>
-                    <option value="final_semester_thesis" {% if rcl_request.reason == 'final_semester_thesis' %}selected{% endif %}>Final Semester (Thesis/Dissertation Track)</option>
-                </select>
+      <label>Main Reason for RCL:</label>
+      <select name="reason" id="reason" required onchange="toggleSections()">
+        <option value="">-- Select Reason --</option>
+        <option value="academic" {% if rcl_request.reason == 'academic' %}selected{% endif %}>Academic Difficulty (First Semester Only)</option>
+        <option value="medical" {% if rcl_request.reason == 'medical' %}selected{% endif %}>Medical Reason</option>
+        <option value="final" {% if rcl_request.reason == 'final' %}selected{% endif %}>Final Semester</option>
+      </select>
 
-                <div id="academic-options" style="margin-top:10px;">
-                    <label>Academic Difficulty Types:</label>
-                    <label><input type="checkbox" name="academic_difficulty_types" value="english_language"
-                        {% if 'english_language' in rcl_request.academic_difficulty_types %}checked{% endif %}> English Language</label>
-                    <label><input type="checkbox" name="academic_difficulty_types" value="reading_requirements"
-                        {% if 'reading_requirements' in rcl_request.academic_difficulty_types %}checked{% endif %}> Reading Requirements</label>
-                    <label><input type="checkbox" name="academic_difficulty_types" value="american_teaching_methods"
-                        {% if 'american_teaching_methods' in rcl_request.academic_difficulty_types %}checked{% endif %}> American Teaching Methods</label>
-                    <label><input type="checkbox" name="academic_difficulty_types" value="improper_course_placement"
-                        {% if 'improper_course_placement' in rcl_request.academic_difficulty_types %}checked{% endif %}> Improper Course Level Placement</label>
-                </div>
-
-                <label><input type="checkbox" name="medical_letter_attached" {% if rcl_request.medical_letter_attached %}checked{% endif %}> Medical Letter Attached</label>
-
-                <label>Expected Course Hours Remaining:</label>
-                <input type="number" name="final_semester_hours" value="{% if rcl_request.final_semester_hours %}{{ rcl_request.final_semester_hours }}{% endif %}">
-
-                <label>Semester:</label>
-                <select name="semester" required>
-                    <option value="fall" {% if rcl_request.semester == 'fall' %}selected{% endif %}>Fall</option>
-                    <option value="spring" {% if rcl_request.semester == 'spring' %}selected{% endif %}>Spring</option>
-                </select>
-
-                <label>Semester Year:</label>
-                <input type="number" name="semester_year" value="{% if rcl_request %}{{ rcl_request.semester_year }}{% else %}2025{% endif %}" required>
-
-                <label>Courses to Drop (Course Numbers):</label>
-                <input type="text" name="courses_to_drop" value="{% if rcl_request %}{{ rcl_request.courses_to_drop }}{% endif %}" placeholder="e.g. COSC6310, MATH6371">
-
-                <label>Total Credit Hours After Drop:</label>
-                <input type="number" name="total_credit_hours_after_drop" value="{% if rcl_request %}{{ rcl_request.total_credit_hours_after_drop }}{% endif %}" required>
-
-                <button type="submit" class="btn">Submit Request</button>
-
-                {% if rcl_request %}
-                    <div class="message">Request Saved!</div>
-                    <div class="form-buttons">
-                        <a href="{% url 'generate_rcl_pdf' rcl_request.id %}" target="_blank" class="btn">Generate PDF</a>
-                        <a href="{% url 'approval_requests' %}" class="btn btn-back">Cancel</a>
-                    </div>
-                {% endif %}
-            </form>
-
-            <!-- PDF Preview Section -->
-            <div class="pdf-preview-container">
-                <h3>Preview</h3>
-                <iframe id="pdfPreview"
-                    src="{% if rcl_request and rcl_request.pdf_document %}{{ MEDIA_URL }}{{ rcl_request.pdf_document }}{% else %}{% static 'pdfs/reduced_course_load_form.pdf' %}{% endif %}"
-                    width="100%" height="500px"
-                    type="application/pdf">
-                </iframe>
-
-                {% if rcl_request and rcl_request.status == "Draft" %}
-                    <form method="POST" action="{% url 'submit_rcl_for_approval' rcl_request.id %}">
-                        {% csrf_token %}
-                        <button type="submit" class="btn">Submit for Approval</button>
-                    </form>
-                {% endif %}
-            </div>
+      <!-- ACADEMIC DIFFICULTY SECTION -->
+      <div id="academic-section" style="display:none; margin-top: 15px;">
+        <label>Choose One:</label>
+        <label><input type="radio" name="academic_type" value="ICLP" onclick="toggleIAI(false)"> Improper Course Level Placement (ICLP)</label>
+        <label><input type="radio" name="academic_type" value="IAI" onclick="toggleIAI(true)"> Initial Adjustment Issues (IAI)</label>
+        <div id="iai-suboptions" style="margin-left: 20px; display:none;">
+          <label><input type="checkbox" name="iai_reasons" value="english_language"> English Language</label>
+          <label><input type="checkbox" name="iai_reasons" value="reading_requirements"> Reading Requirements</label>
+          <label><input type="checkbox" name="iai_reasons" value="american_teaching"> American Teaching Methods</label>
         </div>
+      </div>
+
+      <!-- MEDICAL REASON SECTION -->
+      <div id="medical-section" style="display:none; margin-top: 15px;">
+        <label><input type="checkbox" name="medical_letter_attached"> Medical Letter Attached</label>
+      </div>
+
+      <!-- FINAL SEMESTER SECTION -->
+      <div id="final-section" style="display:none; margin-top: 15px;">
+        <label>Select Final Semester Type:</label>
+        <label><input type="radio" name="final_type" value="non_thesis" onclick="toggleFinalType(true)"> Reduced Course Load for Non-Thesis Track</label>
+        <label><input type="radio" name="final_type" value="thesis" onclick="toggleFinalType(false)"> Full-Time Equivalency for Thesis/Dissertation Track</label>
+
+        <div id="non-thesis-input" style="margin-left: 20px; display:none;">
+          <label>How many hours of course work to complete degree:</label>
+          <input type="number" name="final_semester_hours">
+        </div>
+
+        <div id="thesis-input" style="margin-left: 20px; display:none;">
+          <label>How many hours of thesis/dissertation approved:</label>
+          <input type="number" name="thesis_hours">
+        </div>
+      </div>
+
+      <!-- COMMON FIELDS -->
+      <hr class = "Common">
+      <label>Applying for:</label>
+      <label><input type="checkbox" name="semester" value="fall"> Fall Semester</label>
+      <label><input type="checkbox" name="semester" value="spring"> Spring Semester</label>
+
+    <label>Semester Year:</label>
+    <select name="semester_year" required>
+        {% for year in year_choices %}
+            <option value="{{ year }}" {% if rcl_request and rcl_request.semester_year == year %}selected{% endif %}>{{ year }}</option>
+        {% endfor %}
+    </select>
+
+      <label>Course to Drop #1:</label>
+    <input type="text" name="course_to_drop_1" placeholder="e.g. COSC6310" required
+       value="{% if rcl_request %}{{ rcl_request.course_to_drop_1 }}{% endif %}">
+
+    <label>Course to Drop #2 (optional):</label>
+    <input type="text" name="course_to_drop_2" placeholder="Leave blank if not used"
+       value="{% if rcl_request %}{{ rcl_request.course_to_drop_2 }}{% endif %}">
+
+    <label>Course to Drop #3 (optional):</label>
+    <input type="text" name="course_to_drop_3" placeholder="Leave blank if not used"
+       value="{% if rcl_request %}{{ rcl_request.course_to_drop_3 }}{% endif %}">
+
+
+      <label>Total Credit Hours After Drop:</label>
+    <input type="number" name="total_credit_hours_after_drop" required>
+
+    <!-- spacer for clean layout -->
+    <div style="height: 20px;"></div>
+
+    <button type="submit" class="btn">Submit Request</button>
+
+      {% if rcl_request %}
+        <div class="form-buttons">
+          <a href="{% url 'generate_rcl_pdf' rcl_request.id %}" target="_blank" class="btn">Generate PDF</a>
+          <a href="{% url 'approval_requests' %}" class="btn btn-back">Cancel</a>
+        </div>
+      {% endif %}
+    </form>
+
+    <!-- PDF Preview -->
+    <div class="pdf-preview-container">
+      <h3>Preview</h3>
+      <iframe id="pdfPreview"
+        src="{% if rcl_request and rcl_request.pdf_document %}{{ MEDIA_URL }}{{ rcl_request.pdf_document }}{% else %}{% static 'pdfs/reduced_course_load_form.pdf' %}{% endif %}"
+        width="100%" height="500px"
+        type="application/pdf">
+      </iframe>
+
+      {% if rcl_request and rcl_request.status == "Draft" %}
+        <form method="POST" action="{% url 'submit_rcl_for_approval' rcl_request.id %}">
+          {% csrf_token %}
+          <button type="submit" class="btn">Submit for Approval</button>
+        </form>
+      {% endif %}
     </div>
+  </div>
+</div>
+
+<script>
+  function toggleSections() {
+    const reason = document.getElementById('reason').value;
+    document.getElementById('academic-section').style.display = reason === 'academic' ? 'block' : 'none';
+    document.getElementById('medical-section').style.display = reason === 'medical' ? 'block' : 'none';
+    document.getElementById('final-section').style.display = reason === 'final' ? 'block' : 'none';
+  }
+
+  function toggleIAI(show) {
+    document.getElementById('iai-suboptions').style.display = show ? 'block' : 'none';
+  }
+
+  function toggleFinalType(nonThesis) {
+    document.getElementById('non-thesis-input').style.display = nonThesis ? 'block' : 'none';
+    document.getElementById('thesis-input').style.display = nonThesis ? 'none' : 'block';
+  }
+
+  window.onload = toggleSections;
+</script>
 </body>
 </html>

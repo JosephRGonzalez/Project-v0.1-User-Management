@@ -35,6 +35,7 @@ urlpatterns = [
     # PDF Generation
     path("generate-pdf/thesis/<int:request_id>/", views.generate_thesis_pdf, name="generate_thesis_pdf"),
     path("generate-pdf/withdrawal/<int:request_id>/", views.generate_withdrawal_pdf, name="generate_withdrawal_pdf"),
+    path("generate-pdf/rcl/<int:request_id>/", views.generate_rcl_pdf, name="generate_rcl_pdf"),
     path('approval-requests/', views.approval_requests, name='approval_requests'),
     path("approve_request/<int:request_id>/<str:request_type>/", views.approve_request, name="approve_request"),
     path("return_request/<int:request_id>/<str:request_type>/", views.return_request, name="return_request"),

@@ -766,60 +766,72 @@ def submit_withdrawal_for_approval(request, request_id):
 #################################
 
 
-def fill_rcl_form(request):
-    """Handles form submission for Reduced Course Load Request."""
-    user = request.user
 
+def fill_rcl_form(request):
+    user = request.user
     existing_request = ReducedCourseLoadRequest.objects.filter(user=user).first()
+    year_choices = ['24', '25', '26', '27', '28']
 
     if request.method == "POST":
-        print("RCL form submitted!")
-
         student_id = request.POST.get("student_id")
         reason = request.POST.get("reason")
+
+        academic_type = request.POST.get("academic_type") if reason == "academic" else None
+        iai_reasons = request.POST.getlist("iai_reasons") if academic_type == "IAI" else None
+        medical_letter_attached = request.POST.get("medical_letter_attached") == "on" if reason == "medical" else False
+
+        final_type = request.POST.get("final_type") if reason == "final" else None
+        final_semester_hours = request.POST.get("final_semester_hours") if final_type == "non_thesis" else None
+        thesis_hours = request.POST.get("thesis_hours") if final_type == "thesis" else None
+
         semester = request.POST.get("semester")
         semester_year = request.POST.get("semester_year")
-        final_semester_hours = request.POST.get("final_semester_hours") or None
-        medical_letter_attached = request.POST.get("medical_letter_attached") == "on"
-        academic_difficulty_types = request.POST.getlist("academic_difficulty_types")
-        courses_to_drop = request.POST.get("courses_to_drop")
+        course_to_drop_1 = request.POST.get("course_to_drop_1")
+        course_to_drop_2 = request.POST.get("course_to_drop_2", "")
+        course_to_drop_3 = request.POST.get("course_to_drop_3", "")
         total_credit_hours_after_drop = request.POST.get("total_credit_hours_after_drop")
 
-        if not all([student_id, reason, semester, semester_year, total_credit_hours_after_drop]):
-            return render(request, "forms/rcl_form.html", {"error": "Please fill out all required fields."})
+
+        # Validation
+        required_fields = [student_id, reason, semester, semester_year, course_to_drop_1, total_credit_hours_after_drop]
+        if not all(required_fields):
+            return render(request, "forms/rcl_form.html", {"error": "All required fields must be filled."})
+
+        data = {
+            "user": user,
+            "student_id": student_id,
+            "reason": reason,
+            "academic_type": academic_type,
+            "iai_reasons": iai_reasons,
+            "medical_letter_attached": medical_letter_attached,
+            "final_type": final_type,
+            "final_semester_hours": final_semester_hours,
+            "thesis_hours": thesis_hours,
+            "semester": semester,
+            "semester_year": semester_year,
+            "course_to_drop_1": course_to_drop_1,
+            "course_to_drop_2": course_to_drop_2,
+            "course_to_drop_3": course_to_drop_3,
+            "total_credit_hours_after_drop": total_credit_hours_after_drop,
+
+            "status": "Draft",
+        }
 
         if existing_request:
-            existing_request.student_id = student_id
-            existing_request.reason = reason
-            existing_request.semester = semester
-            existing_request.semester_year = semester_year
-            existing_request.final_semester_hours = final_semester_hours
-            existing_request.medical_letter_attached = medical_letter_attached
-            existing_request.academic_difficulty_types = academic_difficulty_types
-            existing_request.courses_to_drop = courses_to_drop
-            existing_request.total_credit_hours_after_drop = total_credit_hours_after_drop
-            existing_request.status = "Draft"
+            for key, value in data.items():
+                setattr(existing_request, key, value)
             existing_request.save()
         else:
-            ReducedCourseLoadRequest.objects.create(
-                user=user,
-                student_id=student_id,
-                reason=reason,
-                semester=semester,
-                semester_year=semester_year,
-                final_semester_hours=final_semester_hours,
-                medical_letter_attached=medical_letter_attached,
-                academic_difficulty_types=academic_difficulty_types,
-                courses_to_drop=courses_to_drop,
-                total_credit_hours_after_drop=total_credit_hours_after_drop,
-                status="Draft"
-            )
+            ReducedCourseLoadRequest.objects.create(**data)
 
-        print("RCL request saved.")
         return redirect("fill_rcl_form")
 
     rcl_request = existing_request or ReducedCourseLoadRequest.objects.filter(user=user).last()
-    return render(request, "forms/rcl_form.html", {"rcl_request": rcl_request, "MEDIA_URL": settings.MEDIA_URL})
+    return render(request, "forms/rcl_form.html", {
+        "rcl_request": rcl_request,
+        "MEDIA_URL": settings.MEDIA_URL,
+        "year_choices": year_choices,
+    })
 
 
 

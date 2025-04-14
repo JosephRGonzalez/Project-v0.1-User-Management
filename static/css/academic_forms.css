@@ -137,3 +137,77 @@ button:hover,
 }
 
 
+
+
+
+
+
+
+
+/* Reduced Course Load Form CSS */
+
+/* --- Section toggles for RCL --- */
+
+#academic-section,
+#medical-section,
+#final-section {
+  padding: 15px;
+  border: 1px solid #ccc;
+  background-color: #fafafa;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+
+.Common{
+    margin-bottom: 5%;
+    color: rgb(240,16,40);
+}
+/* Indent sub-options (like IAI and Final Type details) */
+#iai-suboptions,
+#non-thesis-input,
+#thesis-input {
+  margin-top: 10px;
+  padding: 10px 15px;
+  background-color: #f0f0f0;
+  border-left: 4px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Align radio/checkbox groups nicely */
+#academic-section label,
+#final-section label,
+#iai-suboptions label,
+.checkbox-group label {
+  display: block;
+  margin: 5px 0;
+  font-weight: normal;
+}
+
+/* Make sure all sub-sections respond well to smaller screens */
+@media screen and (max-width: 768px) {
+  #academic-section,
+  #medical-section,
+  #final-section {
+    padding: 10px;
+  }
+
+  #iai-suboptions,
+  #non-thesis-input,
+  #thesis-input {
+    padding: 8px 10px;
+  }
+}
+
+/* Smooth transition when sections appear/disappear */
+#academic-section,
+#medical-section,
+#final-section,
+#iai-suboptions,
+#non-thesis-input,
+#thesis-input {
+  transition: all 0.3s ease-in-out;
+}
+
+
+
