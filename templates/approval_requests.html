@@ -78,7 +78,37 @@
                 </p>
                 <button onclick="fillForm('withdrawal')">Fill Out Form</button>
             </div>
+
         </div>
+
+
+        <div class="forms-container">
+            <!-- Form 3: Reduced Course Load Form -->
+            <div class="form-card">
+                <h3>Reduced Course Load (RCL) Form for Graduate Students</h3>
+                <img src="{% static 'images/reduced_course_load_preview.jpeg' %}" alt="Reduced Course Load Preview" class="form-thumbnail" onclick="openModal('reduced_course_load')">
+                <p class="form-description">
+                    F-1 students must maintain full-time status each semester while in the U.S. For graduate students, this means enrolling in at least 9 credit hours.
+                    More hours may be required for academic or tuition waiver reasons. Summer enrollment is optional unless it's the student’s first semester, in which case 6 credit hours are required.
+                    To drop below full-time after classes begin, a specific form must be completed.
+                    <strong>Note: Dropping below full-time hours may involve the loss of resident tuition and GTF.</strong>
+                </p>
+                <button onclick="fillForm('thesis')">Fill Out Form</button>
+            </div>
+
+            <!-- Form 2: Medical/Administrative Withdrawal -->
+            <div class="form-card">
+                <h3>PLACEHOLDER! I think we should find a new form. </h3>
+                <img src="{% static 'images/withdrawal_preview.jpeg' %}" alt="Withdrawal Form Preview" class="form-thumbnail" onclick="openModal('withdrawal')">
+                <p class="form-description">
+                    For students withdrawing from a term due to documented medical or administrative reasons (e.g., military deployment).
+                    Required documentation should be attached before submission to the academic department.
+                </p>
+                <button onclick="fillForm('withdrawal')">Fill Out Form</button>
+            </div>
+
+        </div>
+
 
         <!-- Modal for PDF Preview -->
         <div id="pdfModal" class="modal">
@@ -96,7 +126,8 @@
     function openModal(formType) {
   const pdfLinks = {
     thesis: "{%  static 'pdfs/thesis_form.pdf'%}",
-    withdrawal: "{%  static 'pdfs/withdrawal_form.pdf'%}"
+    withdrawal: "{%  static 'pdfs/withdrawal_form.pdf'%}",
+    reduced_course_load:   "{%  static 'pdfs/reduced_course_load_form.pdf' %}"
   };
 
   document.getElementById("pdfViewer").src = pdfLinks[formType];
@@ -110,7 +141,8 @@ function closeModal() {
 function fillForm(formType) {
   const formLinks = {
     thesis: "/fill-form/thesis/",
-    withdrawal: "/fill-form/withdrawal/"
+    withdrawal: "/fill-form/withdrawal/",
+    reduced_course_load: '#'
   };
 
   window.location.href = formLinks[formType];
