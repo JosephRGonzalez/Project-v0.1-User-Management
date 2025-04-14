@@ -1,0 +1,133 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thunder Bay | Reduced Course Load Form</title>
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/academic_forms.css' %}">
+    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <i id="notifications_icon" class="fa-regular fa-bell"></i>
+            <i id="settings_icon" class="fa-solid fa-gear"></i>
+            <div class="navbar_user">
+                <img class="profile_picture" src="{% static 'images/default_profile.png' %}" alt="profile picture">
+                <span class="navbar_username">{{ user.first_name }} {{ user.last_name }}</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logoContainer">
+            <img class="logo" src="{% static 'images/logo2.png' %}" alt="logo">
+        </div>
+
+        <div class="sidebar-content">
+            <a href="{% url 'dashboard' %}" class="sidebar-link" data-icon="fa-house">Dashboard</a>
+            <a href="{% url 'user_list' %}" class="sidebar-link" data-icon="fa-users">Users</a>
+            <a href="{% url 'approval_requests' %}" class="sidebar-link" data-icon="fa-file-alt">Forms</a>
+        </div>
+
+        <div class="logout-container">
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+            <i id="logoutIcon" class="fa-solid fa-arrow-right-from-bracket"></i>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Reduced Course Load Form</h2>
+
+        <div class="form-preview-container">
+            <form method="POST" action="{% url 'fill_rcl_form' %}">
+                {% csrf_token %}
+
+                <label>First Name:</label>
+                <input type="text" value="{{ user.first_name }}" readonly>
+
+                <label>Last Name:</label>
+                <input type="text" value="{{ user.last_name }}" readonly>
+
+                <label>Student UH ID:</label>
+                <input type="text" name="student_id" value="{% if rcl_request %}{{ rcl_request.student_id }}{% endif %}" required pattern="\d{7}" title="Must be a 7-digit number">
+
+                <label for="reason">Reason for RCL:</label>
+                <select name="reason" id="reason" required>
+                    <option value="">-- Select Reason --</option>
+                    <option value="academic_difficulty" {% if rcl_request.reason == 'academic_difficulty' %}selected{% endif %}>Academic Difficulty</option>
+                    <option value="medical_reason" {% if rcl_request.reason == 'medical_reason' %}selected{% endif %}>Medical Reason</option>
+                    <option value="final_semester_non_thesis" {% if rcl_request.reason == 'final_semester_non_thesis' %}selected{% endif %}>Final Semester (Non-Thesis Track)</option>
+                    <option value="final_semester_thesis" {% if rcl_request.reason == 'final_semester_thesis' %}selected{% endif %}>Final Semester (Thesis/Dissertation Track)</option>
+                </select>
+
+                <div id="academic-options" style="margin-top:10px;">
+                    <label>Academic Difficulty Types:</label>
+                    <label><input type="checkbox" name="academic_difficulty_types" value="english_language"
+                        {% if 'english_language' in rcl_request.academic_difficulty_types %}checked{% endif %}> English Language</label>
+                    <label><input type="checkbox" name="academic_difficulty_types" value="reading_requirements"
+                        {% if 'reading_requirements' in rcl_request.academic_difficulty_types %}checked{% endif %}> Reading Requirements</label>
+                    <label><input type="checkbox" name="academic_difficulty_types" value="american_teaching_methods"
+                        {% if 'american_teaching_methods' in rcl_request.academic_difficulty_types %}checked{% endif %}> American Teaching Methods</label>
+                    <label><input type="checkbox" name="academic_difficulty_types" value="improper_course_placement"
+                        {% if 'improper_course_placement' in rcl_request.academic_difficulty_types %}checked{% endif %}> Improper Course Level Placement</label>
+                </div>
+
+                <label><input type="checkbox" name="medical_letter_attached" {% if rcl_request.medical_letter_attached %}checked{% endif %}> Medical Letter Attached</label>
+
+                <label>Expected Course Hours Remaining:</label>
+                <input type="number" name="final_semester_hours" value="{% if rcl_request.final_semester_hours %}{{ rcl_request.final_semester_hours }}{% endif %}">
+
+                <label>Semester:</label>
+                <select name="semester" required>
+                    <option value="fall" {% if rcl_request.semester == 'fall' %}selected{% endif %}>Fall</option>
+                    <option value="spring" {% if rcl_request.semester == 'spring' %}selected{% endif %}>Spring</option>
+                </select>
+
+                <label>Semester Year:</label>
+                <input type="number" name="semester_year" value="{% if rcl_request %}{{ rcl_request.semester_year }}{% else %}2025{% endif %}" required>
+
+                <label>Courses to Drop (Course Numbers):</label>
+                <input type="text" name="courses_to_drop" value="{% if rcl_request %}{{ rcl_request.courses_to_drop }}{% endif %}" placeholder="e.g. COSC6310, MATH6371">
+
+                <label>Total Credit Hours After Drop:</label>
+                <input type="number" name="total_credit_hours_after_drop" value="{% if rcl_request %}{{ rcl_request.total_credit_hours_after_drop }}{% endif %}" required>
+
+                <button type="submit" class="btn">Submit Request</button>
+
+                {% if rcl_request %}
+                    <div class="message">Request Saved!</div>
+                    <div class="form-buttons">
+                        <a href="{% url 'generate_rcl_pdf' rcl_request.id %}" target="_blank" class="btn">Generate PDF</a>
+                        <a href="{% url 'approval_requests' %}" class="btn btn-back">Cancel</a>
+                    </div>
+                {% endif %}
+            </form>
+
+            <!-- PDF Preview Section -->
+            <div class="pdf-preview-container">
+                <h3>Preview</h3>
+                <iframe id="pdfPreview"
+                    src="{% if rcl_request and rcl_request.pdf_document %}{{ MEDIA_URL }}{{ rcl_request.pdf_document }}{% else %}{% static 'pdfs/reduced_course_load_form.pdf' %}{% endif %}"
+                    width="100%" height="500px"
+                    type="application/pdf">
+                </iframe>
+
+                {% if rcl_request and rcl_request.status == "Draft" %}
+                    <form method="POST" action="{% url 'submit_rcl_for_approval' rcl_request.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Submit for Approval</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>

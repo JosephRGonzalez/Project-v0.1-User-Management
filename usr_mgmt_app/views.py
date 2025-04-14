@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import permission_required
 from django.utils.timezone import now
 import subprocess
 from django.conf import settings
-from .models import ThesisRequest, WithdrawalRequest
+from .models import ThesisRequest, WithdrawalRequest,ReducedCourseLoadRequest
 from django.http import FileResponse
 from django.conf import settings
 from django.http import HttpResponseForbidden
@@ -411,7 +411,11 @@ def revise_request_view(request, request_id):
 
 
 
-#Signature Image Upload for Forms
+
+
+
+### Signature Image Upload for Forms ###
+
 @login_required
 def upload_signature(request):
     if request.method == "POST" and request.FILES.get("signature"):
@@ -448,12 +452,16 @@ def delete_signature(request):
 
 
 
-
-
-
+#############################
+### LATEX FORM GENERATION ###
+#############################
 
 LATEX_DIR = os.path.join(settings.BASE_DIR, "latex_templates/")
 OUTPUT_DIR = os.path.join(settings.MEDIA_ROOT, "generated_pdfs/")
+
+
+
+### HANDLES ALL PDF GENERATION ###
 
 def generate_pdf_from_latex(user_data, template_file, output_filename):
     """Replace placeholders in LaTeX and compile using Makefile."""
@@ -502,8 +510,9 @@ def generate_pdf_from_latex(user_data, template_file, output_filename):
 
 
 
-
-
+####################
+### THESIS FORM  ###
+####################
 def fill_thesis_form(request):
     """Handles form submission for Thesis Request."""
     user = request.user
@@ -752,10 +761,124 @@ def submit_withdrawal_for_approval(request, request_id):
 
 
 
+#################################
+### REDUCED COURSE LOAD FORM  ###
+#################################
+
+
+def fill_rcl_form(request):
+    """Handles form submission for Reduced Course Load Request."""
+    user = request.user
+
+    existing_request = ReducedCourseLoadRequest.objects.filter(user=user).first()
+
+    if request.method == "POST":
+        print("RCL form submitted!")
+
+        student_id = request.POST.get("student_id")
+        reason = request.POST.get("reason")
+        semester = request.POST.get("semester")
+        semester_year = request.POST.get("semester_year")
+        final_semester_hours = request.POST.get("final_semester_hours") or None
+        medical_letter_attached = request.POST.get("medical_letter_attached") == "on"
+        academic_difficulty_types = request.POST.getlist("academic_difficulty_types")
+        courses_to_drop = request.POST.get("courses_to_drop")
+        total_credit_hours_after_drop = request.POST.get("total_credit_hours_after_drop")
+
+        if not all([student_id, reason, semester, semester_year, total_credit_hours_after_drop]):
+            return render(request, "forms/rcl_form.html", {"error": "Please fill out all required fields."})
+
+        if existing_request:
+            existing_request.student_id = student_id
+            existing_request.reason = reason
+            existing_request.semester = semester
+            existing_request.semester_year = semester_year
+            existing_request.final_semester_hours = final_semester_hours
+            existing_request.medical_letter_attached = medical_letter_attached
+            existing_request.academic_difficulty_types = academic_difficulty_types
+            existing_request.courses_to_drop = courses_to_drop
+            existing_request.total_credit_hours_after_drop = total_credit_hours_after_drop
+            existing_request.status = "Draft"
+            existing_request.save()
+        else:
+            ReducedCourseLoadRequest.objects.create(
+                user=user,
+                student_id=student_id,
+                reason=reason,
+                semester=semester,
+                semester_year=semester_year,
+                final_semester_hours=final_semester_hours,
+                medical_letter_attached=medical_letter_attached,
+                academic_difficulty_types=academic_difficulty_types,
+                courses_to_drop=courses_to_drop,
+                total_credit_hours_after_drop=total_credit_hours_after_drop,
+                status="Draft"
+            )
+
+        print("RCL request saved.")
+        return redirect("fill_rcl_form")
+
+    rcl_request = existing_request or ReducedCourseLoadRequest.objects.filter(user=user).last()
+    return render(request, "forms/rcl_form.html", {"rcl_request": rcl_request, "MEDIA_URL": settings.MEDIA_URL})
 
 
 
-# Used for tracking user forms.
+def generate_rcl_pdf(request, request_id):
+    rcl = ReducedCourseLoadRequest.objects.get(id=request_id)
+
+    signature_filename = (
+        os.path.join("../", rcl.user.signature.name)
+        if hasattr(rcl.user, "signature") and rcl.user.signature
+        else "../signatures/placeholder.png"
+    )
+
+    user_data = {
+        "FIRST_NAME": rcl.user.first_name,
+        "LAST_NAME": rcl.user.last_name,
+        "STUDENT_ID": rcl.student_id,
+        "REASON": rcl.reason,
+        "SEMESTER": rcl.semester,
+        "SEMESTER_YEAR": rcl.semester_year,
+        "FINAL_HOURS": rcl.final_semester_hours or "N/A",
+        "COURSES_TO_DROP": rcl.courses_to_drop,
+        "TOTAL_HOURS": rcl.total_credit_hours_after_drop,
+        "DIFFICULTY_TYPES": ", ".join(rcl.academic_difficulty_types or []),
+        "MEDICAL_LETTER": "Yes" if rcl.medical_letter_attached else "No",
+        "SIGNATURE_FILENAME": signature_filename,
+        "CREATED_AT": rcl.created_at,
+    }
+
+    pdf_filename = f"rcl_filled_{request_id}.pdf"
+    pdf_path = generate_pdf_from_latex(user_data, "rcl_template.tex", f"rcl_filled_{request_id}")
+
+    rcl.pdf_document = os.path.join("generated_pdfs", pdf_filename)
+    rcl.status = "Draft"
+    rcl.save()
+
+    return FileResponse(open(pdf_path, "rb"), content_type="application/pdf")
+
+
+@login_required
+def submit_rcl_for_approval(request, request_id):
+    rcl_request = get_object_or_404(ReducedCourseLoadRequest, id=request_id, user=request.user)
+
+    if request.method == "POST":
+        rcl_request.status = "Pending"
+        rcl_request.save()
+        return redirect("fill_rcl_form")
+
+    return redirect("fill_rcl_form")
+
+
+
+
+
+
+
+
+#################################
+### APPROVAL TRACKING SYSTEM  ###
+#################################
 def approval_requests(request):
     print("Current User:", request.user)
     print("Is Authenticated?", request.user.is_authenticated)

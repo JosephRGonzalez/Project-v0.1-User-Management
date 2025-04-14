@@ -93,7 +93,7 @@
                     To drop below full-time after classes begin, a specific form must be completed.
                     <strong>Note: Dropping below full-time hours may involve the loss of resident tuition and GTF.</strong>
                 </p>
-                <button onclick="fillForm('thesis')">Fill Out Form</button>
+                <button onclick="fillForm('reduced_course_load')">Fill Out Form</button>
             </div>
 
             <!-- Form 2: Medical/Administrative Withdrawal -->
@@ -142,7 +142,7 @@ function fillForm(formType) {
   const formLinks = {
     thesis: "/fill-form/thesis/",
     withdrawal: "/fill-form/withdrawal/",
-    reduced_course_load: '#'
+    reduced_course_load: "/fill-form/rcl/",
   };
 
   window.location.href = formLinks[formType];

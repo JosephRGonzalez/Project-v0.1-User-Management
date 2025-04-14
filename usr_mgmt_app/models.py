@@ -178,3 +178,51 @@ class WithdrawalRequest(models.Model):
 
     def __str__(self):
         return f"Withdrawal Request {self.id} by {self.user.username} - {self.status}"
+
+
+
+
+
+class ReducedCourseLoadRequest(models.Model):
+    STATUS_CHOICES = [
+        ('draft', 'Draft'),
+        ('pending', 'Pending'),
+        ('returned', 'Returned'),
+        ('approved', 'Approved'),
+    ]
+
+    SEMESTER_CHOICES = [
+        ('fall', 'Fall'),
+        ('spring', 'Spring'),
+    ]
+
+    REASON_CHOICES = [
+        ('academic_difficulty', 'Academic Difficulty'),
+        ('medical_reason', 'Medical Reason'),
+        ('final_semester_non_thesis', 'Final Semester - Non-Thesis Track'),
+        ('final_semester_thesis', 'Final Semester - Thesis/Dissertation Track'),
+    ]
+
+    ACADEMIC_DIFFICULTY_CHOICES = [
+        ('english_language', 'English Language'),
+        ('reading_requirements', 'Reading Requirements'),
+        ('american_teaching_methods', 'Unfamiliarity with American Teaching Methods'),
+        ('improper_course_placement', 'Improper Course Level Placement'),
+    ]
+
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="rcl_requests")
+    student_id = models.CharField(max_length=7, default="0000000")
+    reason = models.CharField(max_length=40, choices=REASON_CHOICES)
+    academic_difficulty_types = models.JSONField(null=True, blank=True)  # list of academic difficulty types selected
+    medical_letter_attached = models.BooleanField(default=False)
+    final_semester_hours = models.PositiveIntegerField(null=True, blank=True)
+    semester = models.CharField(max_length=10, choices=SEMESTER_CHOICES)
+    semester_year = models.PositiveIntegerField(default=2025)
+    courses_to_drop = models.CharField(max_length=255, default="", help_text="Comma-separated list of course numbers")
+    total_credit_hours_after_drop = models.PositiveIntegerField(default=0)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
+    pdf_document = models.FileField(upload_to="generated_pdfs/", null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"RCL Request {self.id} by {self.user.username} - {self.status}"

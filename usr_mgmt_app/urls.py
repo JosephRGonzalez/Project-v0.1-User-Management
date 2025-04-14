@@ -27,8 +27,11 @@ urlpatterns = [
     # Forms
     path("fill-form/thesis/", views.fill_thesis_form, name="fill_thesis_form"),
     path("fill-form/withdrawal/", views.fill_withdrawal_form, name="fill_withdrawal_form"),
+    path("fill-form/rcl/", views.fill_rcl_form, name="fill_rcl_form"),
+
     path("submit-thesis-for-approval/<int:request_id>/", views.submit_thesis_for_approval, name="submit_thesis_for_approval"),
     path("submit-withdrawal-for-approval/<int:request_id>/", views.submit_withdrawal_for_approval, name="submit_withdrawal_for_approval"),
+    path("submit-rcl-for-approval/<int:request_id>/", views.submit_rcl_for_approval, name="submit_rcl_for_approval"),
     # PDF Generation
     path("generate-pdf/thesis/<int:request_id>/", views.generate_thesis_pdf, name="generate_thesis_pdf"),
     path("generate-pdf/withdrawal/<int:request_id>/", views.generate_withdrawal_pdf, name="generate_withdrawal_pdf"),
