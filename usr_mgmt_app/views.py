@@ -1027,7 +1027,7 @@ def generate_petition_pdf(request, request_id):
 
     # Generate the PDF from LaTeX template
     pdf_filename = f"petition_filled_{request_id}.pdf"
-    pdf_path = generate_pdf_from_latex(user_data, "petition_template.tex", f"petition_filled_{request_id}")
+    pdf_path = generate_pdf_from_latex(user_data, "Graduate_template.tex", f"petition_filled_{request_id}")
 
     # Store the PDF path in the model (relative to MEDIA_URL)
     petition.pdf_document = os.path.join('generated_pdfs', pdf_filename)  # This is relative to MEDIA_URL
