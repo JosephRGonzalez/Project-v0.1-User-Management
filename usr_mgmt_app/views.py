@@ -7,13 +7,13 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from django.http import HttpResponse
 from django.contrib.auth import logout
-from .models import UserProfile, ApprovalRequest, ApprovalStep  # Updated to include new models
+from .models import UserProfile, ApprovalRequest, ApprovalStep, PetitionRequest  # Updated to include PetitionRequest
 from .forms import UserProfileForm
 from django.contrib.auth.decorators import permission_required
 from django.utils.timezone import now
 import subprocess
 from django.conf import settings
-from .models import ThesisRequest, WithdrawalRequest,ReducedCourseLoadRequest
+from .models import ThesisRequest, WithdrawalRequest, ReducedCourseLoadRequest
 from django.http import FileResponse
 from django.conf import settings
 from django.http import HttpResponseForbidden
@@ -50,6 +50,7 @@ def dashboard_view(request):
     user_count = UserProfile.objects.filter(role='user').count()
     thesis_requests = ThesisRequest.objects.filter(user=request.user).order_by('-created_at')[:5]  # Get last 5 requests
     withdrawal_requests = WithdrawalRequest.objects.filter(user=request.user).order_by('-created_at')[:5]
+    petition_requests = PetitionRequest.objects.filter(user=request.user).order_by('-created_at')[:5]  # Add petition requests
 
     # Render the dashboard template with the counts
     return render(request, 'dashboard.html', {
@@ -58,6 +59,7 @@ def dashboard_view(request):
         'user_count': user_count,
         'thesis_requests': thesis_requests,
         'withdrawal_requests': withdrawal_requests,
+        'petition_requests': petition_requests,  # Add to context
     })
 
 
@@ -131,6 +133,9 @@ def user_list(request):
 
     for withdrawal in WithdrawalRequest.objects.filter(status="Pending"):
         pending_requests.append({"id": withdrawal.id, "type": "WithdrawalRequest", "request": withdrawal})
+        
+    for petition in PetitionRequest.objects.filter(status="Pending"):
+        pending_requests.append({"id": petition.id, "type": "PetitionRequest", "request": petition})
 
     print("Final pending_requests:", pending_requests)  # Debugging
 
@@ -882,10 +887,166 @@ def submit_rcl_for_approval(request, request_id):
     return redirect("fill_rcl_form")
 
 
+#################################
+### GRADUATE PETITION FORM    ###
+#################################
+
+def fill_petition_form(request):
+    """Handles form submission for Graduate School Petition."""
+    user = request.user
+
+    # Check if a PetitionRequest already exists for the user
+    existing_request = PetitionRequest.objects.filter(user=user).first()
+
+    if request.method == "POST":
+        # If a request already exists, update it
+        if existing_request:
+            existing_request.student_id = request.POST["student_id"]
+            existing_request.middle_name = request.POST.get("middle_name", "")
+            existing_request.email = request.POST["email"]
+            existing_request.phone = request.POST["phone"]
+            existing_request.career = request.POST["career"]
+            existing_request.program = request.POST["program"]
+            existing_request.plan_code = request.POST["plan_code"]
+            existing_request.term = request.POST["term"]
+            existing_request.year = request.POST["year"]
+            existing_request.purpose = request.POST["purpose"]
+            existing_request.other_purpose = request.POST.get("other_purpose", "")
+            
+            # Transfer credit fields (only relevant if purpose is 9)
+            if request.POST["purpose"] == "9":
+                existing_request.institution_name = request.POST.get("institution_name", "")
+                existing_request.city_state_zip = request.POST.get("city_state_zip", "")
+                existing_request.transfer_start_term = request.POST.get("transfer_start_term", "")
+                existing_request.transfer_start_year = request.POST.get("transfer_start_year", "")
+                existing_request.transfer_end_term = request.POST.get("transfer_end_term", "")
+                existing_request.transfer_end_year = request.POST.get("transfer_end_year", "")
+                existing_request.credit_description = request.POST.get("credit_description", "")
+                existing_request.hours_transferred = request.POST.get("hours_transferred", "")
+                existing_request.requested_hours = request.POST.get("requested_hours", "")
+            
+            existing_request.explanation = request.POST["explanation"]
+            existing_request.status = "Draft"
+            existing_request.save()  # Save the updated data
+        else:
+            # If no existing request, create a new one
+            petition_data = {
+                "user": user,
+                "student_id": request.POST["student_id"],
+                "middle_name": request.POST.get("middle_name", ""),
+                "email": request.POST["email"],
+                "phone": request.POST["phone"],
+                "career": request.POST["career"],
+                "program": request.POST["program"],
+                "plan_code": request.POST["plan_code"],
+                "term": request.POST["term"],
+                "year": request.POST["year"],
+                "purpose": request.POST["purpose"],
+                "other_purpose": request.POST.get("other_purpose", ""),
+                "explanation": request.POST["explanation"],
+                "status": "Draft"
+            }
+            
+            # Add transfer credit fields only if purpose is 9
+            if request.POST["purpose"] == "9":
+                petition_data.update({
+                    "institution_name": request.POST.get("institution_name", ""),
+                    "city_state_zip": request.POST.get("city_state_zip", ""),
+                    "transfer_start_term": request.POST.get("transfer_start_term", ""),
+                    "transfer_start_year": request.POST.get("transfer_start_year", ""),
+                    "transfer_end_term": request.POST.get("transfer_end_term", ""),
+                    "transfer_end_year": request.POST.get("transfer_end_year", ""),
+                    "credit_description": request.POST.get("credit_description", ""),
+                    "hours_transferred": request.POST.get("hours_transferred", ""),
+                    "requested_hours": request.POST.get("requested_hours", "")
+                })
+            
+            PetitionRequest.objects.create(**petition_data)
+
+        return redirect("fill_petition_form")
+
+    # Retrieve the latest request for the user (either existing or the last one created)
+    petition = existing_request or PetitionRequest.objects.filter(user=user).last()
+    return render(
+        request,
+        "forms/graduate_form.html",
+        {
+            "petition": petition,
+            "MEDIA_URL": settings.MEDIA_URL
+        }
+    )
 
 
+def generate_petition_pdf(request, request_id):
+    """Generates a PDF for a Graduate School Petition Request."""
+    petition = PetitionRequest.objects.get(id=request_id)
+
+    # Ensure SIGNATURE_FILENAME points to the correct file
+    if petition.user.signature:
+        signature_filename = os.path.join("../", petition.user.signature.name)
+    else:
+        signature_filename = "../signatures/placeholder.png"
+
+    user_data = {
+        "FIRST_NAME": petition.user.first_name,
+        "MIDDLE_NAME": petition.middle_name if petition.middle_name else "",
+        "LAST_NAME": petition.user.last_name,
+        "EMAIL": petition.email,
+        "STUDENT_ID": petition.student_id,
+        "PHONE": petition.phone,
+        "CAREER": petition.career,
+        "PROGRAM": petition.program,
+        "PLAN_CODE": petition.plan_code,
+        "TERM": petition.term,
+        "YEAR": petition.year,
+        "PURPOSE": petition.purpose,
+        "OTHER_PURPOSE": petition.other_purpose if petition.purpose == "10" else "",
+        "INSTITUTION_NAME": petition.institution_name if petition.purpose == "9" else "",
+        "CITY_STATE_ZIP": petition.city_state_zip if petition.purpose == "9" else "",
+        "TRANSFER_START_TERM": petition.transfer_start_term if petition.purpose == "9" else "",
+        "TRANSFER_START_YEAR": petition.transfer_start_year if petition.purpose == "9" else "",
+        "TRANSFER_END_TERM": petition.transfer_end_term if petition.purpose == "9" else "",
+        "TRANSFER_END_YEAR": petition.transfer_end_year if petition.purpose == "9" else "",
+        "CREDIT_DESCRIPTION": petition.credit_description if petition.purpose == "9" else "",
+        "HOURS_TRANSFERRED": petition.hours_transferred if petition.purpose == "9" else "",
+        "REQUESTED_HOURS": petition.requested_hours if petition.purpose == "9" else "",
+        "EXPLANATION": petition.explanation,
+        "SIGNATURE_FILENAME": signature_filename,
+        "SIGNATURE_DATE_MONTH": petition.created_at.strftime("%m"),
+        "SIGNATURE_DATE_DAY": petition.created_at.strftime("%d"),
+        "SIGNATURE_DATE_YEAR": petition.created_at.strftime("%y"),
+        "CHAIR_NAME": "",  # These will be filled by approvers
+        "DEAN_NAME": "",
+        "GRAD_DEAN_NAME": "",
+        "PROVOST_NAME": "",
+        "PRESIDENT_NAME": "",
+        "COMMENTS": "",
+    }
+
+    print("User Data Sent to LaTeX:", user_data)  # Debugging
+
+    # Generate the PDF from LaTeX template
+    pdf_filename = f"petition_filled_{request_id}.pdf"
+    pdf_path = generate_pdf_from_latex(user_data, "petition_template.tex", f"petition_filled_{request_id}")
+
+    # Store the PDF path in the model (relative to MEDIA_URL)
+    petition.pdf_document = os.path.join('generated_pdfs', pdf_filename)  # This is relative to MEDIA_URL
+    petition.status = "Draft"
+    petition.save()
+
+    return FileResponse(open(pdf_path, "rb"), content_type="application/pdf")
 
 
+@login_required
+def submit_petition_for_approval(request, request_id):
+    petition_request = get_object_or_404(PetitionRequest, id=request_id, user=request.user)
+
+    if request.method == "POST":
+        petition_request.status = "Pending"  # Update status to Pending
+        petition_request.save()
+        return redirect("fill_petition_form")  # Redirect back to the form page
+
+    return redirect("fill_petition_form")
 
 
 #################################
@@ -897,13 +1058,16 @@ def approval_requests(request):
 
     user_thesis_requests = ThesisRequest.objects.filter(user=request.user)
     user_withdrawal_requests = WithdrawalRequest.objects.filter(user=request.user)
+    user_petition_requests = PetitionRequest.objects.filter(user=request.user)  # Added this line
 
     print("Thesis Requests:", list(user_thesis_requests))
     print("Withdrawal Requests:", list(user_withdrawal_requests))
+    print("Petition Requests:", list(user_petition_requests))  # Added this line
 
     return render(request, "approval_requests.html", {
         "thesis_requests": user_thesis_requests,
         "withdrawal_requests": user_withdrawal_requests,
+        "petition_requests": user_petition_requests,  # Added this line
     })
 
 
@@ -915,6 +1079,8 @@ def approve_request(request, request_id, request_type):
         request_obj = get_object_or_404(ThesisRequest, id=request_id)
     elif request_type == "WithdrawalRequest":
         request_obj = get_object_or_404(WithdrawalRequest, id=request_id)
+    elif request_type == "PetitionRequest":  # Added this condition
+        request_obj = get_object_or_404(PetitionRequest, id=request_id)
     else:
         return HttpResponseForbidden("Invalid request type.")
 
@@ -931,6 +1097,8 @@ def return_request(request, request_id, request_type):
         request_obj = get_object_or_404(ThesisRequest, id=request_id)
     elif request_type == "WithdrawalRequest":
         request_obj = get_object_or_404(WithdrawalRequest, id=request_id)
+    elif request_type == "PetitionRequest":  # Added this condition
+        request_obj = get_object_or_404(PetitionRequest, id=request_id)
     else:
         return HttpResponseForbidden("Invalid request type.")
 
@@ -938,4 +1106,3 @@ def return_request(request, request_id, request_type):
     request_obj.save()
 
     return redirect("user_list")
-

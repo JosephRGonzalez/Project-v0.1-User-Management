@@ -252,3 +252,55 @@ class ReducedCourseLoadRequest(models.Model):
 
     def __str__(self):
         return f"RCL Request {self.id} by {self.user.username} - {self.status}"
+        
+class PetitionRequest(models.Model):
+    STATUS_CHOICES = [
+        ('Draft', 'Draft'),
+        ('Pending', 'Pending Review'),
+        ('Returned', 'Returned for Revision'),
+        ('Approved', 'Approved'),
+    ]
+    
+    user = models.ForeignKey(UserProfile, on_delete=models.CASCADE, related_name="petition_requests")
+    student_id = models.CharField(max_length=7, default="0000000")
+    middle_name = models.CharField(max_length=50, blank=True, null=True)
+    email = models.EmailField(default="example@example.com")
+    phone = models.CharField(max_length=15, default="000-000-0000")
+    
+    # Current Student Information
+    career = models.CharField(max_length=20, default="GRAD")  # GRAD, PRFL
+    program = models.CharField(max_length=20, default="Unknown Program")  # PhD, MA, MS, etc.
+    plan_code = models.CharField(max_length=20, default="Unknown Plan")
+    
+    # Petition Effective
+    term = models.CharField(max_length=10, default="Fall")  # Fall, Spring, Summer
+    year = models.CharField(max_length=4, default="2025")
+    
+    # Purpose of Petition (1-10)
+    purpose = models.CharField(max_length=2, default="10")
+    other_purpose = models.CharField(max_length=200, blank=True, null=True)
+    
+    # Transfer Credit Info (only used if purpose=9)
+    institution_name = models.CharField(max_length=100, blank=True, null=True)
+    city_state_zip = models.CharField(max_length=100, blank=True, null=True)
+    transfer_start_term = models.CharField(max_length=10, blank=True, null=True)
+    transfer_start_year = models.CharField(max_length=4, blank=True, null=True)
+    transfer_end_term = models.CharField(max_length=10, blank=True, null=True)
+    transfer_end_year = models.CharField(max_length=4, blank=True, null=True)
+    credit_description = models.TextField(blank=True, null=True)
+    hours_transferred = models.CharField(max_length=5, blank=True, null=True)
+    requested_hours = models.CharField(max_length=5, blank=True, null=True)
+    
+    # Explanation
+    explanation = models.TextField(default="No explanation provided")
+    
+    # Status tracking
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='Draft')
+    pdf_document = models.FileField(upload_to='generated_pdfs/', null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Petition Request {self.id} by {self.user.username} - {self.status}"
+    
+    def get_status_display(self):
+        return dict(self.STATUS_CHOICES)[self.status]

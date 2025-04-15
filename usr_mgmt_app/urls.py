@@ -5,7 +5,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 
-
 urlpatterns = [
     path('', views.landing_page, name='landing_page'),  # Landing page
     path('login/', views.login_view, name='login'),  # Login page
@@ -28,14 +27,17 @@ urlpatterns = [
     path("fill-form/thesis/", views.fill_thesis_form, name="fill_thesis_form"),
     path("fill-form/withdrawal/", views.fill_withdrawal_form, name="fill_withdrawal_form"),
     path("fill-form/rcl/", views.fill_rcl_form, name="fill_rcl_form"),
+    path("fill-form/petition/", views.fill_petition_form, name="fill_petition_form"),  # New Graduate Petition form
 
     path("submit-thesis-for-approval/<int:request_id>/", views.submit_thesis_for_approval, name="submit_thesis_for_approval"),
     path("submit-withdrawal-for-approval/<int:request_id>/", views.submit_withdrawal_for_approval, name="submit_withdrawal_for_approval"),
     path("submit-rcl-for-approval/<int:request_id>/", views.submit_rcl_for_approval, name="submit_rcl_for_approval"),
+    path("submit-petition-for-approval/<int:request_id>/", views.submit_petition_for_approval, name="submit_petition_for_approval"),  # New submit petition path
     # PDF Generation
     path("generate-pdf/thesis/<int:request_id>/", views.generate_thesis_pdf, name="generate_thesis_pdf"),
     path("generate-pdf/withdrawal/<int:request_id>/", views.generate_withdrawal_pdf, name="generate_withdrawal_pdf"),
     path("generate-pdf/rcl/<int:request_id>/", views.generate_rcl_pdf, name="generate_rcl_pdf"),
+    path("generate-pdf/petition/<int:request_id>/", views.generate_petition_pdf, name="generate_petition_pdf"),  # New generate petition PDF path
     path('approval-requests/', views.approval_requests, name='approval_requests'),
     path("approve_request/<int:request_id>/<str:request_type>/", views.approve_request, name="approve_request"),
     path("return_request/<int:request_id>/<str:request_type>/", views.return_request, name="return_request"),
