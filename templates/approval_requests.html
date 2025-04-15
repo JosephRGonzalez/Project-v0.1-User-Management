@@ -89,22 +89,23 @@
                 <img src="{% static 'images/reduced_course_load_preview.jpeg' %}" alt="Reduced Course Load Preview" class="form-thumbnail" onclick="openModal('reduced_course_load')">
                 <p class="form-description">
                     F-1 students must maintain full-time status each semester while in the U.S. For graduate students, this means enrolling in at least 9 credit hours.
-                    More hours may be required for academic or tuition waiver reasons. Summer enrollment is optional unless it's the student’s first semester, in which case 6 credit hours are required.
+                    More hours may be required for academic or tuition waiver reasons. Summer enrollment is optional unless it's the student's first semester, in which case 6 credit hours are required.
                     To drop below full-time after classes begin, a specific form must be completed.
                     <strong>Note: Dropping below full-time hours may involve the loss of resident tuition and GTF.</strong>
                 </p>
                 <button onclick="fillForm('reduced_course_load')">Fill Out Form</button>
             </div>
 
-            <!-- Form 2: Medical/Administrative Withdrawal -->
+            <!-- Form 4: Graduate School Petition Form -->
             <div class="form-card">
-                <h3>PLACEHOLDER! I think we should find a new form. </h3>
-                <img src="{% static 'images/withdrawal_preview.jpeg' %}" alt="Withdrawal Form Preview" class="form-thumbnail" onclick="openModal('withdrawal')">
+                <h3>Graduate School Petition Form</h3>
+                <img src="{% static 'images/grad_petition_preview.jpeg' %}" alt="Graduate Petition Form Preview" class="form-thumbnail" onclick="openModal('grad_petition')">
                 <p class="form-description">
-                    For students withdrawing from a term due to documented medical or administrative reasons (e.g., military deployment).
-                    Required documentation should be attached before submission to the academic department.
+                    For graduate students requesting program changes, exceptions to degree requirements, leave of absence, 
+                    reinstatement, transfer credits, or posthumous degree awards. This petition requires approvals from the 
+                    department chair, college dean, and graduate school. Submit completed forms to <strong>gradschool@uh.edu</strong>.
                 </p>
-                <button onclick="fillForm('withdrawal')">Fill Out Form</button>
+                <button onclick="fillForm('grad_petition')">Fill Out Form</button>
             </div>
 
         </div>
@@ -127,7 +128,8 @@
   const pdfLinks = {
     thesis: "{%  static 'pdfs/thesis_form.pdf'%}",
     withdrawal: "{%  static 'pdfs/withdrawal_form.pdf'%}",
-    reduced_course_load:   "{%  static 'pdfs/reduced_course_load_form.pdf' %}"
+    reduced_course_load: "{%  static 'pdfs/reduced_course_load_form.pdf' %}",
+    grad_petition: "{%  static 'pdfs/graduate_petition.pdf' %}"
   };
 
   document.getElementById("pdfViewer").src = pdfLinks[formType];
@@ -143,6 +145,7 @@ function fillForm(formType) {
     thesis: "/fill-form/thesis/",
     withdrawal: "/fill-form/withdrawal/",
     reduced_course_load: "/fill-form/rcl/",
+    grad_petition: "/fill-form/petition/"
   };
 
   window.location.href = formLinks[formType];
@@ -240,7 +243,7 @@ function fillForm(formType) {
                 <p><strong>Status:</strong> {{ request.status }}</p> <span class="status-badge status-{{ request.status|lower }}">{{ request.get_status_display }}</span>
                 <p><strong>Degree Plan:</strong> {{ request.degree_plan }}</p>
                 <p><strong>Term for Withdrawal:</strong> {{ request.withdrawal_term }}</p>
-                <p><strong>Last Date Attendend:</strong> {{ request.last_attendance_date }}</p>
+                <p><strong>Last Date Attended:</strong> {{ request.last_attendance_date }}</p>
                 {% if request.pdf_document %}
                     <a href="{{ request.pdf_document.url }}" class="pdf-link" target="_blank">📄 View PDF</a>
                 {% else %}
@@ -255,13 +258,43 @@ function fillForm(formType) {
         {% empty %}
         <p class="no-forms-message">No withdrawal requests found.</p>
         {% endfor %}
+        
+        {% for request in petition_requests %}
+        <div class="tracking-card">
+            <div class="tracking-card-content">
+                <h3>Graduate School Petition</h3>
+                <p><strong>Status:</strong> {{ request.status }}</p> <span class="status-badge status-{{ request.status|lower }}">{{ request.get_status_display }}</span>
+                <p><strong>Program:</strong> {{ request.program }}</p>
+                <p><strong>Purpose:</strong> 
+                    {% if request.purpose == "1" %}Update program status/action
+                    {% elif request.purpose == "2" %}Admissions status change
+                    {% elif request.purpose == "3" %}Add new concurrent degree objective
+                    {% elif request.purpose == "4" %}Change current degree objective
+                    {% elif request.purpose == "5" %}Degree requirement exception
+                    {% elif request.purpose == "6" %}Leave of Absence
+                    {% elif request.purpose == "7" %}Reinstatement to discontinued career
+                    {% elif request.purpose == "8" %}Request to apply to graduate after deadline
+                    {% elif request.purpose == "9" %}Transfer Credit
+                    {% elif request.purpose == "10" %}Other: {{ request.other_purpose }}
+                    {% endif %}
+                </p>
+                <p><strong>Term:</strong> {{ request.term }} {{ request.year }}</p>
+                {% if request.pdf_document %}
+                    <a href="{{ request.pdf_document.url }}" class="pdf-link" target="_blank">📄 View PDF</a>
+                {% else %}
+                    <p class="pdf-unavailable">📄 PDF not available</p>
+                {% endif %}
+            </div>
+            <div class="additional-info">
+                <p><strong>Student ID:</strong> {{ request.student_id }}</p>
+                <p><strong>Submitted On:</strong> {{ request.created_at|date:"F j, Y" }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <p class="no-forms-message">No petition requests found.</p>
+        {% endfor %}
     </div>
 </section>
-
-
-
-
-
 
     </div>
 </body>
