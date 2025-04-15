@@ -1,0 +1,282 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thunder Bay | Graduate School Petition Form</title>
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/academic_forms.css' %}">
+    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <i id="notifications_icon" class="fa-regular fa-bell"></i>
+            <i id="settings_icon" class="fa-solid fa-gear"></i>
+            <div class="navbar_user">
+                <img class="profile_picture" src="{% static 'images/default_profile.png' %}" alt="profile picture">
+                <span class="navbar_username">{{ user.first_name }} {{ user.last_name }}</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="logoContainer">
+            <img class="logo" src="{% static 'images/logo2.png' %}" alt="logo">
+        </div>
+
+        <div class="sidebar-content">
+            <a href="{% url 'dashboard' %}" class="sidebar-link" data-icon="fa-house">Dashboard</a>
+            <a href="{% url 'user_list' %}" class="sidebar-link" data-icon="fa-users">Users</a>
+            <a href="{% url 'approval_requests' %}" class="sidebar-link" data-icon="fa-file-alt">Forms</a>
+        </div>
+
+        <div class="logout-container">
+            <a href="{% url 'logout' %}" class="logout-btn">Logout</a>
+            <i id="logoutIcon" class="fa-solid fa-arrow-right-from-bracket"></i>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <h2>Graduate School Petition Form</h2>
+
+        <div class="form-preview-container">
+            <!-- Form Section -->
+            <form method="POST" action="{% url 'fill_petition_form' %}">
+                {% csrf_token %}
+
+                <label>First Name:</label>
+                <input type="text" value="{{ user.first_name }}" readonly>
+
+                <label>Last Name:</label>
+                <input type="text" value="{{ user.last_name }}" readonly>
+
+                <label>Middle Name:</label>
+                <input type="text" name="middle_name" value="{% if petition %}{{ petition.middle_name }}{% endif %}">
+
+                <label>myUH ID:</label>
+                <input type="text" name="student_id" value="{% if petition %}{{ petition.student_id }}{% endif %}" required pattern="\d{7}" title="Must be a 7-digit number">
+
+                <label for="email">Email:</label>
+                <input type="email" id="email" name="email" value="{{ user.email }}" required>
+
+                <label>Contact Phone Number:</label>
+                <input type="tel" name="phone" value="{% if petition %}{{ petition.phone }}{% endif %}" required>
+
+                <!-- Current Student Information -->
+                <fieldset>
+                    <legend>Current Student Information</legend>
+                    
+                    <label>Career:</label>
+                    <select name="career" required>
+                        <option value="">Select...</option>
+                        <option value="GRAD" {% if petition and petition.career == "GRAD" %}selected{% endif %}>Graduate</option>
+                        <option value="PRFL" {% if petition and petition.career == "PRFL" %}selected{% endif %}>Professional</option>
+                    </select>
+
+                    <label>Program:</label>
+                    <select name="program" required>
+                        <option value="">Select...</option>
+                        <option value="PhD" {% if petition and petition.program == "PhD" %}selected{% endif %}>PhD</option>
+                        <option value="MA" {% if petition and petition.program == "MA" %}selected{% endif %}>Master of Arts</option>
+                        <option value="MS" {% if petition and petition.program == "MS" %}selected{% endif %}>Master of Science</option>
+                        <option value="MFA" {% if petition and petition.program == "MFA" %}selected{% endif %}>Master of Fine Arts</option>
+                        <option value="MBA" {% if petition and petition.program == "MBA" %}selected{% endif %}>Master of Business Administration</option>
+                    </select>
+
+                    <label>Plan Code:</label>
+                    <input type="text" name="plan_code" value="{% if petition %}{{ petition.plan_code }}{% endif %}" required>
+                </fieldset>
+
+                <!-- Petition Effective -->
+                <fieldset>
+                    <legend>Petition Effective</legend>
+                    
+                    <label>Term:</label>
+                    <select name="term" required>
+                        <option value="">Select...</option>
+                        <option value="Fall" {% if petition and petition.term == "Fall" %}selected{% endif %}>Fall</option>
+                        <option value="Spring" {% if petition and petition.term == "Spring" %}selected{% endif %}>Spring</option>
+                        <option value="Summer" {% if petition and petition.term == "Summer" %}selected{% endif %}>Summer</option>
+                    </select>
+
+                    <label>Year:</label>
+                    <input type="text" name="year" value="{% if petition %}{{ petition.year }}{% endif %}" required pattern="\d{4}" title="Must be a 4-digit year">
+                </fieldset>
+
+                <!-- Purpose of Petition -->
+                <fieldset>
+                    <legend>Purpose of Petition</legend>
+                    
+                    <div class="radio-group">
+                        <label>
+                            <input type="radio" name="purpose" value="1" {% if petition and petition.purpose == "1" %}checked{% endif %}>
+                            1. Update program status/action (defer, term activate, discontinue, etc)
+                        </label>
+                        
+                        <label>
+                            <input type="radio" name="purpose" value="2" {% if petition and petition.purpose == "2" %}checked{% endif %}>
+                            2. Admissions status change (ex: conditional to unconditional)
+                        </label>
+                        
+                        <label>
+                            <input type="radio" name="purpose" value="3" {% if petition and petition.purpose == "3" %}checked{% endif %}>
+                            3. Add new concurrent degree objective (career/program/plan)
+                        </label>
+                        
+                        <label>
+                            <input type="radio" name="purpose" value="4" {% if petition and petition.purpose == "4" %}checked{% endif %}>
+                            4. Change current degree objective (program/plan)
+                        </label>
+                        
+                        <label>
+                            <input type="radio" name="purpose" value="5" {% if petition and petition.purpose == "5" %}checked{% endif %}>
+                            5. Degree requirement exception (provide explanation below)
+                        </label>
+                        
+                        <label>
+                            <input type="radio" name="purpose" value="6" {% if petition and petition.purpose == "6" %}checked{% endif %}>
+                            6. Leave of Absence (provide explanation)
+                        </label>
+                        
+                        <label>
+                            <input type="radio" name="purpose" value="7" {% if petition and petition.purpose == "7" %}checked{% endif %}>
+                            7. Reinstatement to discontinued career (provide attached explanation)
+                        </label>
+                        
+                        <label>
+                            <input type="radio" name="purpose" value="8" {% if petition and petition.purpose == "8" %}checked{% endif %}>
+                            8. Request to apply to graduate after the late filing period deadline
+                        </label>
+                        
+                        <label>
+                            <input type="radio" name="purpose" value="9" {% if petition and petition.purpose == "9" %}checked{% endif %}>
+                            9. Transfer Credit (One Institution per petition)
+                        </label>
+                        
+                        <label>
+                            <input type="radio" name="purpose" value="10" {% if petition and petition.purpose == "10" %}checked{% endif %}>
+                            10. Other
+                        </label>
+                    </div>
+
+                    <!-- Other purpose text field (appears when "10. Other" is selected) -->
+                    <div id="otherPurposeField" {% if petition and petition.purpose != "10" %}style="display:none;"{% endif %}>
+                        <label>Please specify:</label>
+                        <input type="text" name="other_purpose" value="{% if petition %}{{ petition.other_purpose }}{% endif %}">
+                    </div>
+                </fieldset>
+
+                <!-- Transfer Credit Information (appears when "9. Transfer Credit" is selected) -->
+                <fieldset id="transferCreditField" {% if petition and petition.purpose != "9" %}style="display:none;"{% endif %}>
+                    <legend>Transfer Credit Information</legend>
+                    
+                    <label>Institution Name:</label>
+                    <input type="text" name="institution_name" value="{% if petition %}{{ petition.institution_name }}{% endif %}">
+                    
+                    <label>City/State/Zip:</label>
+                    <input type="text" name="city_state_zip" value="{% if petition %}{{ petition.city_state_zip }}{% endif %}">
+                    
+                    <label>Start Term:</label>
+                    <select name="transfer_start_term">
+                        <option value="">Select...</option>
+                        <option value="Fall" {% if petition and petition.transfer_start_term == "Fall" %}selected{% endif %}>Fall</option>
+                        <option value="Spring" {% if petition and petition.transfer_start_term == "Spring" %}selected{% endif %}>Spring</option>
+                        <option value="Summer" {% if petition and petition.transfer_start_term == "Summer" %}selected{% endif %}>Summer</option>
+                    </select>
+                    
+                    <label>Start Year:</label>
+                    <input type="text" name="transfer_start_year" value="{% if petition %}{{ petition.transfer_start_year }}{% endif %}" pattern="\d{4}" title="Must be a 4-digit year">
+                    
+                    <label>End Term:</label>
+                    <select name="transfer_end_term">
+                        <option value="">Select...</option>
+                        <option value="Fall" {% if petition and petition.transfer_end_term == "Fall" %}selected{% endif %}>Fall</option>
+                        <option value="Spring" {% if petition and petition.transfer_end_term == "Spring" %}selected{% endif %}>Spring</option>
+                        <option value="Summer" {% if petition and petition.transfer_end_term == "Summer" %}selected{% endif %}>Summer</option>
+                    </select>
+                    
+                    <label>End Year:</label>
+                    <input type="text" name="transfer_end_year" value="{% if petition %}{{ petition.transfer_end_year }}{% endif %}" pattern="\d{4}" title="Must be a 4-digit year">
+                    
+                    <label>Description of Credit:</label>
+                    <input type="text" name="credit_description" value="{% if petition %}{{ petition.credit_description }}{% endif %}">
+                    
+                    <label>Hours Previously Transferred:</label>
+                    <input type="number" name="hours_transferred" value="{% if petition %}{{ petition.hours_transferred }}{% endif %}">
+                    
+                    <label>Requested Transfer Hours:</label>
+                    <input type="number" name="requested_hours" value="{% if petition %}{{ petition.requested_hours }}{% endif %}">
+                </fieldset>
+
+                <label>Explanation of Request:</label>
+                <textarea name="explanation" required>{% if petition %}{{ petition.explanation }}{% endif %}</textarea>
+
+                <button type="submit" class="btn">Submit Request</button>
+
+                {% if petition %}
+                    <div class="message">Request Submitted!</div>
+
+                    <div class="form-buttons">
+                        <a href="{% url 'generate_petition_pdf' petition.id %}" target="_blank" class="btn">Generate PDF</a>
+                        <a href="{% url 'approval_requests' %}" class="btn btn-back">Cancel</a>
+                    </div>
+                {% endif %}
+            </form>
+
+            <!-- PDF Preview Section -->
+            <div class="pdf-preview-container">
+                <h3>Preview</h3>
+                <iframe id="pdfPreview"
+                     src="{% if petition and petition.pdf_document %}{{ MEDIA_URL }}{{ petition.pdf_document }}{% else %}{% static 'pdfs/graduate_petition.pdf' %}{% endif %}"
+                    width="100%" height="500px"
+                    type="application/pdf">
+                </iframe>
+
+                {% if petition and petition.status == "Draft" %}
+                    <form method="POST" action="{% url 'submit_petition_for_approval' petition.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn">Submit for Approval</button>
+                    </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Show/hide other purpose field based on radio selection
+        document.addEventListener('DOMContentLoaded', function() {
+            const purposeRadios = document.querySelectorAll('input[name="purpose"]');
+            const otherPurposeField = document.getElementById('otherPurposeField');
+            const transferCreditField = document.getElementById('transferCreditField');
+            
+            purposeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    // Show/hide "Other" field
+                    if (this.value === '10') {
+                        otherPurposeField.style.display = 'block';
+                    } else {
+                        otherPurposeField.style.display = 'none';
+                    }
+                    
+                    // Show/hide transfer credit field
+                    if (this.value === '9') {
+                        transferCreditField.style.display = 'block';
+                    } else {
+                        transferCreditField.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

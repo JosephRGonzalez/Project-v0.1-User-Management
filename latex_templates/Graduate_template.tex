@@ -1,0 +1,230 @@
+\documentclass{article}
+\usepackage[a4paper,margin=1in,landscape]{geometry}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{eso-pic}  % Allows precise positioning
+\usepackage{tikz}  % For drawing text and components precisely
+\usepackage{ifthen}
+\usepackage{pdfoverlay}
+
+% Function to place checkboxes at specific coordinates
+\newcommand{\CheckboxAt}[3]{
+    \begin{tikzpicture}[
+        remember picture,
+        overlay,
+        shift={(current page.south west)}
+    ]
+        % Draw a checkbox based on the third argument: u for unchecked, c for checked
+        \ifx#3u
+            \node[anchor=south west] at (#1, #2) {\tikz \draw[very thick] (0,0) rectangle (0.60,0.60);}; % Unchecked checkbox
+        \else
+            \node[anchor=south west] at (#1, #2) {\tikz \draw[very thick, fill=black] (0,0) rectangle (0.60,0.60);}; % Checked checkbox
+        \fi
+    \end{tikzpicture}
+}
+
+% Command to place text at specific coordinates
+\NewDocumentCommand{\TextAt}{O{left} r() O{\textwidth} +m O{\normalfont}}{
+    \begin{tikzpicture}[
+        remember picture,
+        overlay,
+        shift={(current page.south west)}
+    ]
+        \node[
+            text width=#3,
+            align=#1,
+            anchor=south west,
+            inner sep=0,
+            font=#5,
+        ] at (#2) {\parbox{\textwidth}{#4}};
+    \end{tikzpicture}
+}
+
+% Command to place image at specific coordinates
+\newcommand{\ImageAt}[3]{
+    \begin{tikzpicture}[
+        remember picture,
+        overlay,
+        shift={(current page.south west)}
+    ]
+        % Insert the image at the specified coordinates
+        \node[anchor=south west] at (#1, #2) {\includegraphics[width=#3]{{{{SIGNATURE_FILENAME}}}}};
+    \end{tikzpicture}
+}
+
+\begin{document}
+
+% PDF Form overlay
+\pdfoverlaySetPDF{../static/pdfs/graduate_petition.pdf}
+
+% Header area - Student information
+\TextAt(2.9in, 7.2in){\large\textbf{GRAD/PROF PETITION for POSTHUMOUS DEGREE}} [\footnotesize\bfseries]
+\TextAt(4in, 6.9in){gradschool@uh.edu} [\footnotesize]
+
+% Student Information Section
+\TextAt(0.78in, 6.5in){{{LAST_NAME}}} [\footnotesize\bfseries]
+\TextAt(2.77in, 6.5in){{{FIRST_NAME}}} [\footnotesize\bfseries]
+\TextAt(4.76in, 6.5in){{{MIDDLE_NAME}}} [\footnotesize\bfseries]
+\TextAt(0.78in, 6.1in){{{STUDENT_ID}}} [\footnotesize\bfseries]
+\TextAt(2.9in, 6.1in){{{PHONE}}} [\footnotesize\bfseries]
+\TextAt(0.78in, 5.7in){{{EMAIL}}} [\footnotesize\bfseries]
+
+% Current Student Information
+\TextAt(8.74in, 6.5in){Select...} [\footnotesize\bfseries]
+\TextAt(8.74in, 6.1in){Select...} [\footnotesize\bfseries]
+\TextAt(8.4in, 5.7in){Select...} [\footnotesize\bfseries]
+
+% Petition Effective
+\TextAt(9.97in, 6.1in){{{TERM}}} [\footnotesize\bfseries]
+\TextAt(9.97in, 5.7in){{{YEAR}}} [\footnotesize\bfseries]
+
+% PURPOSE OF PETITION Section
+% Checkbox 1
+\ifthenelse{\equal{{{PURPOSE}}}{1}}
+    {\CheckboxAt{0.5in}{4.9in}{c}}
+    {\CheckboxAt{0.5in}{4.9in}{u}}
+\TextAt(1.0in, 4.9in){1. Update program status/action} [\footnotesize]
+\TextAt(1.0in, 4.7in){(defer, term activate, discontinue, etc)} [\footnotesize]
+
+% Checkbox 2
+\ifthenelse{\equal{{{PURPOSE}}}{2}}
+    {\CheckboxAt{3.3in}{4.9in}{c}}
+    {\CheckboxAt{3.3in}{4.9in}{u}}
+\TextAt(3.8in, 4.9in){2. Admissions status change} [\footnotesize]
+\TextAt(3.8in, 4.7in){(ex: conditional to unconditional)} [\footnotesize]
+
+% Checkbox 3
+\ifthenelse{\equal{{{PURPOSE}}}{3}}
+    {\CheckboxAt{6.5in}{4.9in}{c}}
+    {\CheckboxAt{6.5in}{4.9in}{u}}
+\TextAt(7.0in, 4.9in){3. Add new concurrent degree objective} [\footnotesize]
+\TextAt(7.0in, 4.7in){(career/program/plan)} [\footnotesize]
+
+% Checkbox 4
+\ifthenelse{\equal{{{PURPOSE}}}{4}}
+    {\CheckboxAt{9.6in}{4.9in}{c}}
+    {\CheckboxAt{9.6in}{4.9in}{u}}
+\TextAt(10.1in, 4.9in){4. Change current degree objective} [\footnotesize]
+\TextAt(10.1in, 4.7in){(program/plan)} [\footnotesize]
+
+% Checkbox 5
+\ifthenelse{\equal{{{PURPOSE}}}{5}}
+    {\CheckboxAt{0.5in}{4.2in}{c}}
+    {\CheckboxAt{0.5in}{4.2in}{u}}
+\TextAt(1.0in, 4.2in){5. Degree requirement exception} [\footnotesize]
+\TextAt(1.0in, 4.0in){(provide explanation below)} [\footnotesize]
+
+% Checkbox 6
+\ifthenelse{\equal{{{PURPOSE}}}{6}}
+    {\CheckboxAt{3.3in}{4.2in}{c}}
+    {\CheckboxAt{3.3in}{4.2in}{u}}
+\TextAt(3.8in, 4.2in){6. Leave of Absence (provide explanation)} [\footnotesize]
+\TextAt(3.8in, 4.0in){(Attach supporting documentation)} [\footnotesize]
+
+% Checkbox 7
+\ifthenelse{\equal{{{PURPOSE}}}{7}}
+    {\CheckboxAt{6.5in}{4.2in}{c}}
+    {\CheckboxAt{6.5in}{4.2in}{u}}
+\TextAt(7.0in, 4.2in){7. Reinstatement to discontinued} [\footnotesize]
+\TextAt(7.0in, 4.0in){career (provide attached explanation)} [\footnotesize]
+
+% Checkbox 8
+\ifthenelse{\equal{{{PURPOSE}}}{8}}
+    {\CheckboxAt{9.6in}{4.2in}{c}}
+    {\CheckboxAt{9.6in}{4.2in}{u}}
+\TextAt(10.1in, 4.2in){8. Request to apply to graduate after} [\footnotesize]
+\TextAt(10.1in, 4.0in){the late filing period deadline} [\footnotesize]
+
+% Checkbox 9
+\ifthenelse{\equal{{{PURPOSE}}}{9}}
+    {\CheckboxAt{0.5in}{3.5in}{c}}
+    {\CheckboxAt{0.5in}{3.5in}{u}}
+\TextAt(1.0in, 3.5in){9. Transfer Credit} [\footnotesize]
+\TextAt(1.0in, 3.3in){(One Institution per petition)} [\footnotesize]
+
+% Checkbox 10
+\ifthenelse{\equal{{{PURPOSE}}}{10}}
+    {\CheckboxAt{9.6in}{3.5in}{c}}
+    {\CheckboxAt{9.6in}{3.5in}{u}}
+\TextAt(10.1in, 3.5in){10. Other:} [\footnotesize]
+\TextAt(10.0in, 3.2in){{{OTHER_PURPOSE}}} [\footnotesize\bfseries]
+
+% Transfer Credit Information
+\TextAt(2.5in, 3.5in){{{INSTITUTION_NAME}}} [\footnotesize\bfseries]
+\TextAt(2.5in, 3.1in){{{CITY_STATE_ZIP}}} [\footnotesize\bfseries]
+\TextAt(8.0in, 3.5in){Select...} [\footnotesize\bfseries] % Start Term dropdown
+\TextAt(8.0in, 3.1in){Select...} [\footnotesize\bfseries] % End Term dropdown
+\TextAt(9.2in, 3.5in){{{START_YEAR}}} [\footnotesize\bfseries]
+\TextAt(9.2in, 3.1in){{{END_YEAR}}} [\footnotesize\bfseries]
+
+% Credit hours
+\TextAt(7.2in, 2.8in){{{HOURS_TRANSFERRED}}} [\footnotesize\bfseries]
+\TextAt(7.2in, 2.4in){{{REQUESTED_HOURS}}} [\footnotesize\bfseries]
+
+% Explanation of request
+\TextAt(0.78in, 2.0in){{{EXPLANATION}}} [\footnotesize\bfseries]
+
+% Signature Section
+\TextAt(0.78in, 1.2in){STUDENT SIGNATURE} [\footnotesize\bfseries]
+\ImageAt{3.0in}{1.2in}{2cm} % Signature image placement
+\TextAt(7.2in, 1.2in){/} [\footnotesize]
+\TextAt(8.0in, 1.2in){/20} [\footnotesize]
+\TextAt(6.7in, 1.2in){{{SIGNATURE_DATE_MONTH}}} [\footnotesize\bfseries]
+\TextAt(7.5in, 1.2in){{{SIGNATURE_DATE_DAY}}} [\footnotesize\bfseries]
+\TextAt(8.5in, 1.2in){{{SIGNATURE_DATE_YEAR}}} [\footnotesize\bfseries]
+
+% Required Approvals Section
+\TextAt(3.8in, 0.9in){REQUIRED APPROVALS} [\footnotesize\bfseries]
+\TextAt(9.5in, 0.9in){ACADEMIC OFFICE USE ONLY} [\footnotesize\bfseries]
+
+% Approvals checkboxes and signatures
+% Thesis Advisor or Department Chair
+\TextAt(0.78in, 0.6in){Thesis Advisor or Department Chair} [\footnotesize\bfseries]
+\CheckboxAt{0.5in}{0.3in}{u} % APPROVED checkbox
+\TextAt(0.78in, 0.3in){APPROVED} [\footnotesize]
+\CheckboxAt{1.8in}{0.3in}{u} % DISAPPROVED checkbox
+\TextAt{2.1in, 0.3in}{DISAPPROVED} [\footnotesize]
+\TextAt(3.5in, 0.3in){{{CHAIR_NAME}}} [\footnotesize\bfseries]
+\TextAt(6.5in, 0.3in){{{CHAIR_DATE}}} [\footnotesize\bfseries]
+
+% Dean of the College (Next row)
+\TextAt(0.78in, -0.2in){Dean of the College} [\footnotesize\bfseries]
+\CheckboxAt{0.5in}{-0.5in}{u} % APPROVED checkbox
+\TextAt(0.78in, -0.5in){APPROVED} [\footnotesize]
+\CheckboxAt{1.8in}{-0.5in}{u} % DISAPPROVED checkbox
+\TextAt{2.1in, -0.5in}{DISAPPROVED} [\footnotesize]
+\TextAt(3.5in, -0.5in){{{DEAN_NAME}}} [\footnotesize\bfseries]
+\TextAt(6.5in, -0.5in){{{DEAN_DATE}}} [\footnotesize\bfseries]
+
+% Vice Provost/Dean of the Graduate School
+\TextAt(0.78in, -1.0in){Vice Provost/Dean of the Graduate School} [\footnotesize\bfseries]
+\CheckboxAt{0.5in}{-1.3in}{u} % APPROVED checkbox
+\TextAt(0.78in, -1.3in){APPROVED} [\footnotesize]
+\CheckboxAt{1.8in}{-1.3in}{u} % DISAPPROVED checkbox
+\TextAt{2.1in, -1.3in}{DISAPPROVED} [\footnotesize]
+\TextAt(3.5in, -1.3in){{{GRAD_DEAN_NAME}}} [\footnotesize\bfseries]
+\TextAt(6.5in, -1.3in){{{GRAD_DEAN_DATE}}} [\footnotesize\bfseries]
+
+% Senior Vice President/Provost
+\TextAt(0.78in, -1.8in){Senior Vice President/Provost} [\footnotesize\bfseries]
+\CheckboxAt{0.5in}{-2.1in}{u} % APPROVED checkbox
+\TextAt(0.78in, -2.1in){APPROVED} [\footnotesize]
+\CheckboxAt{1.8in}{-2.1in}{u} % DISAPPROVED checkbox
+\TextAt{2.1in, -2.1in}{DISAPPROVED} [\footnotesize]
+\TextAt(3.5in, -2.1in){{{PROVOST_NAME}}} [\footnotesize\bfseries]
+\TextAt(6.5in, -2.1in){{{PROVOST_DATE}}} [\footnotesize\bfseries]
+
+% President
+\TextAt(0.78in, -2.6in){President} [\footnotesize\bfseries]
+\CheckboxAt{0.5in}{-2.9in}{u} % APPROVED checkbox
+\TextAt(0.78in, -2.9in){APPROVED} [\footnotesize]
+\CheckboxAt{1.8in}{-2.9in}{u} % DISAPPROVED checkbox
+\TextAt{2.1in, -2.9in}{DISAPPROVED} [\footnotesize]
+\TextAt(3.5in, -2.9in){{{PRESIDENT_NAME}}} [\footnotesize\bfseries]
+\TextAt(6.5in, -2.9in){{{PRESIDENT_DATE}}} [\footnotesize\bfseries]
+
+% Comments section
+\TextAt(7.8in, 0.6in){COMMENTS} [\footnotesize\bfseries]
+\TextAt(7.8in, 0.2in){{{COMMENTS}}} [\footnotesize]
+
+\end{document}
