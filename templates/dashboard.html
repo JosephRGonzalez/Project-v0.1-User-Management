@@ -121,6 +121,36 @@
                 </td>
             </tr>
             {% endfor %}
+
+                    {% for request in rcl_requests %}
+            <tr>
+                <td>Reduced Course Load</td>
+                <td>{{ request.created_at|date:"F j, Y" }}</td>
+                <td><span class="status-badge status-{{ request.status|lower }}">{{ request.get_status_display }}</span></td>
+                <td>
+                    {% if request.pdf_document %}
+                        <a href="{{ request.pdf_document.url }}" class="pdf-link" target="_blank">📄 View</a>
+                    {% else %}
+                        <span class="pdf-unavailable">N/A</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+
+                    {% for request in petition_requests %}
+            <tr>
+                <td>Graduate & Professional Student Petition</td>
+                <td>{{ request.created_at|date:"F j, Y" }}</td>
+                <td><span class="status-badge status-{{ request.status|lower }}">{{ request.get_status_display }}</span></td>
+                <td>
+                    {% if request.pdf_document %}
+                        <a href="{{ request.pdf_document.url }}" class="pdf-link" target="_blank">📄 View</a>
+                    {% else %}
+                        <span class="pdf-unavailable">N/A</span>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
         </tbody>
     </table>
 

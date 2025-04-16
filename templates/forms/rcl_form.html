@@ -128,6 +128,19 @@
        value="{% if rcl_request %}{{ rcl_request.course_to_drop_3 }}{% endif %}">
 
 
+    <label>Current Semester:</label>
+     <select name="current_semester" required>
+      <option value="fall" {% if rcl_request.current_semester == "fall" %}selected{% endif %}>Fall</option>
+      <option value="spring" {% if rcl_request.current_semester == "spring" %}selected{% endif %}>Spring</option>
+    </select>
+
+    <label>Current Year (last 2 digits):</label>
+    <select name="current_semester_year" required>
+     {% for year in year_choices %}
+        <option value="{{ year }}" {% if rcl_request and rcl_request.current_semester_year == year %}selected{% endif %}>{{ year }}</option>
+     {% endfor %}
+    </select>
+
       <label>Total Credit Hours After Drop:</label>
     <input type="number" name="total_credit_hours_after_drop" required>
 

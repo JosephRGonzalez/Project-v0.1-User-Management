@@ -258,7 +258,32 @@ function fillForm(formType) {
         {% empty %}
         <p class="no-forms-message">No withdrawal requests found.</p>
         {% endfor %}
-        
+
+        {% for request in rcl_requests %}
+        <div class="tracking-card">
+            <div class="tracking-card-content">
+                <h3>Reduced Course Load Request</h3>
+                <p><strong>Status:</strong> {{ request.status }}</p>
+                <span class="status-badge status-{{ request.status|lower }}">{{ request.get_status_display }}</span>
+                <p><strong>Reason for Request:</strong> {{ request.get_reason_display }}</p>
+                <p><strong>Semester:</strong> {{ request.semester|title }} 20{{ request.semester_year }}</p>
+                <p><strong>Current Enrollment:</strong> {{ request.total_credit_hours_after_drop }} credit hours</p>
+                {% if request.pdf_document %}
+                    <a href="{{ request.pdf_document.url }}" class="pdf-link" target="_blank">📄 View PDF</a>
+                {% else %}
+                    <p class="pdf-unavailable">📄 PDF not available</p>
+                {% endif %}
+            </div>
+            <div class="additional-info">
+                <p><strong>Student ID:</strong> {{ request.student_id }}</p>
+                <p><strong>Submitted On:</strong> {{ request.created_at|date:"F j, Y" }}</p>
+            </div>
+        </div>
+        {% empty %}
+        <p class="no-forms-message">No reduced course load requests found.</p>
+        {% endfor %}
+
+
         {% for request in petition_requests %}
         <div class="tracking-card">
             <div class="tracking-card-content">

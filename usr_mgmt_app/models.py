@@ -236,15 +236,17 @@ class ReducedCourseLoadRequest(models.Model):
     final_semester_hours = models.PositiveIntegerField(blank=True, null=True)
     thesis_hours = models.PositiveIntegerField(blank=True, null=True)
 
-    # Common fields
+  # Common fields
     semester = models.CharField(max_length=10, choices=SEMESTER_CHOICES)
-    semester_year = models.PositiveIntegerField(default=2025)
+    semester_year = models.PositiveIntegerField(default=25)
     # Courses to Drop
     course_to_drop_1 = models.CharField(max_length=20, default="")  # Required
     course_to_drop_2 = models.CharField(max_length=20, blank=True, default="")  # Optional
     course_to_drop_3 = models.CharField(max_length=20, blank=True, default="")  # Optional
 
     total_credit_hours_after_drop = models.PositiveIntegerField()
+    current_semester = models.CharField(max_length=10, choices=SEMESTER_CHOICES, default = 'fall')
+    current_year = models.PositiveIntegerField(default=25)
 
     pdf_document = models.FileField(upload_to="generated_pdfs/", null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='draft')
@@ -252,7 +254,10 @@ class ReducedCourseLoadRequest(models.Model):
 
     def __str__(self):
         return f"RCL Request {self.id} by {self.user.username} - {self.status}"
-        
+
+
+
+
 class PetitionRequest(models.Model):
     STATUS_CHOICES = [
         ('Draft', 'Draft'),

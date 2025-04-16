@@ -58,7 +58,7 @@
         shift={(current page.south west)}
     ]
         % Insert the image at the specified coordinates
-        \node[anchor=south west] at (#1, #2) {\includegraphics[width=#3]{{{{SIGNATURE_FILENAME}}}}};
+        \node[anchor=south west] at (#1, #2) {\includegraphics[width=#3]{{../signatures/handwritten-email-signature.jpeg}}};
     \end{tikzpicture}
 }
 
@@ -83,29 +83,29 @@
   % 1. ACADEMIC DIFFICULTY
 
     % Initial Adjustment Issues (IAI)
-        \ifthenelse{\equal{{{ACADEMIC_TYPE}}}{IAI}}
+        \ifthenelse{\equal{IAI}{IAI}}
         {\TextAt(0.495in,7.90in) {X}  [\footnotesize\bfseries]} %  Main Box
         {\TextAt(0.495in,7.90in) { }  [\footnotesize\bfseries]} %  Main Box
 
      % IAI REASON
         % English
-        \ifthenelse{\equal{{{IAI_REASONS}}}{english_language}}
+        \ifthenelse{\equal{english_language}{english_language}}
         {\TextAt(2.02in,7.88in) {X}  [\footnotesize\bfseries]} % English
         {\TextAt(2.02in,7.88in) { }  [\footnotesize\bfseries]} % English
 
         % Reading
-        \ifthenelse{\equal{{{IAI_REASONS}}}{reading_requirements}}
+        \ifthenelse{\equal{english_language}{reading_requirements}}
         {\TextAt(3.36in,7.88in) {X}  [\footnotesize\bfseries]} % Reading
         {\TextAt(3.36in,7.88in) { }  [\footnotesize\bfseries]} % Reading
 
         % Unfamiliarity
-        \ifthenelse{\equal{{{IAI_REASONS}}}{american_teaching}}
+        \ifthenelse{\equal{english_language}{american_teaching}}
         {\TextAt(4.69in,7.88in) {X}  [\footnotesize\bfseries]} % Unfamiliarity
         {\TextAt(4.69in,7.88in) { }  [\footnotesize\bfseries]} % Unfamiliarity
 
 
     % Improper Course Level Placement (ICLP)
-    \ifthenelse{\equal{{{ACADEMIC_TYPE}}}{ICLP}}
+    \ifthenelse{\equal{IAI}{ICLP}}
     {\TextAt(0.495in,7.52in) {X}  [\footnotesize\bfseries]} % Main Box
     {\TextAt(0.495in,7.52in) { }  [\footnotesize\bfseries]} % Main Box
 
@@ -114,11 +114,11 @@
 
 
   % 2. MEDICAL REASON
-    \ifthenelse{\equal{{{REASON}}}{medical}}
+    \ifthenelse{\equal{academic}{medical}}
     {\TextAt(0.495in,6.925in) {X}  [\footnotesize\bfseries]} % Main Box
     {\TextAt(0.495in,6.925in) { }  [\footnotesize\bfseries]} % Main Box
 
-    \ifthenelse{\equal{{{MEDICAL_LETTER}}}{Yes}}
+    \ifthenelse{\equal{No}{Yes}}
     {\TextAt(0.735in,5.92in) {X} [\footnotesize\bfseries]} % Secondary Box
     {\TextAt(0.735in,5.92in) { } [\footnotesize\bfseries]} % Secondary Box
 
@@ -129,7 +129,7 @@
   % 3. Full Time Equivalency For Final Semester
 
     % Reduced Course Load for Non Thesis Track
-    \ifthenelse{\equal{{{FINAL_TYPE}}}{non_thesis}}
+    \ifthenelse{\equal{}{non_thesis}}
     {\TextAt(0.56in,5.46in) {X}  [\footnotesize\bfseries]} % Main Box
     {\TextAt(0.56in,5.46in) { }  [\footnotesize\bfseries]} % Main Box
 
@@ -138,17 +138,17 @@
     \TextAt(6.05in,5.44in) {1000}  [\footnotesize\bfseries] % Hours
 
     % Full Time Equivalency for Thesis/Dissertion Track
-    \ifthenelse{\equal{{{FINAL_TYPE}}}{thesis}}
+    \ifthenelse{\equal{}{thesis}}
     {\TextAt(0.56in,4.825in) {X}  [\footnotesize\bfseries]} % Main Box
     {\TextAt(0.56in,4.825in) { }  [\footnotesize\bfseries]} % Main Box
 
 
 
     % Reduced Course Load for Non Thesis Track HOURS
-    \TextAt(6.05in,5.44in) {{{{FINAL_HOURS}}}}  [\footnotesize\bfseries] % Hours
+    \TextAt(6.05in,5.44in) {{}}  [\footnotesize\bfseries] % Hours
 
     % Full Time Equivalency for Thesis/Dissertion Track HOURS
-    \TextAt(5.53in,4.64in) {{{{THESIS_HOURS}}}}  [\footnotesize\bfseries] % Hours
+    \TextAt(5.53in,4.64in) {{}}  [\footnotesize\bfseries] % Hours
 
 
  %%%% End of Checkboxes
@@ -156,22 +156,22 @@
 
 
     % Fall Semester of 20____
-    \ifthenelse{\equal{{{SEMESTER}}}{fall}}
+    \ifthenelse{\equal{fall}{fall}}
     {\TextAt(3.07in,4.1in) {X}  [\footnotesize\bfseries]} % Fall Semester
     {\TextAt(3.07in,4.1in) { }  [\footnotesize\bfseries]} % Fall Semester
 
-    \ifthenelse{\equal{{{SEMESTER}}}{fall}}
-    {\TextAt(4.25in,4.09in) {{{{SEMESTER_YEAR}}}}  [\footnotesize\bfseries]} % Year
+    \ifthenelse{\equal{fall}{fall}}
+    {\TextAt(4.25in,4.09in) {{24}}  [\footnotesize\bfseries]} % Year
     {\TextAt(4.25in,4.09in) { }  [\footnotesize\bfseries]} % Year
 
 
     % Spring Semester of 20____
-    \ifthenelse{\equal{{{SEMESTER}}}{spring}}
+    \ifthenelse{\equal{fall}{spring}}
     {\TextAt(4.75in,4.1in) {X}  [\footnotesize\bfseries]} % Spring Semester
     {\TextAt(4.75in,4.1in) { }  [\footnotesize\bfseries]} % Spring Semester
 
-    \ifthenelse{\equal{{{SEMESTER}}}{spring}}
-    {\TextAt(6.07in,4.09in) {{{{SEMESTER_YEAR}}}}   [\footnotesize\bfseries]} % Year
+    \ifthenelse{\equal{fall}{spring}}
+    {\TextAt(6.07in,4.09in) {{24}}   [\footnotesize\bfseries]} % Year
     {\TextAt(6.07in,4.09in) { }   [\footnotesize\bfseries]} % Year
 
 
@@ -181,44 +181,44 @@
 
 
     % Dropped Classes
-    \TextAt(2.62in,3.885in) {{{{COURSE_1}}}}   [\footnotesize\bfseries] % Class 1
-    \TextAt(3.5in,3.885in) {{{{COURSE_2}}}}   [\footnotesize\bfseries] % Class 2
-    \TextAt(4.44in,3.885in) {{{{COURSE_3}}}}   [\footnotesize\bfseries] % Class 3
+    \TextAt(2.62in,3.885in) {{COSC 2438}}   [\footnotesize\bfseries] % Class 1
+    \TextAt(3.5in,3.885in) {{COSC 3320}}   [\footnotesize\bfseries] % Class 2
+    \TextAt(4.44in,3.885in) {{}}   [\footnotesize\bfseries] % Class 3
 
     % Total Of Hours
-    \TextAt(0.92in,3.7in) {{{{TOTAL_HOURS_AFTER_DROP}}}}   [\footnotesize\bfseries]
+    \TextAt(0.92in,3.7in) {{12}}   [\footnotesize\bfseries]
 
     % SEMESTER CHECKBOXES
 
        %FALL
-    \ifthenelse{\equal{{{CURRENT_SEMESTER}}}{fall}}
+    \ifthenelse{\equal{fall}{fall}}
     {\TextAt(2.015in,3.725in) {X}  [\footnotesize\bfseries]} % Fall
     {\TextAt(2.015in,3.725in) { }  [\footnotesize\bfseries]} % Fall
 
-    \ifthenelse{\equal{{{CURRENT_SEMESTER}}}{fall}}
-    {\TextAt(3.07in,3.72in) {{{{CURRENT_SEMESTER_YEAR}}}} [\footnotesize\bfseries]} % Year
+    \ifthenelse{\equal{fall}{fall}}
+    {\TextAt(3.07in,3.72in) {{25}} [\footnotesize\bfseries]} % Year
     {\TextAt(3.07in,3.72in) { } [\footnotesize\bfseries]} % Year
 
         %SPRING
 
-    \ifthenelse{\equal{{{CURRENT_SEMESTER}}}{spring}}
+    \ifthenelse{\equal{fall}{spring}}
     {\TextAt(3.54in,3.725in) {X}  [\footnotesize\bfseries]} % Spring
     {\TextAt(3.54in,3.725in) { }  [\footnotesize\bfseries]} % Spring
 
-    \ifthenelse{\equal{{{CURRENT_SEMESTER}}}{spring}}
-    {\TextAt(4.88in,3.72in) {{{{CURRENT_SEMESTER_YEAR}}}} [\footnotesize\bfseries]} % Year
+    \ifthenelse{\equal{fall}{spring}}
+    {\TextAt(4.88in,3.72in) {{25}} [\footnotesize\bfseries]} % Year
     {\TextAt(4.88in,3.72in) { } [\footnotesize\bfseries]} % Year
 
     % First Name
-    \TextAt(1.11in,3in) {{{{FIRST_NAME}}}}
+    \TextAt(1.11in,3in) {{Admin}}
     % Last Name
-    \TextAt(1.8in,3in) {{{{LAST_NAME}}}}
+    \TextAt(1.8in,3in) {{Team}}
     %Signature
     \ImageAt{4in}{2.9in} {1.5cm}
     % UH ID
-    \TextAt(5.8in,3.01in) {{{{STUDENT_ID}}}}
+    \TextAt(5.8in,3.01in) {{2039433}}
     % Date Created
-    \TextAt(7in,2.98in) {{{CREATED_AT}}}
+    \TextAt(7in,2.98in) {2025-04-14 23:52:32.238300+00:00}
 
 
 

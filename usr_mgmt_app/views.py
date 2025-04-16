@@ -50,6 +50,7 @@ def dashboard_view(request):
     user_count = UserProfile.objects.filter(role='user').count()
     thesis_requests = ThesisRequest.objects.filter(user=request.user).order_by('-created_at')[:5]  # Get last 5 requests
     withdrawal_requests = WithdrawalRequest.objects.filter(user=request.user).order_by('-created_at')[:5]
+    rcl_requests = ReducedCourseLoadRequest.objects.filter(user=request.user).order_by('-created_at')[:5]
     petition_requests = PetitionRequest.objects.filter(user=request.user).order_by('-created_at')[:5]  # Add petition requests
 
     # Render the dashboard template with the counts
@@ -59,6 +60,7 @@ def dashboard_view(request):
         'user_count': user_count,
         'thesis_requests': thesis_requests,
         'withdrawal_requests': withdrawal_requests,
+        'rcl_requests': rcl_requests,
         'petition_requests': petition_requests,  # Add to context
     })
 
@@ -133,7 +135,10 @@ def user_list(request):
 
     for withdrawal in WithdrawalRequest.objects.filter(status="Pending"):
         pending_requests.append({"id": withdrawal.id, "type": "WithdrawalRequest", "request": withdrawal})
-        
+
+    for rcl in ReducedCourseLoadRequest.objects.filter(status="Pending"):
+        pending_requests.append({"id": rcl.id, "type": "ReducedCourseLoadRequest", "request": rcl})
+
     for petition in PetitionRequest.objects.filter(status="Pending"):
         pending_requests.append({"id": petition.id, "type": "PetitionRequest", "request": petition})
 
@@ -795,10 +800,12 @@ def fill_rcl_form(request):
         course_to_drop_2 = request.POST.get("course_to_drop_2", "")
         course_to_drop_3 = request.POST.get("course_to_drop_3", "")
         total_credit_hours_after_drop = request.POST.get("total_credit_hours_after_drop")
+        current_semester = request.POST.get("current_semester")
+        current_semester_year = request.POST.get("current_semester_year")
 
 
         # Validation
-        required_fields = [student_id, reason, semester, semester_year, course_to_drop_1, total_credit_hours_after_drop]
+        required_fields = [student_id, reason, semester, semester_year, course_to_drop_1, total_credit_hours_after_drop,current_semester, current_semester_year,]
         if not all(required_fields):
             return render(request, "forms/rcl_form.html", {"error": "All required fields must be filled."})
 
@@ -818,7 +825,8 @@ def fill_rcl_form(request):
             "course_to_drop_2": course_to_drop_2,
             "course_to_drop_3": course_to_drop_3,
             "total_credit_hours_after_drop": total_credit_hours_after_drop,
-
+            "current_semester": current_semester,
+            "current_semester_year": current_semester_year,
             "status": "Draft",
         }
 
@@ -841,29 +849,43 @@ def fill_rcl_form(request):
 
 
 def generate_rcl_pdf(request, request_id):
+    """Generates a PDF for a Reduced Course Load Request."""
     rcl = ReducedCourseLoadRequest.objects.get(id=request_id)
 
-    signature_filename = (
-        os.path.join("../", rcl.user.signature.name)
-        if hasattr(rcl.user, "signature") and rcl.user.signature
-        else "../signatures/placeholder.png"
-    )
+    # Get the signature image from the user model
+    if rcl.user.signature:
+        signature_filename = os.path.join("../", rcl.user.signature.name)
+    else:
+        signature_filename = "../signatures/placeholder.png"
 
     user_data = {
         "FIRST_NAME": rcl.user.first_name,
         "LAST_NAME": rcl.user.last_name,
         "STUDENT_ID": rcl.student_id,
-        "REASON": rcl.reason,
+
+        "CURRENT_SEMESTER": rcl.current_semester,
+        "CURRENT_SEMESTER_YEAR": rcl.current_year,
         "SEMESTER": rcl.semester,
         "SEMESTER_YEAR": rcl.semester_year,
-        "FINAL_HOURS": rcl.final_semester_hours or "N/A",
-        "COURSES_TO_DROP": rcl.courses_to_drop,
-        "TOTAL_HOURS": rcl.total_credit_hours_after_drop,
-        "DIFFICULTY_TYPES": ", ".join(rcl.academic_difficulty_types or []),
+
+        "REASON": rcl.reason,
+        "ACADEMIC_TYPE": rcl.academic_type,
+        "IAI_REASONS": ",".join(rcl.iai_reasons) if rcl.iai_reasons else "",
         "MEDICAL_LETTER": "Yes" if rcl.medical_letter_attached else "No",
+        "FINAL_TYPE": rcl.final_type,
+        "FINAL_HOURS": rcl.final_semester_hours,
+        "THESIS_HOURS": rcl.thesis_hours,
+
+        "COURSE_1": rcl.course_to_drop_1,
+        "COURSE_2": rcl.course_to_drop_2,
+        "COURSE_3": rcl.course_to_drop_3,
+        "TOTAL_HOURS_AFTER_DROP": rcl.total_credit_hours_after_drop,
+
         "SIGNATURE_FILENAME": signature_filename,
         "CREATED_AT": rcl.created_at,
     }
+
+    print("User Data Sent to LaTeX:", user_data)  # Debugging
 
     pdf_filename = f"rcl_filled_{request_id}.pdf"
     pdf_path = generate_pdf_from_latex(user_data, "rcl_template.tex", f"rcl_filled_{request_id}")
@@ -1058,15 +1080,18 @@ def approval_requests(request):
 
     user_thesis_requests = ThesisRequest.objects.filter(user=request.user)
     user_withdrawal_requests = WithdrawalRequest.objects.filter(user=request.user)
+    user_rcl_requests = ReducedCourseLoadRequest.objects.filter(user=request.user)
     user_petition_requests = PetitionRequest.objects.filter(user=request.user)  # Added this line
 
     print("Thesis Requests:", list(user_thesis_requests))
     print("Withdrawal Requests:", list(user_withdrawal_requests))
+    print("Reduced Course Load Requests:", list(user_rcl_requests))
     print("Petition Requests:", list(user_petition_requests))  # Added this line
 
     return render(request, "approval_requests.html", {
         "thesis_requests": user_thesis_requests,
         "withdrawal_requests": user_withdrawal_requests,
+        "rcl_requests": user_rcl_requests,
         "petition_requests": user_petition_requests,  # Added this line
     })
 
@@ -1079,7 +1104,9 @@ def approve_request(request, request_id, request_type):
         request_obj = get_object_or_404(ThesisRequest, id=request_id)
     elif request_type == "WithdrawalRequest":
         request_obj = get_object_or_404(WithdrawalRequest, id=request_id)
-    elif request_type == "PetitionRequest":  # Added this condition
+    elif request_type == "ReducedCourseLoadRequest":
+        request_obj = get_object_or_404(ReducedCourseLoadRequest, id=request_id)
+    elif request_type == "PetitionRequest":
         request_obj = get_object_or_404(PetitionRequest, id=request_id)
     else:
         return HttpResponseForbidden("Invalid request type.")
@@ -1097,6 +1124,8 @@ def return_request(request, request_id, request_type):
         request_obj = get_object_or_404(ThesisRequest, id=request_id)
     elif request_type == "WithdrawalRequest":
         request_obj = get_object_or_404(WithdrawalRequest, id=request_id)
+    elif request_type == "ReducedCourseLoadRequest":
+        request_obj = get_object_or_404(ReducedCourseLoadRequest, id=request_id)
     elif request_type == "PetitionRequest":  # Added this condition
         request_obj = get_object_or_404(PetitionRequest, id=request_id)
     else:
