@@ -4,14 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thunder Bay | Create User</title>
+    <title>Thunder Bay | Dashboard</title>
     <link  rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-    <link rel="stylesheet" href="{% static 'css/user_form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
+
 </head>
 <body>
 
@@ -75,18 +77,70 @@
     </div>
 
 
-    <!-- Main Content -->
+
+
+
+
+    <!-- Main content -->
     <div class="main-content">
-        <h1>Create New User</h1>
 
-        <form method="post" class="user-form">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn-submit">Create User</button>
-        </form>
+    <form method="POST" enctype="multipart/form-data" class="profile-edit-form">
+        {% csrf_token %}
 
-        <a href="{% url 'user_list' %}" class="btn-back">Cancel</a>
+<!-- Banner Display & Upload -->
+<div class="profile-banner banner-edit">
+    {% if user_profile.profile_banner %}
+        <img id="banner-preview" class="banner-image" src="{{ user_profile.profile_banner.url }}" alt="Profile Banner">
+    {% else %}
+        <img id="banner-preview" class="banner-image" src="{% static 'images/default_banner.jpg' %}" alt="Default Banner">
+    {% endif %}
+
+    <label class="upload-banner-label" for="banner-picture-input">
+        Upload New Banner
+        <input type="file" name="profile_banner" id="banner-picture-input">
+        <small>Recommended size: 1600 x 240px</small>
+    </label>
+</div>
+
+
+
+        <div class="profile-info-card">
+
+            <!-- Profile Picture Upload -->
+            <div class="profile-picture-edit">
+                {% if user_profile.profile_picture %}
+                    <img class="profile-picture-large" src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
+                {% else %}
+                    <img class="profile-picture-large" src="{% static 'images/default_profile.png' %}" alt="Default Profile">
+                {% endif %}
+                <label class="upload-profile-label">
+                    Upload New Picture
+                    {{ form.profile_picture }}
+                </label>
+            </div>
+
+            <!-- Editable Fields -->
+            <div class="form-fields">
+                <label>Major</label>
+                {{ form.major }}
+
+                <label>College</label>
+                {{ form.college }}
+
+                <label>Academic Level</label>
+                {{ form.academic_level }}
+
+                <label>Bio</label>
+                {{ form.bio }}
+            </div>
+
+            <!-- Submit -->
+            <button type="submit" class="submit-btn">Save Changes</button>
+        </div>
+    </form>
+
+
+
     </div>
-
 </body>
 </html>

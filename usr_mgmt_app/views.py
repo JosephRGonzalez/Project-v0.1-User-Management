@@ -17,6 +17,7 @@ from .models import ThesisRequest, WithdrawalRequest, ReducedCourseLoadRequest
 from django.http import FileResponse
 from django.conf import settings
 from django.http import HttpResponseForbidden
+from .forms import PublicProfileEditForm
 
 
 
@@ -1135,3 +1136,47 @@ def return_request(request, request_id, request_type):
     request_obj.save()
 
     return redirect("user_list")
+
+
+
+
+
+@login_required
+def user_profile_view(request, user_id):
+    user_profile = get_object_or_404(UserProfile, id=user_id)
+
+    # Fields used for profile completion
+    fields = [
+        'first_name', 'last_name', 'email', 'role', 'cougar_id',
+        'college', 'major', 'academic_level', 'profile_picture', 'bio'
+    ]
+
+    completed_fields = sum(1 for field in fields if getattr(user_profile, field))
+    completion_percent = int((completed_fields / len(fields)) * 100)
+
+    context = {
+        'user_profile': user_profile,
+        'completion_percent': completion_percent,
+    }
+
+    return render(request, 'profile.html', context)
+
+
+
+
+@login_required
+def edit_profile_view(request):
+    user_profile = request.user
+
+    if request.method == 'POST':
+        form = PublicProfileEditForm(request.POST, request.FILES, instance=user_profile)
+        if form.is_valid():
+            form.save()
+            return redirect('user_profile', user_id=user_profile.id)
+    else:
+        form = PublicProfileEditForm(instance=user_profile)
+
+    return render(request, 'edit_profile.html', {
+        'form': form,
+        'user_profile': user_profile
+    })

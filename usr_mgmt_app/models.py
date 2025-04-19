@@ -2,6 +2,7 @@ import os
 from django.db import models
 from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.exceptions import ValidationError
+from django.core.validators import RegexValidator
 
 
 
@@ -20,7 +21,40 @@ class UserProfile(AbstractUser):
         ('moderator', 'Moderator'),
         ('user', 'User'),
     ]
+
+    ACADEMIC_LEVEL_CHOICES = [
+        ('undergraduate', 'Undergraduate'),
+        ('graduate', 'Graduate'),
+    ]
+
+    COLLEGE_CHOICES = [
+        ('architecture', 'Gerald D. Hines College of Architecture and Design'),
+        ('arts', 'Kathrine G. McGovern College of the Arts'),
+        ('business', 'C.T. Bauer College of Business'),
+        ('education', 'College of Education'),
+        ('engineering', 'Cullen College of Engineering'),
+        ('technology', 'Technology Division at the Cullen College of Engineering'),
+        ('liberal_arts', 'College of Liberal Arts and Social Sciences'),
+        ('nsm', 'College of Natural Sciences and Mathematics'),
+        ('nursing', 'Andy and Barbara Gessner College of Nursing'),
+        ('medicine', 'Tilman J. Fertitta Family College of Medicine'),
+        ('optometry', 'College of Optometry'),
+        ('pharmacy', 'College of Pharmacy'),
+        ('hospitality', 'Conrad N. Hilton College of Global Hospitality Leadership'),
+        ('law', 'UH Law Center'),
+        ('social_work', 'Graduate College of Social Work'),
+        ('public_affairs', 'Hobby School of Public Affairs'),
+        ('honors', 'The Honors College'),
+    ]
+
+    cougar_id = models.CharField(max_length=7,unique=True,null=True,blank=True,validators=[RegexValidator(regex=r'^\d{7}$', message='Cougar ID must be exactly 7 digits')])
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
+    major = models.CharField(max_length=100, null=True, blank=True)
+    college = models.CharField(max_length=50, choices=COLLEGE_CHOICES, null=True, blank=True)
+    academic_level = models.CharField(max_length=15, choices=ACADEMIC_LEVEL_CHOICES, null=True, blank=True)
+    profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
+    profile_banner = models.ImageField(upload_to='banner_pictures/', null=True,blank=True)
+    bio = models.TextField(null=True, blank=True)
     is_active = models.BooleanField(default=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

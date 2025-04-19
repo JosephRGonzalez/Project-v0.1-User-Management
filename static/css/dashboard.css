@@ -4,7 +4,7 @@
     padding: 0;
     box-sizing: border-box;
     font-family: Source Sans Pro,sans-serif;
-    overflow-x:hidden;
+
 }
 
 
@@ -12,7 +12,7 @@ body {
     background: rgb(255,255,255);
     color: black;
     z-index: 1;
-
+    overflow-x:hidden;
 }
 
 h1{
@@ -51,6 +51,7 @@ h3{
     flex-direction: row; /* Aligns elements in a vertical stack */
     font-family: Source Sans Pro,sans-serif;
 
+
 }
 
 .navbar-content {
@@ -62,6 +63,11 @@ h3{
     flex-direction: row;
     padding: 10px 0 0 10px;
 }
+
+.navbar-content > * {
+    margin-left: 1%;
+}
+
 
 .navbar_user {
     display: flex;
@@ -80,7 +86,8 @@ h3{
 .navbar_username{
     padding: 15px 0 10px 15px;
     font-weight: lighter;
-
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .profile_picture{
@@ -108,6 +115,99 @@ h3{
 #notifications_icon:hover{
     transform: scale(1.2) ;
     cursor: pointer;
+}
+
+/* Dropdown container wrapper */
+.dropdown-wrapper {
+    position: relative;
+}
+
+/* Shared dropdown menu style */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: white;
+    color: #333;
+    min-width: 200px;
+    padding: 12px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    z-index: 2000;
+}
+
+/* Only show dropdown when hovering directly on the settings icon */
+#settings_icon:hover + .settings-menu {
+    display: block;
+}
+
+/* Optional: Keep dropdown open if mouse moves into it */
+.settings-menu:hover {
+    display: block;
+}
+
+/* Show profile dropdown only when hovering directly over the user area */
+.navbar_user:hover + .profile-menu {
+    display: block;
+}
+
+/* Optional: Keep dropdown open when mouse enters it */
+.profile-menu:hover {
+    display: block;
+}
+
+
+/* Links inside settings menu */
+.settings-menu a {
+    display: block;
+    padding: 10px 14px;
+    color: #333;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.settings-menu a:hover {
+    background-color: #f0f0f0;
+}
+
+/* User profile card style */
+.profile-menu {
+    text-align: center;
+}
+
+.profile-menu .profile-picture-large {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    margin-bottom: 10px;
+}
+
+.profile-menu .user-role {
+    font-size: 0.85em;
+    color: #666;
+}
+
+.profile-menu .user-email {
+    font-size: 0.8em;
+    color: #999;
+    margin-bottom: 10px;
+}
+
+.profile-menu a {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 6px 12px;
+    background-color: #402512;
+    color: white;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 0.9em;
+}
+
+.profile-menu a:hover {
+    background-color: #60371b;
 }
 
 

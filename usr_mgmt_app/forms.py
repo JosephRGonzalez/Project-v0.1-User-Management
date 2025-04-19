@@ -17,3 +17,20 @@ class UserProfileForm(forms.ModelForm):
         if commit:
             user.save()
         return user
+
+
+class PublicProfileEditForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = [
+            'profile_picture',
+            'profile_banner',
+            'major',
+            'college',
+            'academic_level',
+            'bio',
+        ]
+        widgets = {
+            'bio': forms.Textarea(attrs={'placeholder': 'Write a short bio...'}),
+            'major': forms.TextInput(attrs={'placeholder': 'e.g. Computer Science'}),
+        }

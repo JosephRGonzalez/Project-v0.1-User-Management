@@ -1,0 +1,190 @@
+/* Profile Page */
+
+.profile-banner {
+    background-size: cover;
+    height: 240px;
+    position: relative;
+    border-radius: 10px;
+    margin-bottom: 60px;
+    width: 100%;
+}
+
+.banner-image {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+
+.profile-picture-container {
+    position: absolute;
+    bottom: -50px;
+    left: 60px;
+    border-radius: 50%;
+    background-color: white;
+    padding: 6px;
+    border: 3px solid white;
+}
+
+.profile-picture-large {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-info-card {
+    background: white;
+    padding: 100px 60px 40px 60px;
+    border-radius: 12px;
+    margin: 0 auto;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 100%;
+}
+
+.profile-info-card h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+}
+
+.profile-info-card .user-role {
+    font-size: 18px;
+    color: #666;
+}
+
+.profile-info-card .user-email {
+    font-size: 15px;
+    color: #999;
+    margin-bottom: 25px;
+}
+
+.user-details p {
+    font-size: 17px;
+    margin: 8px 0;
+}
+
+.profile-completion-section {
+    margin-top: 35px;
+}
+
+.profile-completion-section label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    background-color: #eee;
+    height: 14px;
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 8px;
+}
+
+.progress {
+    background-color: rgb(200, 16, 46);
+    height: 100%;
+    transition: width 0.5s ease-in-out;
+}
+
+.profile-completion-section span {
+    font-size: 14px;
+    color: #333;
+}
+
+
+
+
+
+/* EDIT PROFILE */
+
+.profile-edit-form {
+    width: 100%;
+}
+
+.profile-picture-edit {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.upload-profile-label,
+.upload-banner-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+    cursor: pointer;
+}
+
+.upload-profile-label input,
+.upload-banner-label input {
+    display: block;
+    margin-top: 6px;
+    font-size: 14px;
+}
+
+.form-fields label {
+    display: block;
+    margin: 15px 0 5px;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+.form-fields input,
+.form-fields select,
+.form-fields textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+.form-fields textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.submit-btn {
+    margin-top: 30px;
+    padding: 12px 24px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: rgb(200, 16, 46);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: rgb(170, 12, 38);
+}
+
+
+
+
+.banner-edit {
+    position: relative;
+    margin-bottom: 60px;
+}
+
+.upload-banner-label {
+    display: block;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #444;
+}
+
+.upload-banner-label input {
+    display: block;
+    margin-top: 6px;
+}
+
+

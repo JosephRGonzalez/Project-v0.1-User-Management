@@ -4,14 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thunder Bay | Create User</title>
+    <title>Thunder Bay | Dashboard</title>
     <link  rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-    <link rel="stylesheet" href="{% static 'css/user_form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
-    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
+
 </head>
 <body>
 
@@ -54,6 +56,7 @@
     </div>
 </nav>
 
+
         <!-- Sidebar -->
     <div class="sidebar">
 
@@ -75,18 +78,67 @@
     </div>
 
 
-    <!-- Main Content -->
+
+
+
+
+    <!-- Main content -->
     <div class="main-content">
-        <h1>Create New User</h1>
 
-        <form method="post" class="user-form">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn-submit">Create User</button>
-        </form>
 
-        <a href="{% url 'user_list' %}" class="btn-back">Cancel</a>
+    <!-- Banner -->
+    <div class="profile-banner">
+        {% if user_profile.profile_banner %}
+            <img src="{{ user_profile.profile_banner.url }}" alt="Banner" class="banner-image">
+        {% else %}
+            <img src="{% static 'images/default_banner.jpg' %}" alt="Default Banner" class="banner-image">
+        {% endif %}
+
+        <div class="profile-picture-container">
+            {% if user_profile.profile_picture %}
+                <img class="profile-picture-large" src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
+            {% else %}
+                <img class="profile-picture-large" src="{% static 'images/default_profile.png' %}" alt="Default Profile Picture">
+            {% endif %}
+        </div>
     </div>
 
+
+    <!-- Info Card -->
+    <div class="profile-info-card">
+        <h1>{{ user_profile.first_name }} {{ user_profile.last_name }}</h1>
+        <p class="user-role">{{ user_profile.get_role_display }}</p>
+        <p class="user-email">{{ user_profile.email }}</p>
+
+        <div class="user-details">
+            {% if user_profile.college %}
+                <p><strong>College:</strong> {{ user_profile.get_college_display }}</p>
+            {% endif %}
+            {% if user_profile.major %}
+                <p><strong>Major:</strong> {{ user_profile.major }}</p>
+            {% endif %}
+            {% if user_profile.academic_level %}
+                <p><strong>Academic Level:</strong> {{ user_profile.get_academic_level_display }}</p>
+            {% endif %}
+            {% if user_profile.cougar_id %}
+                <p><strong>Cougar ID:</strong> {{ user_profile.cougar_id }}</p>
+            {% endif %}
+            {% if user_profile.bio %}
+                <p><strong>Bio:</strong> {{ user_profile.bio }}</p>
+            {% endif %}
+        </div>
+
+        <div class="profile-completion-section">
+            <label>Profile Completion</label>
+            <div class="progress-bar">
+                <div class="progress" style="width: {{ completion_percent }}%;"></div>
+            </div>
+            <span>{{ completion_percent }}% complete</span>
+        </div>
+    </div>
+
+
+
+    </div>
 </body>
 </html>

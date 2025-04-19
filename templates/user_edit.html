@@ -16,20 +16,44 @@
 </head>
 <body>
 
-    <!-- Navbar -->
-    <nav class="navbar">
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="navbar-content">
 
-        <div class="navbar-content">
+        <!-- Notifications Icon -->
+        <i id="notifications_icon" class="fa-regular fa-bell"></i>
 
-            <i id = "notifications_icon" class="fa-regular fa-bell"></i>
-            <i id = "settings_icon" class="fa-solid fa-gear"></i>
+<!-- Settings Dropdown -->
+<div class="dropdown-wrapper">
+    <i id="settings_icon" class="fa-solid fa-gear"></i>
+    <div class="dropdown-menu settings-menu">
+        <a href="{% url 'edit_profile' %}">Edit Profile</a>
+        <a href="#">Account Settings</a>
+        <a href="#">Privacy & Security</a>
+        <a href="#">Log Out</a>
+    </div>
+</div>
 
-            <div class = "navbar_user">
-                <img class = "profile_picture" src="{% static 'images/default_profile.png' %}" alt="profile picture">
-                <span class = "navbar_username">{{ user.first_name }} {{ user.last_name }}</span>
-            </div>
-        </div>
-    </nav>
+
+<!-- User Profile Dropdown -->
+<div class="dropdown-wrapper">
+    <div class="navbar_user">
+        <img class="profile_picture" src="{% static 'images/default_profile.png' %}" alt="profile picture">
+        <span class="navbar_username">{{ user.first_name }} {{ user.last_name }}</span>
+    </div>
+    <div class="dropdown-menu profile-menu">
+        <img class="profile-picture-large" src="{% static 'images/default_profile.png' %}" alt="profile picture">
+        <p><strong>{{ user.first_name }} {{ user.last_name }}</strong></p>
+        <p class="user-role">{{ user.role|capfirst }}</p>
+        <p class="user-email">{{ user.email }}</p>
+        <a href="{% url 'user_profile' user.id %}">View Profile</a>
+    </div>
+</div>
+
+
+
+    </div>
+</nav>
 
 
         <!-- Sidebar -->
