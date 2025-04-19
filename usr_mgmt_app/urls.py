@@ -47,6 +47,9 @@ urlpatterns = [
     # Account Settings
     path('settings/account/', views.account_settings_view, name='account_settings'),
     path('settings/delete-account/', views.delete_account_view, name='delete_account'),
+    # Privacy & Security
+    path('settings/privacy/', views.privacy_security_view, name='privacy_security'),
+
 
 ]
 

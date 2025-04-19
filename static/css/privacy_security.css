@@ -1,0 +1,28 @@
+.privacy-page h1 {
+    font-size: 28px;
+    margin-bottom: 20px;
+}
+
+.privacy-card {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    line-height: 1.7;
+    max-width: 900px;
+    margin: auto;
+}
+
+.privacy-card h2, .privacy-card h3 {
+    margin-top: 20px;
+    color: #333;
+}
+
+.privacy-card ul {
+    margin: 10px 0 20px 20px;
+}
+
+.privacy-card li {
+    margin-bottom: 10px;
+    color: #444;
+}

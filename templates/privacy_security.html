@@ -4,15 +4,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thunder Bay | Edit User</title>
+    <title>Thunder Bay | Privacy & Security</title>
     <link  rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-    <link rel="stylesheet" href="{% static 'css/user_form.css' %}">
+    <link rel="stylesheet" href="{% static 'css/privacy_security.css' %}">
+    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
-    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
 </head>
 <body>
 
@@ -85,35 +86,50 @@
     </div>
 
 
-    <!-- Main Content -->
+
+
+
+
+    <!-- Main content -->
     <div class="main-content">
-        <h1>Edit User: {{ user.first_name }} {{ user.last_name }}</h1>
 
-        <form method="POST" action="{% url 'user_edit' user.id %}" class="user-form">
-            {% csrf_token %}
+    <h1>Privacy & Security</h1>
 
-            <label for="id_first_name">First Name</label>
-            <input type="text" id="id_first_name" name="first_name" value="{{ user.first_name }}" required>
+    <div class="privacy-card">
+        <h2>Our Commitment to Your Privacy</h2>
+        <p>
+            We take your privacy seriously. Your personal data, including your profile, contact information, and activity, is stored securely and is never shared with third parties without your consent.
+        </p>
 
-            <label for="id_last_name">Last Name</label>
-            <input type="text" id="id_last_name" name="last_name" value="{{ user.last_name }}" required>
+        <h3>What We Collect</h3>
+        <ul>
+            <li>Your name, email, and profile information</li>
+            <li>Your form submissions and login activity</li>
+            <li>Any uploaded files (e.g., profile pictures, documents)</li>
+        </ul>
 
-            <label for="id_email">Email</label>
-            <input type="email" id="id_email" name="email" value="{{ user.email }}" required>
+        <h3>How We Use It</h3>
+        <ul>
+            <li>To provide access to features based on your role</li>
+            <li>To personalize your experience</li>
+            <li>To maintain system security</li>
+        </ul>
 
-            <label for="id_role">Role</label>
-            <select id="id_role" name="role">
-                <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
-                <option value="moderator" {% if user.role == 'moderator' %}selected{% endif %}>Moderator</option>
-                <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
-            </select>
+        <h3>Your Control</h3>
+        <ul>
+            <li>You can update your profile information at any time</li>
+            <li>You can request data deletion through account settings</li>
+            <li>You may view, edit, or request removal of your data</li>
+        </ul>
 
-            <button type="submit" class="btn-submit">Save Changes</button>
-        </form>
-
-    <a href="{% url 'user_list' %}" class="btn-back">Cancel</a>
+        <p>
+            If you have any questions or concerns about how your data is handled, please contact the site administrator or support.
+        </p>
     </div>
+</div>
 
+
+
+    </div>
 </body>
 </html>
-

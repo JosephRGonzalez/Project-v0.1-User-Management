@@ -1251,3 +1251,9 @@ def delete_account_view(request):
 
     return render(request, 'confirm_delete_account.html', {'form': form})
 
+
+
+### PRIVACY & SECURITY
+@login_required
+def privacy_security_view(request):
+    return render(request, 'privacy_security.html')
