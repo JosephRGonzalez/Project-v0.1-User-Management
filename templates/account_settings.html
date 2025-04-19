@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Thunder Bay | Dashboard</title>
+    <title>Thunder Bay | Account Settings</title>
     <link  rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
     <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/account_settings.css' %}">
     <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -63,6 +63,8 @@
 
     </div>
 </nav>
+
+
         <!-- Sidebar -->
     <div class="sidebar">
 
@@ -90,64 +92,69 @@
 
     <!-- Main content -->
     <div class="main-content">
+    <h1>Account Settings</h1>
 
-    <form method="POST" enctype="multipart/form-data" class="profile-edit-form">
+    <!-- Update Email -->
+    <form method="POST">
         {% csrf_token %}
+        <div class="settings-section">
+            <h2>Update Email</h2>
+            {{ email_form.as_p }}
+            <button type="submit" name="update_email" class="submit-btn">Update Email</button>
+        </div>
+    </form>
 
-<!-- Banner Display & Upload -->
-<div class="profile-banner banner-edit">
-    {% if user_profile.profile_banner %}
-        <img id="banner-preview" class="banner-image" src="{{ user_profile.profile_banner.url }}" alt="Profile Banner">
-    {% else %}
-        <img id="banner-preview" class="banner-image" src="{% static 'images/default_banner.jpg' %}" alt="Default Banner">
-    {% endif %}
+    <!-- Update Cougar ID -->
+    <form method="POST">
+        {% csrf_token %}
+        <div class="settings-section">
+            <h2>Update Cougar ID</h2>
+            {{ cougar_id_form.as_p }}
+            <button type="submit" name="update_cougar_id" class="submit-btn">Update Cougar ID</button>
+        </div>
+    </form>
 
-    <label class="upload-banner-label" for="banner-picture-input">
-        Upload New Banner
-        <input type="file" name="profile_banner" id="banner-picture-input">
-        <small>Recommended size: 1600 x 240px</small>
-    </label>
-</div>
+    <!-- Update Password -->
+    <form method="POST">
+        {% csrf_token %}
+        <div class="settings-section">
+            <h2>Change Password</h2>
 
+            <div class="form-field">
+                {{ password_form.old_password.label_tag }}
+                {{ password_form.old_password }}
+                {{ password_form.old_password.errors }}
+            </div>
 
-
-        <div class="profile-info-card">
-
-            <!-- Profile Picture Upload -->
-            <div class="profile-picture-edit">
-                {% if user_profile.profile_picture %}
-                    <img class="profile-picture-large" src="{{ user_profile.profile_picture.url }}" alt="Profile Picture">
-                {% else %}
-                    <img class="profile-picture-large" src="{% static 'images/default_profile.png' %}" alt="Default Profile">
+            <div class="form-field">
+                {{ password_form.new_password1.label_tag }}
+                {{ password_form.new_password1 }}
+                {{ password_form.new_password1.errors }}
+                {% if password_form.new_password1.help_text %}
+                    <div class="help-text">{{ password_form.new_password1.help_text|safe }}</div>
                 {% endif %}
-                <label class="upload-profile-label">
-                    Upload New Picture
-                    {{ form.profile_picture }}
-                </label>
             </div>
 
-            <!-- Editable Fields -->
-            <div class="form-fields">
-                <label>Major</label>
-                {{ form.major }}
-
-                <label>College</label>
-                {{ form.college }}
-
-                <label>Academic Level</label>
-                {{ form.academic_level }}
-
-                <label>Bio</label>
-                {{ form.bio }}
+            <div class="form-field">
+                {{ password_form.new_password2.label_tag }}
+                {{ password_form.new_password2 }}
+                {{ password_form.new_password2.errors }}
+                {% if password_form.new_password2.help_text %}
+                    <div class="help-text">{{ password_form.new_password2.help_text|safe }}</div>
+                {% endif %}
             </div>
 
-            <!-- Submit -->
-            <button type="submit" class="submit-btn">Save Changes</button>
+            <button type="submit" name="update_password" class="submit-btn">Update Password</button>
         </div>
     </form>
 
 
-
+    <!-- Delete Account -->
+    <div class="settings-section danger-zone">
+        <h2 style="color: #b00020;">Delete Account</h2>
+        <p>This action is permanent and cannot be undone. You will be asked to confirm your password.</p>
+        <a href="{% url 'delete_account' %}" class="delete-btn">Delete My Account</a>
+    </div>
     </div>
 </body>
 </html>

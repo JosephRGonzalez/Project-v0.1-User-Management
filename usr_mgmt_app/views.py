@@ -18,6 +18,15 @@ from django.http import FileResponse
 from django.conf import settings
 from django.http import HttpResponseForbidden
 from .forms import PublicProfileEditForm
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth import update_session_auth_hash, logout
+from .forms import (EmailUpdateForm,CougarIDUpdateForm,ConfirmDeleteAccountForm)
 
 
 
@@ -1163,7 +1172,7 @@ def user_profile_view(request, user_id):
 
 
 
-
+### EDIT PROFILE (PUBLIC VIEW)
 @login_required
 def edit_profile_view(request):
     user_profile = request.user
@@ -1180,3 +1189,65 @@ def edit_profile_view(request):
         'form': form,
         'user_profile': user_profile
     })
+
+
+
+
+
+
+## ACCOUNT SETTINGS (PRIVATE VIEW)
+
+
+
+@login_required
+def account_settings_view(request):
+    user = request.user
+
+    email_form = EmailUpdateForm(instance=user)
+    cougar_id_form = CougarIDUpdateForm(instance=user)
+    password_form = PasswordChangeForm(user)
+
+    if request.method == 'POST':
+        if 'update_email' in request.POST:
+            email_form = EmailUpdateForm(request.POST, instance=user)
+            if email_form.is_valid():
+                email_form.save()
+                messages.success(request, "Email updated successfully.")
+                return redirect('account_settings')
+
+        elif 'update_cougar_id' in request.POST:
+            cougar_id_form = CougarIDUpdateForm(request.POST, instance=user)
+            if cougar_id_form.is_valid():
+                cougar_id_form.save()
+                messages.success(request, "Cougar ID updated successfully.")
+                return redirect('account_settings')
+
+        elif 'update_password' in request.POST:
+            password_form = PasswordChangeForm(user, request.POST)
+            if password_form.is_valid():
+                password_form.save()
+                update_session_auth_hash(request, password_form.user)
+                messages.success(request, "Password updated successfully.")
+                return redirect('account_settings')
+
+    return render(request, 'account_settings.html', {
+        'email_form': email_form,
+        'cougar_id_form': cougar_id_form,
+        'password_form': password_form,
+    })
+
+
+@login_required
+def delete_account_view(request):
+    form = ConfirmDeleteAccountForm(user=request.user)
+
+    if request.method == 'POST':
+        form = ConfirmDeleteAccountForm(user=request.user, data=request.POST)
+        if form.is_valid():
+            request.user.delete()
+            logout(request)
+            messages.success(request, "Your account has been deleted.")
+            return redirect('login')  # Or a goodbye page
+
+    return render(request, 'confirm_delete_account.html', {'form': form})
+

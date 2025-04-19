@@ -44,6 +44,10 @@ urlpatterns = [
     # Profile
     path('profile/<int:user_id>/', views.user_profile_view, name='user_profile'),  # VIEW ONLY
     path('profile/edit/', views.edit_profile_view, name='edit_profile'),   # EDIT PROFILE
+    # Account Settings
+    path('settings/account/', views.account_settings_view, name='account_settings'),
+    path('settings/delete-account/', views.delete_account_view, name='delete_account'),
+
 ]
 
 if settings.DEBUG:
