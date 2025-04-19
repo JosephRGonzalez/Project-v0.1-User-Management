@@ -39,11 +39,19 @@
 <!-- User Profile Dropdown -->
 <div class="dropdown-wrapper">
     <div class="navbar_user">
-        <img class="profile_picture" src="{% static 'images/default_profile.png' %}" alt="profile picture">
+        {% if user.profile_picture %}
+            <img class="profile_picture" src="{{ user.profile_picture.url }}" alt="profile picture">
+        {% else %}
+            <img class="profile_picture" src="{% static 'images/default_profile.png' %}" alt="Default profile picture">
+        {% endif %}
         <span class="navbar_username">{{ user.first_name }} {{ user.last_name }}</span>
     </div>
     <div class="dropdown-menu profile-menu">
-        <img class="profile-picture-large" src="{% static 'images/default_profile.png' %}" alt="profile picture">
+        {% if user.profile_picture %}
+            <img class="profile-picture-large" src="{{ user.profile_picture.url }}" alt="profile picture">
+        {% else %}
+            <img class="profile-picture-large" src="{% static 'images/default_profile.png' %}" alt="Default profile picture">
+        {% endif %}
         <p><strong>{{ user.first_name }} {{ user.last_name }}</strong></p>
         <p class="user-role">{{ user.role|capfirst }}</p>
         <p class="user-email">{{ user.email }}</p>

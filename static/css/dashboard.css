@@ -90,10 +90,7 @@ h3{
     flex-shrink: 0;
 }
 
-.profile_picture{
-    max-width: 65px;
-    width:100%;
-}
+
 
 #settings_icon{
     font-size: 20px;
@@ -208,6 +205,25 @@ h3{
 
 .profile-menu a:hover {
     background-color: #60371b;
+}
+
+/* Small avatar in navbar */
+.profile_picture {
+    max-width:65px;
+    width:100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #fff;
+    background-color: #f0f0f0;
+}
+
+/* Larger avatar in dropdown */
+.profile-picture-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 10px;
 }
 
 
