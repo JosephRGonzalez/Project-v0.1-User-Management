@@ -119,12 +119,13 @@
         <p class="user-email">{{ user_profile.email }}</p>
 
         <div class="user-details">
-            {% if user_profile.college %}
-                <p><strong>College:</strong> {{ user_profile.get_college_display }}</p>
+            {% if user_profile.unit %}
+                <p><strong>Major:</strong> {{ user_profile.unit.name }}</p>
+                {% if user_profile.unit.parent %}
+                    <p><strong>College:</strong> {{ user_profile.unit.parent.name }}</p>
+                {% endif %}
             {% endif %}
-            {% if user_profile.major %}
-                <p><strong>Major:</strong> {{ user_profile.major }}</p>
-            {% endif %}
+
             {% if user_profile.academic_level %}
                 <p><strong>Academic Level:</strong> {{ user_profile.get_academic_level_display }}</p>
             {% endif %}

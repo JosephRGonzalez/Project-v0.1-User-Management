@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import PasswordChangeForm
-from .models import UserProfile
+from .models import UserProfile, Unit
 
 class UserProfileForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput(), required=True)
@@ -12,13 +12,17 @@ class UserProfileForm(forms.ModelForm):
             'last_name',
             'email',
             'cougar_id',
-            'major',
+            'unit',
             'academic_level',
-            'college',
             'role',
             'is_active',
             'password',
         ]
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['unit'].queryset = Unit.objects.filter(is_college=False)
+            self.fields['unit'].label = "Major"
 
 # Override save method to use Cougar ID as username (optional)
 def save(self, commit=True):
@@ -44,8 +48,7 @@ class PublicProfileEditForm(forms.ModelForm):
         fields = [
             'profile_picture',
             'profile_banner',
-            'major',
-            'college',
+            'unit',
             'academic_level',
             'bio',
         ]

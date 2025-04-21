@@ -15,6 +15,28 @@ def validate_signature_file(value):
 
 
 
+
+class Unit(models.Model):
+    name = models.CharField(max_length=255)  # e.g., "Computer Science"
+    code = models.SlugField(unique=True)     # e.g., "cs", "nsm"
+    is_college = models.BooleanField(default=False)
+    parent = models.ForeignKey(
+        'self',
+        null=True,
+        blank=True,
+        related_name='sub_units',
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        if self.is_college:
+            return f"{self.name} (College)"
+        elif self.parent:
+            return f"{self.name} - {self.parent.name}"
+        return self.name
+
+
+
 class UserProfile(AbstractUser):
     ROLE_CHOICES = [
         ('admin', 'Admin'),
@@ -27,30 +49,9 @@ class UserProfile(AbstractUser):
         ('graduate', 'Graduate'),
     ]
 
-    COLLEGE_CHOICES = [
-        ('architecture', 'Gerald D. Hines College of Architecture and Design'),
-        ('arts', 'Kathrine G. McGovern College of the Arts'),
-        ('business', 'C.T. Bauer College of Business'),
-        ('education', 'College of Education'),
-        ('engineering', 'Cullen College of Engineering'),
-        ('technology', 'Technology Division at the Cullen College of Engineering'),
-        ('liberal_arts', 'College of Liberal Arts and Social Sciences'),
-        ('nsm', 'College of Natural Sciences and Mathematics'),
-        ('nursing', 'Andy and Barbara Gessner College of Nursing'),
-        ('medicine', 'Tilman J. Fertitta Family College of Medicine'),
-        ('optometry', 'College of Optometry'),
-        ('pharmacy', 'College of Pharmacy'),
-        ('hospitality', 'Conrad N. Hilton College of Global Hospitality Leadership'),
-        ('law', 'UH Law Center'),
-        ('social_work', 'Graduate College of Social Work'),
-        ('public_affairs', 'Hobby School of Public Affairs'),
-        ('honors', 'The Honors College'),
-    ]
 
     cougar_id = models.CharField(max_length=7,unique=True,null=True,blank=True,validators=[RegexValidator(regex=r'^\d{7}$', message='Cougar ID must be exactly 7 digits')])
     role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
-    major = models.CharField(max_length=100, null=True, blank=True)
-    college = models.CharField(max_length=50, choices=COLLEGE_CHOICES, null=True, blank=True)
     academic_level = models.CharField(max_length=15, choices=ACADEMIC_LEVEL_CHOICES, null=True, blank=True)
     profile_picture = models.ImageField(upload_to='profile_pictures/', null=True, blank=True)
     profile_banner = models.ImageField(upload_to='banner_pictures/', null=True,blank=True)
@@ -61,7 +62,7 @@ class UserProfile(AbstractUser):
     signature = models.ImageField(upload_to='signatures/', null=True, blank=True, validators=[validate_signature_file])
     groups = models.ManyToManyField(Group, related_name="userprofile_groups", blank=True)
     user_permissions = models.ManyToManyField(Permission, related_name="userprofile_permissions", blank=True)
-    
+    unit = models.ForeignKey(Unit, null=True, blank=True, on_delete=models.SET_NULL)
     class Meta:
         permissions = [
             ("can_read", "Can read data"),
@@ -343,3 +344,7 @@ class PetitionRequest(models.Model):
     
     def get_status_display(self):
         return dict(self.STATUS_CHOICES)[self.status]
+
+
+
+

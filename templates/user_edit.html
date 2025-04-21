@@ -112,8 +112,6 @@
                 <option value="user" {% if user.role == 'user' %}selected{% endif %}>User</option>
             </select>
 
-        <label for="id_major">Major</label>
-        <input type="text" id="id_major" name="major" value="{{ user.major }}" placeholder="e.g. Computer Science">
 
         <label for="id_academic_level">Academic Level</label>
         <select id="id_academic_level" name="academic_level">
@@ -122,13 +120,30 @@
             <option value="graduate" {% if user.academic_level == 'graduate' %}selected{% endif %}>Graduate</option>
         </select>
 
-        <label for="id_college">College</label>
-        <select id="id_college" name="college">
+        <label for="college-select">College</label>
+        <select id="college-select" name="college" required>
             <option value="">Select College</option>
-            {% for key, label in user.COLLEGE_CHOICES %}
-                <option value="{{ key }}" {% if user.college == key %}selected{% endif %}>{{ label }}</option>
+            {% for college in colleges %}
+                <option value="{{ college.id }}"
+                    {% if user.unit and user.unit.parent and user.unit.parent.id == college.id %}
+                        selected
+                    {% endif %}
+                >{{ college.name }}</option>
             {% endfor %}
         </select>
+
+        <label for="unit-select">Major</label>
+        <select id="unit-select" name="unit" required>
+            <option value="">Select Major</option>
+            {% for major in majors %}
+                <option value="{{ major.id }}" data-parent="{{ major.parent.id }}"
+                    {% if user.unit and user.unit.id == major.id %}
+                        selected
+                    {% endif %}
+                >{{ major.name }}</option>
+            {% endfor %}
+        </select>
+
 
 
             <button type="submit" class="btn-submit">Save Changes</button>
@@ -136,6 +151,8 @@
 
     <a href="{% url 'user_list' %}" class="btn-back">Cancel</a>
     </div>
+
+<script src="{% static 'javascript/dependent_dropdown.js' %}"></script>
 
 </body>
 </html>

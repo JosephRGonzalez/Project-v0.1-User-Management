@@ -87,14 +87,60 @@
     <div class="main-content">
         <h1>Create New User</h1>
 
-        <form method="post" class="user-form">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn-submit">Create User</button>
-        </form>
+<form method="post" class="user-form">
+    {% csrf_token %}
+
+    <label for="id_first_name">First Name</label>
+    {{ form.first_name }}
+
+    <label for="id_last_name">Last Name</label>
+    {{ form.last_name }}
+
+    <label for="id_email">Email</label>
+    {{ form.email }}
+
+    <label for="id_cougar_id">Cougar ID</label>
+    {{ form.cougar_id }}
+
+    <label for="college-select">College</label>
+    <select id="college-select" name="college" required>
+        <option value="">Select College</option>
+        {% for college in colleges %}
+            <option value="{{ college.id }}">{{ college.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="unit-select">Major</label>
+    <select id="unit-select" name="unit" required>
+        <option value="">Select Major</option>
+        {% for major in majors %}
+            <option value="{{ major.id }}" data-parent="{{ major.parent.id }}">{{ major.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label for="id_academic_level">Academic Level</label>
+    {{ form.academic_level }}
+
+    <label for="id_role">Role</label>
+    {{ form.role }}
+
+    <label for="id_is_active">Active?</label>
+    {{ form.is_active }}
+
+    <label for="id_password">Password</label>
+    {{ form.password }}
+
+    <button type="submit" class="btn-submit">Create User</button>
+</form>
+
 
         <a href="{% url 'user_list' %}" class="btn-back">Cancel</a>
     </div>
+
+
+
+
+<script src="{% static 'javascript/dependent_dropdown.js' %}"></script>
 
 </body>
 </html>

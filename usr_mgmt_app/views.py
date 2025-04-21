@@ -13,7 +13,7 @@ from django.contrib.auth.decorators import permission_required
 from django.utils.timezone import now
 import subprocess
 from django.conf import settings
-from .models import ThesisRequest, WithdrawalRequest, ReducedCourseLoadRequest
+from .models import ThesisRequest, WithdrawalRequest, ReducedCourseLoadRequest, Unit
 from django.http import FileResponse
 from django.conf import settings
 from django.http import HttpResponseForbidden
@@ -32,6 +32,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+
 
 
 
@@ -94,7 +95,8 @@ def login_bancroff(request):
 
 def complete_profile(request):
     email = request.session.get("bancroff_email")
-
+    colleges = Unit.objects.filter(is_college=True)
+    majors = Unit.objects.filter(is_college=False)
     full_name = request.session.get("bancroff_full_name", "")
     first_name, last_name = "", ""
 
@@ -111,17 +113,21 @@ def complete_profile(request):
         first_name = request.POST.get("first_name")
         last_name = request.POST.get("last_name")
         cougar_id = request.POST.get("cougar_id")
-        major = request.POST.get("major")
+        unit_id = request.POST.get("unit")
         academic_level = request.POST.get("academic_level")
-        college = request.POST.get("college")
         password = request.POST.get("password")
         confirm_password = request.POST.get("confirm_password")
 
+        unit = Unit.objects.get(id=unit_id) if unit_id else None
+
         if password != confirm_password:
             messages.error(request, "Passwords do not match.")
-            return render(request, 'complete_profile.html', {
-                'email': email,
-                'colleges': dict(UserProfile.COLLEGE_CHOICES)
+            return render(request, "complete_profile.html", {
+                "email": email,
+                "first_name": first_name,
+                "last_name": last_name,
+                "colleges": colleges,
+                "majors": majors,
             })
 
         try:
@@ -129,18 +135,22 @@ def complete_profile(request):
         except ValidationError as e:
             for err in e:
                 messages.error(request, err)
-            return render(request, 'complete_profile.html', {
-                'email': email,
-                'colleges': dict(UserProfile.COLLEGE_CHOICES)
+            return render(request, "complete_profile.html", {
+                "email": email,
+                "first_name": first_name,
+                "last_name": last_name,
+                "colleges": colleges,
+                "majors": majors,
             })
-
-
 
         if not cougar_id or len(cougar_id) != 7 or not cougar_id.isdigit():
             messages.error(request, "Cougar ID must be exactly 7 digits.")
-            return render(request, 'complete_profile.html', {
-                'email': email,
-                'colleges': dict(UserProfile.COLLEGE_CHOICES)
+            return render(request, "complete_profile.html", {
+                "email": email,
+                "first_name": first_name,
+                "last_name": last_name,
+                "colleges": colleges,
+                "majors": majors,
             })
 
         # Create user
@@ -151,9 +161,8 @@ def complete_profile(request):
             first_name=first_name,
             last_name=last_name,
             cougar_id=cougar_id,
-            major=major,
             academic_level=academic_level,
-            college=college,
+            unit=unit,
             role='user'
         )
 
@@ -161,14 +170,15 @@ def complete_profile(request):
         login(request, user)
         return redirect("dashboard")
 
+
+
     return render(request, "complete_profile.html", {
         "email": email,
-        "colleges": dict(UserProfile.COLLEGE_CHOICES),
         "first_name": first_name,
         "last_name": last_name,
+        "colleges": colleges,
+        "majors": majors,
     })
-
-
 
 
 # Redirects user to Dashboard (dashboard.html) after logging in
@@ -252,15 +262,30 @@ def logout_view(request):
     return redirect('login')  # Redirect to login page after logout
 
 
+
+def user_can_approve(approver: UserProfile, target_user: UserProfile) -> bool:
+    # Super advisor
+    if approver.role == "admin":
+        return True
+
+    # Moderator without a unit assigned — deny
+    if approver.role != "moderator" or not approver.unit:
+        return False
+
+    # Major-level advisor
+    if not approver.unit.is_college:
+        return target_user.unit == approver.unit
+
+    # College-level advisor
+    return target_user.unit and target_user.unit.parent == approver.unit
+
+
 #Users List in user_list.html
-
-
 @login_required
 @permission_required('usr_mgmt_app.can_read', raise_exception=True)
 def user_list(request):
-    user = request.user
+    current_user = request.user
     users = UserProfile.objects.all()
-
     pending_requests = []
 
     models_and_types = [
@@ -271,16 +296,17 @@ def user_list(request):
     ]
 
     for model, req_type in models_and_types:
-        queryset = model.objects.filter(status="Pending")
+        base_queryset = model.objects.filter(status="Pending")
 
-        # Moderators only see requests from their college
-        if user.role == "moderator":
-            queryset = queryset.filter(user__college=user.college)
-        elif user.role != "admin":
-            # Neither admin nor moderator? Skip this model.
-            continue
+        # Only filter for non-admins
+        if current_user.role != "admin":
+            # Narrow down to requests the current user can approve
+            base_queryset = [
+                obj for obj in base_queryset
+                if obj.user and user_can_approve(current_user, obj.user)
+            ]
 
-        for obj in queryset:
+        for obj in base_queryset:
             pending_requests.append({
                 "id": obj.id,
                 "type": req_type,
@@ -288,8 +314,8 @@ def user_list(request):
             })
 
     # Permissions
-    has_edit_permission = user.has_perm('usr_mgmt_app.can_edit')
-    has_manage_users_permission = user.has_perm('usr_mgmt_app.can_manage_users')
+    has_edit_permission = current_user.has_perm('usr_mgmt_app.can_edit')
+    has_manage_users_permission = current_user.has_perm('usr_mgmt_app.can_manage_users')
 
     context = {
         'users': users,
@@ -310,6 +336,9 @@ def user_list(request):
 #Creating a user (ADMIN ONLY)
 @permission_required('usr_mgmt_app.can_manage_users', raise_exception=True)
 def user_create(request):
+    colleges = Unit.objects.filter(is_college=True)
+    majors = Unit.objects.filter(is_college=False)
+
     if request.method == 'POST':
         form = UserProfileForm(request.POST)
         if form.is_valid():
@@ -317,13 +346,15 @@ def user_create(request):
             return redirect('user_list')
     else:
         form = UserProfileForm()
-    return render(request, 'user_create.html', {'form': form})
+    return render(request, 'user_create.html', {'form': form, 'colleges': colleges, 'majors': majors})
 
 
 # Edit a user (ADMIN AND MODERATORS ONLY)
 @permission_required('usr_mgmt_app.can_edit', raise_exception=True)
 def user_edit(request, user_id):
     user = get_object_or_404(UserProfile, id=user_id)
+    colleges = Unit.objects.filter(is_college=True)
+    majors = Unit.objects.filter(is_college=False)
 
     if request.method == "POST":
         user.first_name = request.POST.get("first_name", user.first_name)
@@ -331,15 +362,16 @@ def user_edit(request, user_id):
         user.email = request.POST.get("email", user.email)
         user.cougar_id = request.POST.get("cougar_id")
         user.role = request.POST.get("role", user.role)
-        user.major = request.POST.get("major", user.major)
         user.academic_level = request.POST.get("academic_level", user.academic_level)
-        user.college = request.POST.get("college", user.college)
+        unit_id = request.POST.get("unit")
+        if unit_id:
+            user.unit = Unit.objects.get(id=unit_id)
 
         user.save()  # Save changes to the database
 
         return redirect("user_list")  # Redirect to user list after saving
 
-    return render(request, "user_edit.html", {"user": user})
+    return render(request, "user_edit.html", {"user": user,'colleges': colleges,'majors': majors,})
 
 
 # Deactivate a user (ADMIN ONLY)
@@ -1288,10 +1320,8 @@ def user_profile_view(request, user_id):
     user_profile = get_object_or_404(UserProfile, id=user_id)
 
     # Fields used for profile completion
-    fields = [
-        'first_name', 'last_name', 'email', 'role', 'cougar_id',
-        'college', 'major', 'academic_level', 'profile_picture', 'bio'
-    ]
+    fields = ['first_name', 'last_name', 'email', 'role', 'cougar_id', 'unit', 'academic_level', 'profile_picture',
+              'bio']
 
     completed_fields = sum(1 for field in fields if getattr(user_profile, field))
     completion_percent = int((completed_fields / len(fields)) * 100)
@@ -1309,6 +1339,8 @@ def user_profile_view(request, user_id):
 @login_required
 def edit_profile_view(request):
     user_profile = request.user
+    colleges = Unit.objects.filter(is_college=True)
+    majors = Unit.objects.filter(is_college=False)
 
     if request.method == 'POST':
         form = PublicProfileEditForm(request.POST, request.FILES, instance=user_profile)
@@ -1318,9 +1350,12 @@ def edit_profile_view(request):
     else:
         form = PublicProfileEditForm(instance=user_profile)
 
-    return render(request, 'edit_profile.html', {
-        'form': form,
-        'user_profile': user_profile
+
+    return render(request, "edit_profile.html", {
+        "form": form,
+        "user_profile": user_profile,
+        "colleges": colleges,
+        "majors": majors,
     })
 
 

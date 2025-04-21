@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/complete_profile.css' %}">
     <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
+
 </head>
 
 <body>
@@ -79,11 +80,6 @@
                 </div>
 
                 <div class="input-container">
-                    <input type="text" name="major" id="major" required>
-                    <span>Major</span>
-                </div>
-
-                <div class="input-container">
                     <select name="academic_level" required>
                         <option value="">Select Academic Level</option>
                         <option value="undergraduate">Undergraduate</option>
@@ -91,11 +87,23 @@
                     </select>
                 </div>
 
+
+                <!-- College Dropdown -->
                 <div class="input-container">
-                    <select name="college" required>
+                    <select name="college" id="college-select" required>
                         <option value="">Select College</option>
-                        {% for key, label in colleges.items %}
-                            <option value="{{ key }}">{{ label }}</option>
+                        {% for college in colleges %}
+                            <option value="{{ college.id }}">{{ college.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Major Dropdown -->
+                <div class="input-container">
+                    <select name="unit" id="major-select" name="unit" required disabled>
+                        <option value="">Select Your Major</option>
+                        {% for major in majors %}
+                            <option value="{{ major.id }}" data-parent="{{ major.parent.id }}">{{ major.name }}</option>
                         {% endfor %}
                     </select>
                 </div>
@@ -107,5 +115,9 @@
             </div>
         </form>
     </main>
+
+
+<script src="{% static 'javascript/dependent_dropdown.js' %}"></script>
+
 </body>
 </html>
