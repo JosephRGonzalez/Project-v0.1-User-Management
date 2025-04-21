@@ -53,159 +53,104 @@
 }
 
 \begin{document}
-
-% PDF Form overlay
 \pdfoverlaySetPDF{../static/pdfs/graduate_petition.pdf}
-
-% Title
-\TextAt(2.9in, 7.2in){\large\textbf{GRAD/PROF PETITION for POSTHUMOUS DEGREE}} [\footnotesize\bfseries]
-\TextAt(4in, 6.9in){gradschool@uh.edu} [\footnotesize]
+% Define a plain page for testing
+\pagecolor{white}
+\pagestyle{empty}
 
 % Student Information Section
-\TextAt(0.78in, 6.5in){{{LAST_NAME}}} [\footnotesize\bfseries]
-\TextAt(2.77in, 6.5in){{{FIRST_NAME}}} [\footnotesize\bfseries]
-\TextAt(4.76in, 6.5in){{{MIDDLE_NAME}}} [\footnotesize\bfseries]
-\TextAt(0.78in, 6.1in){{{STUDENT_ID}}} [\footnotesize\bfseries]
-\TextAt(2.9in, 6.1in){{{PHONE}}} [\footnotesize\bfseries]
-\TextAt(0.78in, 5.7in){{{EMAIL}}} [\footnotesize\bfseries]
+\TextAt(1.9in, 7.02in){{{LAST_NAME}}} [\footnotesize\bfseries]
+\TextAt(3.9in, 7.02in){{{FIRST_NAME}}} [\footnotesize\bfseries]
+\TextAt(5.9in, 7.02in){{{MIDDLE_NAME}}} [\footnotesize\bfseries]
+\TextAt(1.28in, 6.58in){{{STUDENT_ID}}} [\footnotesize\bfseries]
+\TextAt(4.8in, 6.58in){{{PHONE}}} [\footnotesize\bfseries]
+\TextAt(1.33in, 6.22in){{{EMAIL}}} [\footnotesize\bfseries]
 
 % Current Student Information
-\TextAt(8.74in, 6.5in){{{CAREER}}} [\footnotesize\bfseries]
-\TextAt(8.74in, 6.1in){{{PROGRAM}}} [\footnotesize\bfseries]
-\TextAt(8.4in, 5.7in){{{PLAN_CODE}}} [\footnotesize\bfseries]
+\TextAt(8.6in, 7.04in){{{CAREER}}} [\footnotesize\bfseries]
+\TextAt(8.6in, 6.83in){{{PROGRAM}}} [\footnotesize\bfseries]
+\TextAt(8.6in, 6.6in){{{PLAN_CODE}}} [\footnotesize\bfseries]
 
 % Petition Effective
-\TextAt(9.97in, 6.1in){{{TERM}}} [\footnotesize\bfseries]
-\TextAt(9.97in, 5.7in){{{YEAR}}} [\footnotesize\bfseries]
+\TextAt(9.3in, 6.6in){{{TERM}}} [\footnotesize\bfseries]
+\TextAt(10.45in, 6.6in){{{YEAR}}} [\footnotesize\bfseries]
 
 % PURPOSE OF PETITION Section
 % Checkbox 1
 \ifthenelse{\equal{{{PURPOSE}}}{1}}
-    {\CheckboxAt{0.5in}{4.9in}{c}}
-    {\CheckboxAt{0.5in}{4.9in}{u}}
+    {\CheckboxAt{.8in}{5.5in}{c}}
+    {\CheckboxAt{.8in}{5.5in}{u}}
 
 % Checkbox 2
 \ifthenelse{\equal{{{PURPOSE}}}{2}}
-    {\CheckboxAt{3.3in}{4.9in}{c}}
-    {\CheckboxAt{3.3in}{4.9in}{u}}
+    {\CheckboxAt{3.35in}{5.5in}{c}}
+    {\CheckboxAt{3.35in}{5.5in}{u}}
 
 % Checkbox 3
 \ifthenelse{\equal{{{PURPOSE}}}{3}}
-    {\CheckboxAt{6.5in}{4.9in}{c}}
-    {\CheckboxAt{6.5in}{4.9in}{u}}
+    {\CheckboxAt{6.05in}{5.5in}{c}}
+    {\CheckboxAt{6.05in}{5.5in}{u}}
 
 % Checkbox 4
 \ifthenelse{\equal{{{PURPOSE}}}{4}}
-    {\CheckboxAt{9.6in}{4.9in}{c}}
-    {\CheckboxAt{9.6in}{4.9in}{u}}
+    {\CheckboxAt{8.65in}{5.5in}{c}}
+    {\CheckboxAt{8.65in}{5.5in}{u}}
 
 % Checkbox 5
 \ifthenelse{\equal{{{PURPOSE}}}{5}}
-    {\CheckboxAt{0.5in}{4.2in}{c}}
-    {\CheckboxAt{0.5in}{4.2in}{u}}
+    {\CheckboxAt{0.8in}{5.1in}{c}}
+    {\CheckboxAt{0.8in}{5.1in}{u}}
 
 % Checkbox 6
 \ifthenelse{\equal{{{PURPOSE}}}{6}}
-    {\CheckboxAt{3.3in}{4.2in}{c}}
-    {\CheckboxAt{3.3in}{4.2in}{u}}
+    {\CheckboxAt{3.35in}{5.1in}{c}}
+    {\CheckboxAt{3.35in}{5.1in}{u}}
 
 % Checkbox 7
 \ifthenelse{\equal{{{PURPOSE}}}{7}}
-    {\CheckboxAt{6.5in}{4.2in}{c}}
-    {\CheckboxAt{6.5in}{4.2in}{u}}
+    {\CheckboxAt{6.05in}{5.1in}{c}}
+    {\CheckboxAt{6.05in}{5.1in}{u}}
 
 % Checkbox 8
 \ifthenelse{\equal{{{PURPOSE}}}{8}}
-    {\CheckboxAt{9.6in}{4.2in}{c}}
-    {\CheckboxAt{9.6in}{4.2in}{u}}
+    {\CheckboxAt{8.65in}{5.1in}{c}}
+    {\CheckboxAt{8.65in}{5.1in}{u}}
 
 % Checkbox 9
 \ifthenelse{\equal{{{PURPOSE}}}{9}}
-    {\CheckboxAt{0.5in}{3.5in}{c}}
-    {\CheckboxAt{0.5in}{3.5in}{u}}
+    {\CheckboxAt{0.8in}{4.65in}{c}}
+    {\CheckboxAt{0.8in}{4.65in}{u}}
 
 % Checkbox 10
 \ifthenelse{\equal{{{PURPOSE}}}{10}}
-    {\CheckboxAt{9.6in}{3.5in}{c}}
-    {\CheckboxAt{9.6in}{3.5in}{u}}
-\TextAt(10.0in, 3.2in){{{OTHER_PURPOSE}}} [\footnotesize\bfseries]
+    {\CheckboxAt{8.65in}{4.65in}{c}}
+    {\CheckboxAt{8.65in}{4.65in}{u}}
+\TextAt(9in, 4.5in){{{OTHER_PURPOSE}}} [\footnotesize\bfseries]
 
 % Transfer Credit Information (only if purpose is 9)
-\TextAt(2.5in, 3.5in){{{INSTITUTION_NAME}}} [\footnotesize\bfseries]
-\TextAt(2.5in, 3.1in){{{CITY_STATE_ZIP}}} [\footnotesize\bfseries]
-\TextAt(8.0in, 3.5in){{{TRANSFER_START_TERM}}} [\footnotesize\bfseries]
-\TextAt(8.0in, 3.1in){{{TRANSFER_END_TERM}}} [\footnotesize\bfseries]
-\TextAt(9.2in, 3.5in){{{TRANSFER_START_YEAR}}} [\footnotesize\bfseries]
-\TextAt(9.2in, 3.1in){{{TRANSFER_END_YEAR}}} [\footnotesize\bfseries]
+\TextAt(3.4in, 4.78in){{{INSTITUTION_NAME}}} [\footnotesize\bfseries]
+\TextAt(3.4in, 4.62in){{{CITY_STATE_ZIP}}} [\footnotesize\bfseries]
+\TextAt(7.3in, 4.8in){{{TRANSFER_START_TERM}}} [\footnotesize\bfseries]
+\TextAt(7.3in, 4.6in){{{TRANSFER_END_TERM}}} [\footnotesize\bfseries]
+\TextAt(8.1in, 4.82in){{{TRANSFER_START_YEAR}}} [\footnotesize\bfseries]
+\TextAt(8.1in, 4.64in){{{TRANSFER_END_YEAR}}} [\footnotesize\bfseries]
 
 % Credit hours (for transfer credits)
-\TextAt(7.2in, 2.8in){{{HOURS_TRANSFERRED}}} [\footnotesize\bfseries]
-\TextAt(7.2in, 2.4in){{{REQUESTED_HOURS}}} [\footnotesize\bfseries]
+\TextAt(8.1in, 4.3in){{{HOURS_TRANSFERRED}}} [\footnotesize\bfseries]
+\TextAt(8.1in, 4.05in){{{REQUESTED_HOURS}}} [\footnotesize\bfseries]
+
+%Description of Credit
+\TextAt(2in, 4.25in){{{CREDIT_DESCRIPTION}}}[\footnotesize\bfseries]
 
 % Explanation of request
-\TextAt(0.78in, 2.0in){{{EXPLANATION}}} [\footnotesize\bfseries]
+\TextAt(2in, 3.5in){{{EXPLANATION}}} [\footnotesize\bfseries]
 
 % Signature Section
-\TextAt(0.78in, 1.2in){STUDENT SIGNATURE} [\footnotesize\bfseries]
-\ImageAt{3.0in}{1.2in}{2cm} % Signature image placement
-\TextAt(7.2in, 1.2in){/} [\footnotesize]
-\TextAt(8.0in, 1.2in){/20} [\footnotesize]
-\TextAt(6.7in, 1.2in){{{SIGNATURE_DATE_MONTH}}} [\footnotesize\bfseries]
-\TextAt(7.5in, 1.2in){{{SIGNATURE_DATE_DAY}}} [\footnotesize\bfseries]
-\TextAt(8.5in, 1.2in){{{SIGNATURE_DATE_YEAR}}} [\footnotesize\bfseries]
+\TextAt(2.5in, 2.95in){STUDENT SIGNATURE} [\footnotesize\bfseries]
+\ImageAt{3.0in}{2.8in}{1.5cm} % Signature image placement
 
-% Required Approvals Section
-\TextAt(3.8in, 0.9in){REQUIRED APPROVALS} [\footnotesize\bfseries]
-\TextAt(9.5in, 0.9in){ACADEMIC OFFICE USE ONLY} [\footnotesize\bfseries]
-
-% Approvals checkboxes and signatures
-% Thesis Advisor or Department Chair
-\TextAt(0.78in, 0.6in){Thesis Advisor or Department Chair} [\footnotesize\bfseries]
-\CheckboxAt{0.5in}{0.3in}{u} % APPROVED checkbox
-\TextAt(0.78in, 0.3in){APPROVED} [\footnotesize]
-\CheckboxAt{1.8in}{0.3in}{u} % DISAPPROVED checkbox
-\TextAt{2.1in, 0.3in}{DISAPPROVED} [\footnotesize]
-\TextAt(3.5in, 0.3in){{{CHAIR_NAME}}} [\footnotesize\bfseries]
-\TextAt(6.5in, 0.3in){{{CHAIR_DATE}}} [\footnotesize\bfseries]
-
-% Dean of the College (Next row)
-\TextAt(0.78in, -0.2in){Dean of the College} [\footnotesize\bfseries]
-\CheckboxAt{0.5in}{-0.5in}{u} % APPROVED checkbox
-\TextAt(0.78in, -0.5in){APPROVED} [\footnotesize]
-\CheckboxAt{1.8in}{-0.5in}{u} % DISAPPROVED checkbox
-\TextAt{2.1in, -0.5in}{DISAPPROVED} [\footnotesize]
-\TextAt(3.5in, -0.5in){{{DEAN_NAME}}} [\footnotesize\bfseries]
-\TextAt(6.5in, -0.5in){{{DEAN_DATE}}} [\footnotesize\bfseries]
-
-% Vice Provost/Dean of the Graduate School
-\TextAt(0.78in, -1.0in){Vice Provost/Dean of the Graduate School} [\footnotesize\bfseries]
-\CheckboxAt{0.5in}{-1.3in}{u} % APPROVED checkbox
-\TextAt(0.78in, -1.3in){APPROVED} [\footnotesize]
-\CheckboxAt{1.8in}{-1.3in}{u} % DISAPPROVED checkbox
-\TextAt{2.1in, -1.3in}{DISAPPROVED} [\footnotesize]
-\TextAt(3.5in, -1.3in){{{GRAD_DEAN_NAME}}} [\footnotesize\bfseries]
-\TextAt(6.5in, -1.3in){{{GRAD_DEAN_DATE}}} [\footnotesize\bfseries]
-
-% Senior Vice President/Provost
-\TextAt(0.78in, -1.8in){Senior Vice President/Provost} [\footnotesize\bfseries]
-\CheckboxAt{0.5in}{-2.1in}{u} % APPROVED checkbox
-\TextAt(0.78in, -2.1in){APPROVED} [\footnotesize]
-\CheckboxAt{1.8in}{-2.1in}{u} % DISAPPROVED checkbox
-\TextAt{2.1in, -2.1in}{DISAPPROVED} [\footnotesize]
-\TextAt(3.5in, -2.1in){{{PROVOST_NAME}}} [\footnotesize\bfseries]
-\TextAt(6.5in, -2.1in){{{PROVOST_DATE}}} [\footnotesize\bfseries]
-
-% President
-\TextAt(0.78in, -2.6in){President} [\footnotesize\bfseries]
-\CheckboxAt{0.5in}{-2.9in}{u} % APPROVED checkbox
-\TextAt(0.78in, -2.9in){APPROVED} [\footnotesize]
-\CheckboxAt{1.8in}{-2.9in}{u} % DISAPPROVED checkbox
-\TextAt{2.1in, -2.9in}{DISAPPROVED} [\footnotesize]
-\TextAt(3.5in, -2.9in){{{PRESIDENT_NAME}}} [\footnotesize\bfseries]
-\TextAt(6.5in, -2.9in){{{PRESIDENT_DATE}}} [\footnotesize\bfseries]
-
-% Comments section
-\TextAt(7.8in, 0.6in){COMMENTS} [\footnotesize\bfseries]
-\TextAt(7.8in, 0.2in){{{COMMENTS}}} [\footnotesize]
+\TextAt(6.2in, 2.9in){{{SIGNATURE_DATE_MONTH}}} [\footnotesize\bfseries]
+\TextAt(7.in, 2.9in){{{SIGNATURE_DATE_DAY}}} [\footnotesize\bfseries]
+\TextAt(7.65in, 2.9in){{{SIGNATURE_DATE_YEAR}}} [\footnotesize\bfseries]
 
 \end{document}
