@@ -331,6 +331,9 @@ def user_edit(request, user_id):
         user.email = request.POST.get("email", user.email)
         user.cougar_id = request.POST.get("cougar_id")
         user.role = request.POST.get("role", user.role)
+        user.major = request.POST.get("major", user.major)
+        user.academic_level = request.POST.get("academic_level", user.academic_level)
+        user.college = request.POST.get("college", user.college)
 
         user.save()  # Save changes to the database
 

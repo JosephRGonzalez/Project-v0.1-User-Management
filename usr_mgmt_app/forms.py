@@ -3,9 +3,22 @@ from django.contrib.auth.forms import PasswordChangeForm
 from .models import UserProfile
 
 class UserProfileForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput(), required=True)
+
     class Meta:
         model = UserProfile
-        fields = ['first_name', 'last_name', 'email', 'role', 'is_active' , 'password']
+        fields = [
+            'first_name',
+            'last_name',
+            'email',
+            'cougar_id',
+            'major',
+            'academic_level',
+            'college',
+            'role',
+            'is_active',
+            'password',
+        ]
 
 # Override save method to use Cougar ID as username (optional)
 def save(self, commit=True):
