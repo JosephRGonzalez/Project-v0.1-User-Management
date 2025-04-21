@@ -105,12 +105,35 @@
             </thead>
             <tbody>
                 {% for user in users %}
-                <tr>
-                    <td>{{ user.id }}</td>
-                    <td>{{ user.first_name }} {{ user.last_name }}</td>
-                    <td>{{ user.email }}</td>
-                    <td>{{ user.get_role_display }}</td>
-                    <td>{% if user.is_active %}Active{% else %}Deactivated{% endif %}</td>
+<tr class="user-row">
+    <td>{{ user.id }}</td>
+<td class="user-info-cell">
+  <div class="user-hover-wrapper">
+    <div class="user-thumbnail-container">
+<div class="user-thumbnail">
+    {% if user.profile_picture %}
+        <img src="{{ user.profile_picture.url }}" alt="Profile Picture">
+    {% else %}
+        <img src="{% static 'images/default_profile.png' %}" alt="Default Profile Picture">
+    {% endif %}
+</div>
+
+      <div class="user-tooltip">
+        <div class="preview-header">
+          <span>{{ user.first_name }} {{ user.last_name }}</span>
+          <span class="role">{{ user.get_role_display }}</span>
+        </div>
+        <p><strong>Cougar ID:</strong> {{ user.cougar_id }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <a href="{% url 'user_profile' user.id %}" class="view-profile-btn">View Full Profile</a>
+      </div>
+    </div>
+    <span class="user-name">{{ user.first_name }} {{ user.last_name }}</span>
+  </div>
+</td>
+    <td>{{ user.email }}</td>
+    <td>{{ user.get_role_display }}</td>
+    <td>{% if user.is_active %}Active{% else %}Deactivated{% endif %}</td>
                     <td class="actions">
                         <a href="{% url 'user_edit' user.id %}" class="btn-edit {% if not has_edit_permission %}disabled{% endif %}">Edit</a>
                         <a href="{% url 'user_toggle_status' user.id %}" class="btn-status {% if not has_manage_users_permission %}disabled{% endif %}"
@@ -145,13 +168,14 @@
 
 
 
-{% if user.role == "admin" %}
+{% if user.role == "admin" or user.role == "moderator" %}
     <h2>Pending Form Submissions</h2>
     <table class="approval-table">
         <thead>
             <tr>
                 <th>ID</th>
                 <th>Requester</th>
+                <th>College</th> <!-- Optional -->
                 <th>Form Type</th>
                 <th>Submitted On</th>
                 <th>View PDF</th>
@@ -160,49 +184,39 @@
         </thead>
         <tbody>
             {% for entry in pending_requests %}
-<tr>
-    <td>{{ entry.request.id }}</td>
-    <td>{{ entry.request.user.first_name }} {{ entry.request.user.last_name }}</td>
-    <td>{{ entry.type }}</td>
-    <td>{{ entry.request.created_at|date:"Y-m-d H:i" }}</td>
-    <td><a href="{{entry.request.pdf_document.url}}">View PDF</a></td>
-    <td>
-
-
-        {% for request in pending_requests %}
-        {% if request.id and request.type %}
-        <form method="POST" action="{% url 'approve_request' request.id request.type %}">
-            {% csrf_token %}
-            <button type="submit" class="btn-approve">Approve</button>
-        </form>
-        {% else %}
-        <span class="text-danger">Invalid Request</span>
-        {% endif %}
-        {% endfor %}
-
-
-        {% for request in pending_requests %}
-        {% if request.id and request.type %}
-        <form method="POST" action="{% url 'return_request' request.id request.type %}">
-            {% csrf_token %}
-            <button type="submit" class="btn-return">Return</button>
-        </form>
-        {% else %}
-        <span class="text-danger">Invalid Request</span>
-        {% endif %}
-        {% endfor %}
-
-    </td>
-</tr>
-{% empty %}
-<tr>
-    <td colspan="5" class="no-requests">No pending requests.</td>
-</tr>
-{% endfor %}
-
+                <tr>
+                    <td>{{ entry.request.id }}</td>
+                    <td>{{ entry.request.user.first_name }} {{ entry.request.user.last_name }}</td>
+                    <td>{{ entry.request.user.get_college_display }}</td>
+                    <td>{{ entry.type }}</td>
+                    <td>{{ entry.request.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>
+                        {% if entry.request.pdf_document %}
+                            <a href="{{ entry.request.pdf_document.url }}" target="_blank">View PDF</a>
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="POST" action="{% url 'approve_request' entry.request.id entry.type %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-approve">Approve</button>
+                        </form>
+                        <form method="POST" action="{% url 'return_request' entry.request.id entry.type %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-return">Return</button>
+                        </form>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="7" class="no-requests">No pending requests.</td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 {% endif %}
+
 
 </div>
 </body>

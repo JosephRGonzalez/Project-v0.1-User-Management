@@ -1,0 +1,111 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Profile | Thunder Bay</title>
+    <link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/complete_profile.css' %}">
+    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
+</head>
+
+<body>
+    <main class="card-container slideUp-animation">
+
+        <!-- Left-Side Content -->
+        <div class="image-container">
+            <img src="{% static 'images/logo.png' %}" class="logo" alt="logo">
+            <p class="quote">Welcome to Thunder Bay, {{ first_name }}! <br>
+<br>
+                We're excited to have you on board. Help us finish your migration with just a few more details.</p>
+            <a href="{% url 'login' %}" class="back-btn">
+                <i id="back-icon" class="fa-solid fa-left-long"></i>
+            </a>
+        </div>
+
+        <!-- Right-Side Content -->
+        <form action="{% url 'complete_profile' %}" method="POST">
+            {% csrf_token %}
+
+            <div class="form-container slideRight-animation">
+
+                {% if messages %}
+                    <div class="messages">
+                        <ul>
+                            {% for message in messages %}
+                                <li class="message {% if message.tags %}{{ message.tags }}{% endif %}">{{ message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+                <h1 class="form-header">
+                    Complete Your Profile
+                </h1>
+
+                <div class="input-container">
+                    <input type="email" name="email" id="email" value="{{ email }}" readonly>
+                    <span>Email (from Bancroff)</span>
+                </div>
+
+                <div class="input-container">
+                    <input type="text" name="first_name" id="first_name" value="{{ first_name }}" required>
+                    <span>First Name</span>
+                </div>
+
+                <div class="input-container">
+                    <input type="text" name="last_name" id="last_name" value="{{ last_name }}" required>
+                    <span>Last Name</span>
+                </div>
+
+                <div class="input-container">
+                    <input type="text" name="cougar_id" id="cougar_id" maxlength="7" required>
+                    <span>7-digit Cougar ID</span>
+                </div>
+
+
+
+                <div class="input-container">
+                    <input type="password" name="password" id="password" required>
+                    <span>Create Password</span>
+                </div>
+
+                <div class="input-container">
+                    <input type="password" name="confirm_password" id="confirm_password" required>
+                    <span>Confirm Password</span>
+                </div>
+
+                <div class="input-container">
+                    <input type="text" name="major" id="major" required>
+                    <span>Major</span>
+                </div>
+
+                <div class="input-container">
+                    <select name="academic_level" required>
+                        <option value="">Select Academic Level</option>
+                        <option value="undergraduate">Undergraduate</option>
+                        <option value="graduate">Graduate</option>
+                    </select>
+                </div>
+
+                <div class="input-container">
+                    <select name="college" required>
+                        <option value="">Select College</option>
+                        {% for key, label in colleges.items %}
+                            <option value="{{ key }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+
+                <div id="btm">
+                    <button type="submit" class="submit-btn">Finish Setup</button>
+                </div>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

@@ -1,0 +1,82 @@
+{%load  static%}
+<!DOCTYPE html>
+
+
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link  rel="icon" type="image/png" href="{% static 'images/favicon.png' %}">
+    <title>Thunder Bay | Login</title>
+    <link rel="stylesheet" href="{% static 'css/bancroft_login.css' %}">
+    <script src="https://kit.fontawesome.com/542cb8b844.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,600;0,700;1,400;1,600;1,700&family=League+Gothic&family=Source+Sans+Pro:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+   </head>
+
+
+
+
+<body>
+
+
+
+
+    <!-- Login Form Container -->
+  <div class="container">
+        <!-- Logo -->
+    <div class = logoContainer>
+        <a href="{% url 'landing_page' %}"> <img src = "{% static 'images/logo.png' %}" class="logo" alt="logo"> </a>
+  </div>
+
+    <div class="login form">
+      <header>Login</header>
+
+        <!-- Login Form -->
+      <form method="POST" action="{% url 'login_bancroff' %}">
+          {% csrf_token %}
+        <i id="emailicon" class="fa-solid fa-envelope"></i>
+        <i class="fas fa-lock"></i>
+        <label for="email"></label>
+        <input type="email" name="email" placeholder="Email used in Bancroft" required />
+        <label for="password"></label>
+        <input type="password" name="password" placeholder="Password" required />
+        <a href="#">Forgot Password?</a>
+        <input id="loginButton" type="submit" class="button" value="Login">
+      </form>
+
+            <div class="bancroff-login">
+                <a href="{% url 'login' %}" class="bancroff-button">Login with Thunder Bay</a>
+            </div>
+
+         <!-- Display error messages if login fails -->
+        {% if messages %}
+        <div class="error-messages">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+
+      <div class="signup">
+        <span class="signup">Don't have an account?</span>
+        <label for="check"></label>
+        <a id="check" href="{% url 'signup' %}">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+
+    <!-- UofH Logo -->
+<div class="uofhContainer">
+    <img src = "{% static 'images/uofh2.png' %}" class="uofh" alt="UH logo">
+</div>
+
+
+</body>
+
+
+
+</html>

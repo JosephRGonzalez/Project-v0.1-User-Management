@@ -36,15 +36,19 @@
         <!-- Login Form -->
       <form method = "POST" >
           {% csrf_token %}
-        <i id="emailicon" class="fa-solid fa-envelope"></i>
+        <i id="emailicon" class="fas fa-id-card"></i>
         <i class="fas fa-lock"></i>
         <label for="username"></label>
-        <input name="username" id="username" type="text" placeholder="Enter Email" >
+        <input name="username" id="username" type="text" placeholder="Enter Cougar ID" >
         <label for="password"></label>
         <input name="password" id="password" type="password" placeholder="Enter your password">
         <a href="#">Forgot Password?</a>
         <input id="loginButton" type="submit" class="button" value="Login">
       </form>
+
+            <div class="bancroff-login">
+                <a href="{% url 'bancroff_login_page' %}" class="bancroff-button">Log in with Bancroft</a>
+            </div>
 
          <!-- Display error messages if login fails -->
         {% if messages %}
@@ -53,10 +57,9 @@
                 <p>{{ message }}</p>
             {% endfor %}
         </div>
-
-
-
         {% endif %}
+
+
       <div class="signup">
         <span class="signup">Don't have an account?</span>
         <label for="check"></label>

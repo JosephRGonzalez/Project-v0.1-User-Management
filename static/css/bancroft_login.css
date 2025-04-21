@@ -1,0 +1,292 @@
+@import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    opacity: 0;
+    animation: fadeInSlideUp 1.5s ease-in-out forwards;
+}
+
+@keyframes fadeInSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(50px); /* Start lower */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Move to normal position */
+    }
+}
+
+
+/* Background */
+
+body {
+    background-image: url("../images/bancroft_login.jpeg");
+    min-height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-color: white;
+    background-position: bottom;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+
+
+/*  Login Form Containers */
+.container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    max-width: 430px;
+    width: 100%;
+    background: rgba(136, 139, 141, 0.66);
+    border-radius: 7px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    color:#fff;
+
+}
+
+.container .form {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+
+
+/* Logo Containers */
+.logoContainer{
+    position: absolute;
+    max-width: 650px;
+    width:150%;
+    top: -20%;
+    left: 40%;
+    transform: translate(-50%, -50%);
+
+}
+
+.logo:hover{
+    transform: scale(1.1);
+    cursor: pointer;
+}
+
+
+.logo{
+    position: relative;
+    max-width: 100%;
+    transition: transform 0.3s ease-in-out;
+}
+
+
+.uofhContainer{
+    position: absolute;
+    bottom:0;
+    right:0;
+    width:100px;
+}
+
+.uofh{
+    position: relative;
+    max-width: 100%;
+}
+
+
+
+/* Login Form */
+.form header {
+    font-size: 62px;
+    font-weight: 700;
+    text-align: center;
+    font-family: 'League Gothic' , sans-serif;
+    text-shadow: 0 0 1px rgba(0, 0, 0);
+
+}
+
+.form input {
+    height: 60px;
+    width: 100%;
+    padding: 0 15px;
+    font-size: 15px;
+    margin-bottom: 1.3rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    outline: none;
+    border-color: rgba(0, 0, 0, 0.89);
+    background-color: rgba(255, 255, 255, 0.66);
+}
+
+.form input:focus {
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.form a {
+    font-size: 18px;
+    color: rgba(255, 255, 255, 0.81);
+    text-decoration: none;
+    font-family: 'Source Sans Pro', 'sans-serif';
+}
+
+.form a:hover {
+    text-decoration: underline;
+}
+
+.form input.button {
+    background: rgb(36, 88, 202,0.81);
+    text-shadow: 0 0 2px rgba(0, 0, 0);
+    color: white;
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-top: 1rem;
+    cursor: pointer;
+    transition: transform ease-in-out 0.4s;
+    font-family: "Source Sans Pro" , sans-serif;
+
+}
+
+.form input.button:hover {
+    background: rgba(36, 88, 202);
+    text-shadow: 0 0 2px rgba(0, 0, 0);
+    color: white;
+}
+
+.signup {
+    font-size: 20px;
+    text-align: center;
+    font-family: 'Source Sans Pro', 'sans-serif';
+}
+
+.signup a{
+    color: rgb(200, 16, 46);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 22px;
+    margin-left: 1%;
+    text-shadow: 0 0 1px rgba(255, 255, 255);
+
+
+}
+
+
+.signup label:hover {
+    text-decoration: underline;
+}
+
+.error-messages{
+    color: white;
+    background-color: rgb(200, 16, 46,0.9);
+    font-size: 18px;
+    text-align: center;
+    padding:8px;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    border-radius: 20px;
+    text-shadow: 0 0 2px rgba(0, 0, 0);
+
+}
+
+
+
+
+#emailicon {
+    left: 10px;
+    transform: translate(1760%, 230%);
+    font-size: 18px;
+    color: rgba(36, 88, 202, 0.81);
+}
+
+.fas.fa-lock {
+    left: 10px;
+    transform: translate(1870%, 665%);
+    font-size: 18px;
+    color: rgba(36, 88, 202, 0.81);
+}
+
+
+
+
+/*Responsive Code */
+
+@media screen and (min-width: 335px) and (max-width: 415px) {
+    .form header {
+        font-size: 1.5rem;
+    }
+
+    .form input {
+        height: 50px;
+        font-size: 14px;
+    }
+
+    .form .input-container {
+        margin: 0;
+        padding: 0;
+    }
+
+    .form .input-container i {
+        font-size: 16px;
+        margin-right: 5px;
+    }
+
+    #emailicon {
+        left: 10px;
+        transform: translate(1360%, 210%);
+        font-size: 18px;
+        color: rgba(200, 16, 46, 0.81);
+    }
+
+    .fas.fa-lock {
+        left: 10px;
+        transform: translate(1400%, 605%);
+        font-size: 18px;
+        color: rgba(200, 16, 46, 0.81);
+    }
+}
+
+
+
+
+
+/* BANCROFT LOGIN */
+
+.bancroff-login {
+    text-align: center;
+}
+
+.bancroff-login a{
+    text-wrap: nowrap;
+}
+.bancroff-login a:hover{
+    text-decoration: none;
+}
+
+
+.bancroff-button {
+    background-color: rgba(200, 16, 46, 0.76);
+    display: inline-block;
+    padding: 12px 85px;
+    color: white;
+    font-weight: 700;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    font-size: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-family: 'Source Sans Pro', sans-serif;
+    margin-bottom: 1rem;
+}
+
+.bancroff-button:hover {
+    background-color: rgba(200, 16, 46);
+    text-decoration: none;
+    cursor: pointer;
+}

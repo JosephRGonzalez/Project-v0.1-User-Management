@@ -27,7 +27,11 @@ from django.contrib import messages
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth import update_session_auth_hash, logout
 from .forms import (EmailUpdateForm,CougarIDUpdateForm,ConfirmDeleteAccountForm)
-
+import requests
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
 
 
 
@@ -49,6 +53,122 @@ def login_view(request):
             messages.error(request, "Invalid username or password")
 
     return render(request, 'index.html')  # Render login page
+
+
+
+
+def bancroff_login_page(request):
+    return render(request, "bancroff_login.html")
+
+
+
+
+def login_bancroff(request):
+    if request.method == "POST":
+        email = request.POST.get("email")
+        password = request.POST.get("password")
+
+        try:
+            response = requests.post("http://127.0.0.1:50010/api/authenticate", json={
+                "email": email,
+                "password": password
+            })
+
+            data = response.json()
+
+            if response.status_code == 200 and response.json().get("success"):
+                # Temporarily store email in session for use in profile setup
+                request.session['bancroff_email'] = email
+                request.session["bancroff_full_name"] = data.get("full_name") or ""
+                return redirect('complete_profile')
+
+            else:
+                messages.error(request, "Invalid Bancroff credentials.")
+
+        except Exception as e:
+            messages.error(request, f"Error connecting to Bancroff: {e}")
+
+    return redirect('bancroff_login_page')  # Or re-render the same page if you prefer
+
+
+
+def complete_profile(request):
+    email = request.session.get("bancroff_email")
+
+    full_name = request.session.get("bancroff_full_name", "")
+    first_name, last_name = "", ""
+
+    if full_name:
+        parts = full_name.split()
+        first_name = parts[0]
+        last_name = " ".join(parts[1:]) if len(parts) > 1 else ""
+
+
+    if not email:
+        return redirect("login")
+
+    if request.method == "POST":
+        first_name = request.POST.get("first_name")
+        last_name = request.POST.get("last_name")
+        cougar_id = request.POST.get("cougar_id")
+        major = request.POST.get("major")
+        academic_level = request.POST.get("academic_level")
+        college = request.POST.get("college")
+        password = request.POST.get("password")
+        confirm_password = request.POST.get("confirm_password")
+
+        if password != confirm_password:
+            messages.error(request, "Passwords do not match.")
+            return render(request, 'complete_profile.html', {
+                'email': email,
+                'colleges': dict(UserProfile.COLLEGE_CHOICES)
+            })
+
+        try:
+            validate_password(password)
+        except ValidationError as e:
+            for err in e:
+                messages.error(request, err)
+            return render(request, 'complete_profile.html', {
+                'email': email,
+                'colleges': dict(UserProfile.COLLEGE_CHOICES)
+            })
+
+
+
+        if not cougar_id or len(cougar_id) != 7 or not cougar_id.isdigit():
+            messages.error(request, "Cougar ID must be exactly 7 digits.")
+            return render(request, 'complete_profile.html', {
+                'email': email,
+                'colleges': dict(UserProfile.COLLEGE_CHOICES)
+            })
+
+        # Create user
+        user = UserProfile.objects.create_user(
+            username=email,
+            email=email,
+            password=password,
+            first_name=first_name,
+            last_name=last_name,
+            cougar_id=cougar_id,
+            major=major,
+            academic_level=academic_level,
+            college=college,
+            role='user'
+        )
+
+        del request.session['bancroff_email']
+        login(request, user)
+        return redirect("dashboard")
+
+    return render(request, "complete_profile.html", {
+        "email": email,
+        "colleges": dict(UserProfile.COLLEGE_CHOICES),
+        "first_name": first_name,
+        "last_name": last_name,
+    })
+
+
 
 
 # Redirects user to Dashboard (dashboard.html) after logging in
@@ -133,45 +253,53 @@ def logout_view(request):
 
 
 #Users List in user_list.html
+
+
 @login_required
 @permission_required('usr_mgmt_app.can_read', raise_exception=True)
 def user_list(request):
+    user = request.user
     users = UserProfile.objects.all()
 
-    # Fetch pending requests and categorize them
     pending_requests = []
-    for thesis in ThesisRequest.objects.filter(status="Pending"):
-        pending_requests.append({"id": thesis.id, "type": "ThesisRequest", "request": thesis})
 
-    for withdrawal in WithdrawalRequest.objects.filter(status="Pending"):
-        pending_requests.append({"id": withdrawal.id, "type": "WithdrawalRequest", "request": withdrawal})
+    models_and_types = [
+        (ThesisRequest, "ThesisRequest"),
+        (WithdrawalRequest, "WithdrawalRequest"),
+        (ReducedCourseLoadRequest, "ReducedCourseLoadRequest"),
+        (PetitionRequest, "PetitionRequest"),
+    ]
 
-    for rcl in ReducedCourseLoadRequest.objects.filter(status="Pending"):
-        pending_requests.append({"id": rcl.id, "type": "ReducedCourseLoadRequest", "request": rcl})
+    for model, req_type in models_and_types:
+        queryset = model.objects.filter(status="Pending")
 
-    for petition in PetitionRequest.objects.filter(status="Pending"):
-        pending_requests.append({"id": petition.id, "type": "PetitionRequest", "request": petition})
+        # Moderators only see requests from their college
+        if user.role == "moderator":
+            queryset = queryset.filter(user__college=user.college)
+        elif user.role != "admin":
+            # Neither admin nor moderator? Skip this model.
+            continue
 
-    print("Final pending_requests:", pending_requests)  # Debugging
+        for obj in queryset:
+            pending_requests.append({
+                "id": obj.id,
+                "type": req_type,
+                "request": obj
+            })
 
-    # Get the permissions for the current user
-    has_edit_permission = request.user.has_perm('usr_mgmt_app.can_edit')
-    has_manage_users_permission = request.user.has_perm('usr_mgmt_app.can_manage_users')
+    # Permissions
+    has_edit_permission = user.has_perm('usr_mgmt_app.can_edit')
+    has_manage_users_permission = user.has_perm('usr_mgmt_app.can_manage_users')
 
-    # Add permissions to context
     context = {
-        'has_edit_permission': has_edit_permission,
-        'has_manage_users_permission': has_manage_users_permission,
-        'users': UserProfile.objects.all(),  # Assuming you have users in your context
-        'pending_requests': pending_requests,
-    }
-
-    return render(request, 'user_list.html', {
         'users': users,
         'has_edit_permission': has_edit_permission,
         'has_manage_users_permission': has_manage_users_permission,
         'pending_requests': pending_requests,
-    })
+    }
+
+    return render(request, 'user_list.html', context)
+
 
 
 
@@ -201,6 +329,7 @@ def user_edit(request, user_id):
         user.first_name = request.POST.get("first_name", user.first_name)
         user.last_name = request.POST.get("last_name", user.last_name)
         user.email = request.POST.get("email", user.email)
+        user.cougar_id = request.POST.get("cougar_id")
         user.role = request.POST.get("role", user.role)
 
         user.save()  # Save changes to the database
@@ -1084,6 +1213,7 @@ def submit_petition_for_approval(request, request_id):
 #################################
 ### APPROVAL TRACKING SYSTEM  ###
 #################################
+
 def approval_requests(request):
     print("Current User:", request.user)
     print("Is Authenticated?", request.user.is_authenticated)
@@ -1147,7 +1277,7 @@ def return_request(request, request_id, request_type):
     return redirect("user_list")
 
 
-
+### PROFILES
 
 
 @login_required

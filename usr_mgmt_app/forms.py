@@ -7,17 +7,22 @@ class UserProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ['first_name', 'last_name', 'email', 'role', 'is_active' , 'password']
 
-# Override save method to use email as username
-    def save(self, commit=True):
-        user = super().save(commit=False)
-        user.username = user.email  # Use email as username
-        # Hash the password before saving
-        if user.password:
-            user.set_password(user.password)
+# Override save method to use Cougar ID as username (optional)
+def save(self, commit=True):
+    user = super().save(commit=False)
 
-        if commit:
-            user.save()
-        return user
+    # Optional: keep username populated to avoid unique constraint errors
+    if user.cougar_id:
+        user.username = user.cougar_id  # or f"user_{user.cougar_id}" to avoid collisions
+
+    # Hash the password
+    if user.password:
+        user.set_password(user.password)
+
+    if commit:
+        user.save()
+    return user
+
 
 
 class PublicProfileEditForm(forms.ModelForm):

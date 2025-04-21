@@ -32,24 +32,46 @@
     background: rgb(136,139,141);
     color: white;
     border-radius: 5px;
-    overflow: hidden;
+    overflow: visible;
+    z-index:1;
+    position: relative;
 }
+
+.user-table tr {
+    position: relative;
+    z-index: 0;
+    overflow: visible;
+}
+
+.user-table tr:hover {
+    z-index: 1;
+}
+
 
 .user-table th, .user-table td {
     padding: 15px;
     text-align: left;
+    z-index:1;
+    overflow: visible;
 }
 
 .user-table th {
     background: rgb(200, 16, 46);
+    z-index:1;
+    overflow: visible;
 }
 
 .user-table tr:nth-child(even) {
     background: rgb(84,88,90);
+    overflow: visible;
+    position: relative;
+    z-index:0;
 }
 
 .user-table tr:hover {
     background: rgba(255, 255, 255, 0.1);
+    z-index:1;
+    overflow: visible;
 }
 
 .no-users {
@@ -147,10 +169,12 @@
 
 .user-table tbody tr:nth-child(odd) {
     animation-delay: 0.2s;
+    z-index:1;
 }
 
 .user-table tbody tr:nth-child(even) {
     animation-delay: 0.4s;
+    z-index:1
 }
 
 @keyframes rowSlideUp {
@@ -168,6 +192,7 @@
 .user-table tbody tr:hover {
     background: rgba(255, 255, 255, 0.1);
     transition: background 0.3s ease-in-out;
+    z-index:1;
 }
 
 
@@ -248,4 +273,220 @@
 
 .btn-approve:hover {
     background: rgb(0,134,108);
+}
+
+
+
+.user-info-cell {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 0;
+    position: relative;
+    z-index:9999;
+}
+
+.user-thumbnail img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+    box-shadow: 0 0 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+    z-index:1;
+}
+
+
+.user-thumbnail img:hover {
+    transform: scale(1.05);
+}
+
+.user-hover-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    z-index:9999;
+}
+
+.user-name {
+    font-weight: 600;
+    font-size: 16px;
+    color: #fff;
+    z-index:1;
+}
+
+.user-hover-preview {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 16px;
+    width: 260px;
+    box-shadow: 0 6px 14px rgba(0,0,0,0.15);
+    display: none;
+    z-index: 9999;
+    font-family: "Source Sans Pro", sans-serif;
+}
+
+.user-hover-wrapper:hover .user-hover-preview {
+    display: block;
+    animation: fadeInUp 0.3s ease-in-out forwards;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.user-hover-preview .preview-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #222;
+}
+
+.user-hover-preview p {
+    font-size: 14px;
+    margin: 5px 0;
+    color: #444;
+}
+
+.view-profile-btn {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgb(200, 16, 46);
+    text-decoration: none;
+}
+
+.view-profile-btn:hover {
+    text-decoration: underline;
+}
+
+
+
+
+
+
+.user-info-cell {
+    overflow: visible;
+    position: relative;
+}
+
+
+
+.user-hover-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+}
+
+.user-thumbnail-container {
+    position: relative;
+    z-index: 10;
+}
+
+.user-thumbnail img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid white;
+    transition: transform 0.2s ease;
+}
+
+.user-tooltip {
+    position: absolute;
+    top: 0;
+    left: 55px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    width: 260px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+    display: none;
+    z-index: 40;
+}
+
+.user-tooltip .preview-header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #222;
+}
+
+.user-tooltip p {
+    font-size: 14px;
+    margin: 4px 0;
+    color: #444;
+}
+
+.user-tooltip .view-profile-btn {
+    display: inline-block;
+    margin-top: 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: rgb(200, 16, 46);
+    text-decoration: none;
+}
+
+.user-tooltip .view-profile-btn:hover {
+    text-decoration: underline;
+}
+
+.user-thumbnail-container:hover {
+    z-index: 20;
+}
+
+.user-thumbnail-container:hover .user-tooltip {
+    display: block;
+}
+
+
+.user-table tr {
+    position: relative;   /* allows child z-index to work */
+    z-index: 0;
+}
+
+.user-table tr:hover {
+    z-index: 10;  /* bring current row above others */
+}
+
+.user-thumbnail-container {
+    position: relative;
+    z-index: 20;  /* higher than row, lower than tooltip */
+}
+
+.user-tooltip {
+    z-index: 9999;  /* floats above everything */
+}
+
+
+.user-table tr {
+    position: relative;
+    z-index: 0; /* Base level */
+}
+
+.user-table tr:hover {
+    z-index: 2; /* Raised on hover just in case */
+}
+
+.user-hover-preview {
+    z-index: 1000 !important; /* Raised even higher */
 }

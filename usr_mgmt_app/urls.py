@@ -7,7 +7,13 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('', views.landing_page, name='landing_page'),  # Landing page
+    # Login
     path('login/', views.login_view, name='login'),  # Login page
+    path("login-bancroff/", views.bancroff_login_page, name="bancroff_login_page"),
+    path("login-bancroff/submit/", views.login_bancroff, name="login_bancroff"),
+    path("complete-profile/", views.complete_profile, name="complete_profile"),
+
+
     path('signup/', views.signup_view, name='signup'),  # Sign up Page
     path('dashboard/', views.dashboard_view, name='dashboard'),  # Dashboard page
     path('submit-request/', views.submit_request_view, name='submit_request'),  # Submit approval request

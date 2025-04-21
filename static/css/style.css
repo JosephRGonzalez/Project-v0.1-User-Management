@@ -168,7 +168,7 @@ body {
 .signup a{
     color: rgb(227, 7, 43);
     cursor: pointer;
-    font-weight: 500;
+    font-weight: 700;
     font-size: 22px;
     margin-left: 1%;
     text-shadow: 0 0 1px rgba(255, 255, 255);
@@ -197,9 +197,9 @@ body {
 
 
 
-#emailicon {
+.fas.fa-id-card {
     left: 10px;
-    transform: translate(1760%, 230%);
+    transform: translate(1580%, 230%);
     font-size: 18px;
     color: rgba(200, 16, 46, 0.81);
 }
@@ -252,3 +252,38 @@ body {
 }
 
 
+
+
+
+/* BANCROFT LOGIN */
+
+.bancroff-login {
+    text-align: center;
+}
+
+.bancroff-login a:hover{
+    text-decoration: none;
+}
+
+
+.bancroff-button {
+    background-color: rgba(36, 88, 202, 0.76);
+    display: inline-block;
+    padding: 12px 100px;
+    color: white;
+    font-weight: 600;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(0, 0, 0, 0.4);
+    border-radius: 8px;
+    font-size: 20px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, transform 0.3s ease;
+    font-family: 'Source Sans Pro', sans-serif;
+    margin-bottom: 1rem;
+}
+
+.bancroff-button:hover {
+    background-color: rgba(36, 88, 202);
+    text-decoration: none;
+    cursor: pointer;
+}
