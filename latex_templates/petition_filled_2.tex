@@ -1,0 +1,155 @@
+\documentclass{article}
+\usepackage[a4paper,margin=1in,landscape]{geometry}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{eso-pic}  % Allows precise positioning
+\usepackage{tikz}  % For drawing text and components precisely
+\usepackage{ifthen}
+\usepackage{pdfoverlay}
+
+% Function to place checkboxes at specific coordinates
+\newcommand{\CheckboxAt}[3]{
+    \begin{tikzpicture}[
+        remember picture,
+        overlay,
+        shift={(current page.south west)}
+    ]
+        % Draw a checkbox based on the third argument: u for unchecked, c for checked
+        \ifx#3u
+            \node[anchor=south west] at (#1, #2) {\tikz \draw[very thick] (0,0) rectangle (0.60,0.60);}; % Unchecked checkbox
+        \else
+            \node[anchor=south west] at (#1, #2) {\tikz \draw[very thick, fill=black] (0,0) rectangle (0.60,0.60);}; % Checked checkbox
+        \fi
+    \end{tikzpicture}
+}
+
+% Command to place text at specific coordinates
+\NewDocumentCommand{\TextAt}{O{left} r() O{\textwidth} +m O{\normalfont}}{
+    \begin{tikzpicture}[
+        remember picture,
+        overlay,
+        shift={(current page.south west)}
+    ]
+        \node[
+            text width=#3,
+            align=#1,
+            anchor=south west,
+            inner sep=0,
+            font=#5,
+        ] at (#2) {\parbox{\textwidth}{#4}};
+    \end{tikzpicture}
+}
+
+% Command to place image at specific coordinates
+\newcommand{\ImageAt}[3]{
+    \begin{tikzpicture}[
+        remember picture,
+        overlay,
+        shift={(current page.south west)}
+    ]
+        % Insert the image at the specified coordinates
+        \node[anchor=south west] at (#1, #2) {\includegraphics[width=#3]{{../signatures/placeholder.png}}};
+    \end{tikzpicture}
+}
+
+\begin{document}
+
+% PDF Form overlay
+\pdfoverlaySetPDF{../static/pdfs/graduate_petition.pdf}
+
+% Student Information Section
+\TextAt(1.2in, 7.3in){{{{LAST_NAME}}}} [\footnotesize\bfseries]
+\TextAt(3.2in, 7.3in){{{{FIRST_NAME}}}} [\footnotesize\bfseries]
+\TextAt(5.2in, 7.3in){{{{MIDDLE_NAME}}}} [\footnotesize\bfseries]
+\TextAt(1.2in, 6.7in){{{{STUDENT_ID}}}} [\footnotesize\bfseries]
+\TextAt(3.2in, 6.7in){{{{PHONE}}}} [\footnotesize\bfseries]
+\TextAt(1.2in, 6.3in){{{{EMAIL}}}} [\footnotesize\bfseries]
+
+% Current Student Information
+\TextAt(8.5in, 7.3in){{{{CAREER}}}} [\footnotesize\bfseries]
+\TextAt(8.5in, 7in){{{{PROGRAM}}}} [\footnotesize\bfseries]
+\TextAt(8.5in, 6.7in){{{{PLAN_CODE}}}} [\footnotesize\bfseries]
+
+% Petition Effective
+\TextAt(9.6in, 6.7in){{{{TERM}}}} [\footnotesize\bfseries]
+\TextAt(10.2in, 6.7in){{{{YEAR}}}} [\footnotesize\bfseries]
+
+% PURPOSE OF PETITION Section
+% Checkbox 1
+\ifthenelse{\equal{{{PURPOSE}}}{1}}
+    {\CheckboxAt{0.52in}{5.52in}{c}}
+    {\CheckboxAt{0.52in}{5.52in}{u}}
+
+% Checkbox 2
+\ifthenelse{\equal{{{PURPOSE}}}{2}}
+    {\CheckboxAt{3.35in}{5.52in}{c}}
+    {\CheckboxAt{3.35in}{5.52in}{u}}
+
+% Checkbox 3
+\ifthenelse{\equal{{{PURPOSE}}}{3}}
+    {\CheckboxAt{6.53in}{5.52in}{c}}
+    {\CheckboxAt{6.53in}{5.52in}{u}}
+
+% Checkbox 4
+\ifthenelse{\equal{{{PURPOSE}}}{4}}
+    {\CheckboxAt{9.63in}{5.52in}{c}}
+    {\CheckboxAt{9.63in}{5.52in}{u}}
+
+% Checkbox 5
+\ifthenelse{\equal{{{PURPOSE}}}{5}}
+    {\CheckboxAt{0.52in}{4.85in}{c}}
+    {\CheckboxAt{0.52in}{4.85in}{u}}
+
+% Checkbox 6
+\ifthenelse{\equal{{{PURPOSE}}}{6}}
+    {\CheckboxAt{3.35in}{4.85in}{c}}
+    {\CheckboxAt{3.35in}{4.85in}{u}}
+
+% Checkbox 7
+\ifthenelse{\equal{{{PURPOSE}}}{7}}
+    {\CheckboxAt{6.53in}{4.85in}{c}}
+    {\CheckboxAt{6.53in}{4.85in}{u}}
+
+% Checkbox 8
+\ifthenelse{\equal{{{PURPOSE}}}{8}}
+    {\CheckboxAt{9.63in}{4.85in}{c}}
+    {\CheckboxAt{9.63in}{4.85in}{u}}
+
+% Checkbox 9
+\ifthenelse{\equal{{{PURPOSE}}}{9}}
+    {\CheckboxAt{0.52in}{4.15in}{c}}
+    {\CheckboxAt{0.52in}{4.15in}{u}}
+
+% Checkbox 10
+\ifthenelse{\equal{{{PURPOSE}}}{10}}
+    {\CheckboxAt{9.63in}{4.15in}{c}}
+    {\CheckboxAt{9.63in}{4.15in}{u}}
+\TextAt(10.0in, 3.7in){{{{OTHER_PURPOSE}}}} [\footnotesize\bfseries]
+
+% Transfer Credit Information
+\TextAt(2.8in, 4.3in){{{{INSTITUTION_NAME}}}} [\footnotesize\bfseries]
+\TextAt(2.8in, 4.1in){{{{CITY_STATE_ZIP}}}} [\footnotesize\bfseries]
+\TextAt(7.8in, 4.32in){{{{START_TERM}}}} [\footnotesize\bfseries]
+\TextAt(7.8in, 4.1in){{{{END_TERM}}}} [\footnotesize\bfseries]
+\TextAt(9.1in, 4.32in){{{{YEAR}}}} [\footnotesize\bfseries]
+\TextAt(9.1in, 4.1in){{{{YEAR}}}} [\footnotesize\bfseries]
+
+% Credit hours
+\TextAt(8.1in, 3.7in){{{{HOURS_TRANSFERRED}}}} [\footnotesize\bfseries]
+\TextAt(8.1in, 3.5in){{{{REQUESTED_HOURS}}}} [\footnotesize\bfseries]
+
+% Explanation of request
+\TextAt(0.85in, 3.0in){{{{EXPLANATION}}}} [\footnotesize\bfseries]
+
+% Signature Section
+\ImageAt{.85in}{1.8in}{2cm} % Signature image placement
+\TextAt(2.75in, 1.8in){{{{SIGNATURE_DATE_MONTH}}}} [\footnotesize\bfseries]
+\TextAt(4.55in, 1.8in){{{{SIGNATURE_DATE_DAY}}}} [\footnotesize\bfseries]
+\TextAt(6.3in, 1.8in){{{{SIGNATURE_DATE_YEAR}}}} [\footnotesize\bfseries]
+
+
+
+
+
+
+\end{document}
