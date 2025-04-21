@@ -1,0 +1,150 @@
+\documentclass{article}
+\usepackage[a4paper,margin=1in,landscape]{geometry}
+\usepackage{graphicx}
+\usepackage{pdfpages}
+\usepackage{eso-pic}  % Allows precise positioning
+\usepackage{tikz}  % For drawing text precisely
+\usepackage{tikz}
+\usepackage{pdfoverlay}
+
+
+
+
+
+
+% Function to place checkboxes at specific coordinates
+\newcommand{\CheckboxAt}[3]{
+    \begin{tikzpicture}[
+        remember picture,
+        overlay,
+        shift={(current page.south west)}
+    ]
+        % Draw a checkbox based on the third argument: 0 for unchecked, 1 for checked
+        \ifx#3u
+            \node[anchor=south west] at (#1, #2) {\tikz \draw[very thick] (0,0) rectangle (0.60,0.60);}; % Unchecked checkbox
+        \else
+            \node[anchor=south west] at (#1, #2) {\tikz \draw[fill=black] (0,0) rectangle (0.60,0.60);}; % Checked checkbox
+        \fi
+    \end{tikzpicture}
+}
+
+
+
+
+
+
+\NewDocumentCommand{\TextAt}{O{left} r() O{\textwidth} +m O{\normalfont}}{
+    \begin{tikzpicture}[
+        remember picture,
+        overlay,
+        shift={(current page.south west)}
+    ]
+        \node[
+            text width=#3,
+            align=#1,
+            anchor=south west,
+            inner sep=0,
+            font=#5,
+        ] at (#2) {\parbox{\textwidth}{#4}};
+    \end{tikzpicture}
+}
+
+
+\newcommand{\ImageAt}[3]{
+    \begin{tikzpicture}[
+        remember picture,
+        overlay,
+        shift={(current page.south west)}
+    ]
+        % Insert the image at the specified coordinates
+        \node[anchor=south west] at (#1, #2) {\includegraphics[width=#3]{{../signatures/handwritten-email-signature.jpeg}}};
+    \end{tikzpicture}
+}
+
+
+
+
+\begin{document}
+
+    % PDF Form
+    \pdfoverlaySetPDF{../static/pdfs/withdrawal_form.pdf}
+
+
+    % Last Name
+    \TextAt(2in,6.92in){Team} [\footnotesize\bfseries]
+    % First Name
+    \TextAt(3in,6.92in){Admin} [\footnotesize\bfseries]
+    % Middle Name
+    \TextAt(4.3in, 6.92in) {Test} [\footnotesize\bfseries]
+    % Student ID number
+    \TextAt(5.85in,6.92in){2039431}[\footnotesize\bfseries]
+    % College
+    \TextAt(7.4in, 6.92in) {NSM} [\footnotesize\bfseries]
+    % Plan/Degree
+    \TextAt(9.11in, 6.92in) {CS} [\footnotesize\bfseries]
+
+    %%% Next Line
+
+    % Current Mail Address
+    \TextAt(2.47in,6.54in){123456 Cougar House Ln} [\footnotesize\bfseries]
+    % City
+    \TextAt(5.2in,6.56in){Houston} [\footnotesize\bfseries]
+    % State
+    \TextAt(6.3in,6.56in){Texas} [\footnotesize\bfseries]
+    % Zip
+    \TextAt(7.2in,6.56in){77498} [\footnotesize\bfseries]
+    % Phone Number
+    \TextAt(9.2in,6.56in){200-200-0022} [\footnotesize\bfseries]
+
+    %% Next Line
+
+    % Term
+    \TextAt(4.54in,6.15in){Spring 2025} [\footnotesize\bfseries]
+    % Reason for request
+    \TextAt(1.2in,5.70in){Testing the Test} [\footnotesize\bfseries]
+    % Last date you attended
+    \TextAt(5.1in,5.48in){2025-03-14} [\footnotesize\bfseries]
+
+
+% Financial Assistance
+\ifthenelse{\equal{No}{Yes}}
+    {\TextAt(4.015in,5.25in){x}  [\footnotesize\bfseries]}  % Yes checkbox checked
+    {\TextAt(4.465in,5.26in){x}  [\footnotesize\bfseries]}  % No checkbox checked
+
+% UH Student Health Insurance
+\ifthenelse{\equal{No}{Yes}}
+    {\TextAt(4.365in,5.065in){x} [\footnotesize\bfseries]}  % Yes checkbox checked
+    {\TextAt(4.78in,5.065in){x}  [\footnotesize\bfseries]}  % No checkbox checked
+
+% Do you live in campus housing
+\ifthenelse{\equal{No}{Yes}}
+    {\TextAt(2.915in,4.853in){x} [\footnotesize\bfseries]}  % Yes checkbox checked
+    {\TextAt(3.298in,4.853in){x} [\footnotesize\bfseries]}  % No checkbox checked
+
+% F1 or J1 Visa
+\ifthenelse{\equal{Yes}{Yes}}
+    {\TextAt(2.875in,4.645in){x} [\footnotesize\bfseries]}  % Yes checkbox checked
+    {\TextAt(3.265in,4.645in){x} [\footnotesize\bfseries]}  % No checkbox checked
+
+% GI Bill
+\ifthenelse{\equal{No}{Yes}}
+    {\TextAt(3.515in,4.435in){x} [\footnotesize\bfseries]}  % Yes checkbox checked
+    {\TextAt(3.875in,4.435in){x} [\footnotesize\bfseries]}  % No checkbox checked
+
+
+    % Initial
+    \TextAt(9.2in,3.49in){A}
+
+
+    %Signature
+    \ImageAt{2.25in}{2.65in}{2cm}
+
+    % Date Created
+    \TextAt(5.3in,2.85in){2025-03-31 21:02:23.476194+00:00}
+    % Email
+    \TextAt(7.75in,2.85in){admin@test.com}
+
+
+
+
+\end{document}
