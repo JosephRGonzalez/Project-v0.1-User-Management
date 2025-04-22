@@ -95,11 +95,11 @@
         <table class="user-table">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Role</th>
-                    <th>Status</th>
+                    <th onclick="sortTable(0)" data-sort="number">ID</th>
+                    <th onclick="sortTable(1)" data-sort="string">Name</th>
+                    <th onclick="sortTable(2)" data-sort="string">Email</th>
+                    <th onclick="sortTable(3)" data-sort="string">Role</th>
+                    <th onclick="sortTable(4)" data-sort="string">Status</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -217,7 +217,49 @@
     </table>
 {% endif %}
 
+    <script>
+        function confirmDelete(userName) {
+            return confirm(`Are you sure you want to delete ${userName}? This action cannot be undone.`);
+        }
+
+        function confirmStatusChange(userName, currentStatus) {
+            return confirm(`Are you sure you want to ${currentStatus === 'Active' ? 'deactivate' : 'activate'} ${userName}?`);
+        }
+
+        let sortDirection = {};
+
+        function sortTable(columnIndex) {
+            const table = document.querySelector(".user-table tbody");
+            const rows = Array.from(table.rows);
+
+            const headers = document.querySelectorAll(".user-table thead th");
+            const header = headers[columnIndex];
+            const type = header.getAttribute("data-sort");
+            const direction = sortDirection[columnIndex] = !sortDirection[columnIndex];
+
+            headers.forEach(th => th.classList.remove("sorted-asc", "sorted-desc"));
+            header.classList.add(direction ? "sorted-asc" : "sorted-desc");
+
+            rows.sort((a, b) => {
+                let aText = a.cells[columnIndex].innerText.trim();
+                let bText = b.cells[columnIndex].innerText.trim();
+
+                if (type === "number") {
+                    aText = parseFloat(aText);
+                    bText = parseFloat(bText);
+                }
+
+                if (aText < bText) return direction ? -1 : 1;
+                if (aText > bText) return direction ? 1 : -1;
+                return 0;
+            });
+
+            rows.forEach(row => table.appendChild(row));
+        }
+    </script>
+
 
 </div>
 </body>
 </html>
+
