@@ -4,17 +4,12 @@ from django.contrib.auth.models import AbstractUser, Group, Permission
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 
-
-
 # Validation for Signature Image Upload
 def validate_signature_file(value):
     ext = os.path.splitext(value.name)[1]  # Get file extension
     valid_extensions = ['.png', '.jpg', '.jpeg']
     if ext.lower() not in valid_extensions:
         raise ValidationError('Unsupported file format. Allowed formats: PNG, JPG, JPEG.')
-
-
-
 
 class Unit(models.Model):
     name = models.CharField(max_length=255)  # e.g., "Computer Science"
@@ -137,14 +132,6 @@ class ETDForm(models.Model):
 
     def __str__(self):
         return f"ETD Form for {self.student.username} - {self.get_request_type_display()}"
-
-
-
-
-
-
-
-
 
 from django.db import models
 from django.contrib.auth import get_user_model

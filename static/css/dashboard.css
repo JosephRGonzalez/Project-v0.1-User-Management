@@ -6,8 +6,6 @@
     font-family: Source Sans Pro,sans-serif;
 
 }
-
-
 body {
     background: rgb(255,255,255);
     color: black;
@@ -32,9 +30,6 @@ h3{
     font-family: Source Sans Pro, sans-serif;
 }
 
-
-
-
 /* Navbar */
 .navbar {
 
@@ -50,8 +45,6 @@ h3{
     z-index: 1000;
     flex-direction: row; /* Aligns elements in a vertical stack */
     font-family: Source Sans Pro,sans-serif;
-
-
 }
 
 .navbar-content {
