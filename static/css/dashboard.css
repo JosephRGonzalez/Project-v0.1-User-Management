@@ -50,7 +50,7 @@ h3{
     flex-direction: row; /* Aligns elements in a vertical stack */
     font-family: Source Sans Pro,sans-serif;
     background-color: #abc6d8;
-    color: red;
+    color: white;
 }
 
 .navbar-content {
