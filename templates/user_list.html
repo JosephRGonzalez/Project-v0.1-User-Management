@@ -111,11 +111,13 @@
   <div class="user-hover-wrapper">
     <div class="user-thumbnail-container">
 <div class="user-thumbnail">
+<a href="{% url 'user_profile' user.id %}">
     {% if user.profile_picture %}
         <img src="{{ user.profile_picture.url }}" alt="Profile Picture">
     {% else %}
         <img src="{% static 'images/default_profile.png' %}" alt="Default Profile Picture">
     {% endif %}
+</a>
 </div>
 
       <div class="user-tooltip">
