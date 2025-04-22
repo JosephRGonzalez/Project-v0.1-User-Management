@@ -32,19 +32,20 @@ h3{
 
 /* Navbar */
 .navbar {
-
     padding: 15px 30px;
     position: fixed;
     top: 0;
     left: 300px; /* Align with sidebar */
     right: 0;
-    height: 70px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     z-index: 1000;
     flex-direction: row; /* Aligns elements in a vertical stack */
     font-family: Source Sans Pro,sans-serif;
+    color: crimson;
+    background-color: #89abe8;
 }
 
 .navbar-content {
@@ -495,7 +496,6 @@ margin-bottom: 5%;
 .card:nth-child(1) { animation-delay: 0.3s; }
 .card:nth-child(2) { animation-delay: 0.6s; }
 .card:nth-child(3) { animation-delay: 0.9s; }
-
 @keyframes slideIn {
     from {
         opacity: 0;
@@ -553,9 +553,6 @@ margin-bottom: 5%;
     text-align: left;
     border-bottom: 1px solid #ddd;
 }
-
-
-
 /* Status Badges */
 .status-badge {
     display: inline-block;
