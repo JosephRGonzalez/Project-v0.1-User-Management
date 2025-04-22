@@ -65,48 +65,63 @@
 
                                     <!-- Form Inputs -->
                 <div class="input-container">
-                    <label for="f-name"></label>
-                    <input type="text" name="f-name" id="f-name" required>
-                    <span>
-                        First name
-                    </span>
-                    <div class="error"></div>
+            <input type="text" name="f-name" id="f-name" required>
+            <span>First name</span>
                 </div>
 
                 <div class="input-container">
-                    <label for="l-name"></label>
                     <input type="text" name="l-name" id="l-name" required>
-                    <span>
-                        Last name
-                    </span>
-                    <div class="error"></div>
+                    <span>Last name</span>
                 </div>
 
                 <div class="input-container">
-                    <label for="mail">
-                    </label>
                     <input type="email" name="mail" id="mail" required>
-                    <span>
-                        E-mail
-                    </span>
-                    <div class="error"></div>
+                    <span>E-mail</span>
                 </div>
 
                 <div class="input-container">
-                    <label for="user-password"></label>
-                    <input type="password" name="user-password" id="user-password" class="user-password" required>
+                    <input type="text" name="cougar_id" id="cougar_id" maxlength="7" required pattern="\d{7}">
+                    <span>Cougar ID</span>
+                </div>
+
+                <div class="input-container">
+                    <select name="academic_level" id="academic_level" required>
+                        <option value="">Select Academic Level</option>
+                        <option value="undergraduate">Undergraduate</option>
+                        <option value="graduate">Graduate</option>
+                    </select>
+                </div>
+
+                <!-- College Dropdown -->
+                <div class="input-container">
+                    <select name="college" id="college-select" required>
+                        <option value="">Select College</option>
+                        {% for college in colleges %}
+                            <option value="{{ college.id }}">{{ college.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Major Dropdown -->
+                <div class="input-container">
+                    <select name="unit" id="major-select" name="unit" required disabled>
+                        <option value="">Select Your Major</option>
+                        {% for major in majors %}
+                            <option value="{{ major.id }}" data-parent="{{ major.parent.id }}">{{ major.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="input-container">
+                    <input type="password" name="user-password" id="user-password" required>
                     <span>Password</span>
-                    <div class="error"></div>
                 </div>
 
                 <div class="input-container">
-                    <label for="user-password-confirm"></label>
-                    <input type="password" name="user-password-confirm" id="user-password-confirm" class="password-confirmation" required>
-                    <span>
-                        Confirm Password
-                    </span>
-                    <div class="error"></div>
+                    <input type="password" name="user-password-confirm" id="user-password-confirm" required>
+                    <span>Confirm Password</span>
                 </div>
+
 
                                 <!-- Submit Button -->
                 <div id="btm">
@@ -118,5 +133,8 @@
             </div>
         </form>
     </main>
+
+
+<script src="{% static 'javascript/dependent_dropdown.js' %}"></script>
 </body>
 </html>

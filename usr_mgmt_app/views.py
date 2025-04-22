@@ -208,38 +208,59 @@ def dashboard_view(request):
 # Sign up form (signup.html)
 def signup_view(request):
     if request.method == 'POST':
-        # Getting data from the form
-        first_name = request.POST['f-name']
-        last_name = request.POST['l-name']
-        email = request.POST['mail']
-        password = request.POST['user-password']
-        password_confirm = request.POST['user-password-confirm']
+        # Get form fields
+        first_name = request.POST.get('f-name')
+        last_name = request.POST.get('l-name')
+        email = request.POST.get('mail')
+        password = request.POST.get('user-password')
+        password_confirm = request.POST.get('user-password-confirm')
+        cougar_id = request.POST.get('cougar_id')
+        academic_level = request.POST.get('academic_level')
+        unit_id = request.POST.get('unit')
 
-        # Validation for matching passwords
+        # Check password match
         if password != password_confirm:
             messages.error(request, "Passwords do not match!")
             return redirect('signup')
 
-        # Check if the email already exists
+
+        # Check if email already exists
         if UserProfile.objects.filter(email=email).exists():
             messages.error(request, "Email is already registered.")
             return redirect('signup')
 
-        # Create the user
+        # Check if Cougar ID already exists
+        if UserProfile.objects.filter(cougar_id=cougar_id).exists():
+            messages.error(request, "Cougar ID is already registered.")
+            return redirect('signup')
+
+        # Get the selected unit (major)
+        unit = Unit.objects.get(id=unit_id) if unit_id else None
+
+        # Create user
         user = UserProfile.objects.create_user(
-            username=email,
+            username=cougar_id,
             first_name=first_name,
             last_name=last_name,
             email=email,
-            password=password
+            password=password,
+            cougar_id=cougar_id,
+            academic_level=academic_level,
+            unit=unit,
+            role='user'  # default role
         )
-        user.save()
 
-        # Redirect to a login page or home page after successful signup
         messages.success(request, "Account created successfully! Please log in.")
         return redirect('login')
 
-    return render(request, 'signup.html')
+    # For GET request, pass colleges and majors
+    colleges = Unit.objects.filter(is_college=True)
+    majors = Unit.objects.filter(is_college=False)
+
+    return render(request, 'signup.html', {
+        'colleges': colleges,
+        'majors': majors
+    })
 
 #Dashboard Admin/User Count Cards
 @login_required
