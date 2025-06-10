@@ -24,7 +24,7 @@ With features such as **user authentication** (via Microsoft Graph API for Azure
 
 ## Live Demo
 
-Experience the User Management System live by visiting the [demo site](http://usr-mgmt-app-bue8bpeqcucthdc8.westus2-01.azurewebsites.net). The demo showcases all the core features of the app, including:
+Experience the User Management System live by viewing the [demo video](https://youtu.be/uyJvVTxA8QI?si=LJv-fiEBHqu2H94p). The demo showcases all the core features of the app, including:
 
 - **Login/Sign Up**: Secure access to the system.
 - **Dashboard**: Admin and Moderator roles have customized access and functionalities.
